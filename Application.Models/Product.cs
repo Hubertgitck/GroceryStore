@@ -27,7 +27,7 @@ namespace Application.Models
         [ValidateNever]
         public Category Category { get; set; }
         [Required]
-        [Display(Name = "Cover Type")]
+        [Display(Name = "Packaging Type")]
         public int PackagingTypeId { get; set; }
         [ValidateNever]
         public PackagingType PackagingType { get; set; }

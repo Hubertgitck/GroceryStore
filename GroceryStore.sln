@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroceryStore", "GroceryStore\GroceryStore.csproj", "{07578872-0077-461A-A1AD-C35A495F5960}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationWeb", "GroceryStore\ApplicationWeb.csproj", "{07578872-0077-461A-A1AD-C35A495F5960}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.DataAccess", "Application.DataAccess\Application.DataAccess.csproj", "{18586C9E-6EC3-4D3B-AA73-F1512BDA763D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.DataAccess", "Application.DataAccess\Application.DataAccess.csproj", "{18586C9E-6EC3-4D3B-AA73-F1512BDA763D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Models", "Application.Models\Application.Models.csproj", "{A59A3C49-70A2-4870-9261-0C6F7D8E72ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Models", "Application.Models\Application.Models.csproj", "{A59A3C49-70A2-4870-9261-0C6F7D8E72ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Utility", "Application.Utility\Application.Utility.csproj", "{7054F3E0-A442-4B8E-BE94-3C38CA588FF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Utility", "Application.Utility\Application.Utility.csproj", "{7054F3E0-A442-4B8E-BE94-3C38CA588FF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

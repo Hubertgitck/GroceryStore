@@ -1,4 +1,5 @@
-namespace GroceryStore.Models
+﻿
+namespace Application.Models.ViewModels
 {
     public class ErrorViewModel
     {

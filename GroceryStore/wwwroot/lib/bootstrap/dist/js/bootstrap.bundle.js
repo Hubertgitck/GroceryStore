@@ -2212,7 +2212,8 @@
     var currentNode = getParentNode(element);
 
     while (isHTMLElement(currentNode) && ['html', 'body'].indexOf(getNodeName(currentNode)) < 0) {
-      var css = getComputedStyle$1(currentNode); // This is non-exhaustive but covers the most common CSS properties that
+      var css = getComputedStyle$1(currentNode); // This is non-exhaustive but 
+s the most common CSS properties that
       // create a containing block.
       // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
 

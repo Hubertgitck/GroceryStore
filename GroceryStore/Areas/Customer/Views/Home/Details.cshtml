@@ -9,8 +9,7 @@
     <div class="card container pt-4">
         <div class="card-header bg-primary text-light ml-0  row ">
             <div class="col-12 col-md-6">
-                <h1 class="text-white-50">@Model.Product.Title</h1>
-                <p class="text-warning">by @Model.Product.Author</p>
+                <h1 class="text-white-50">@Model.Product.Name</h1>
             </div>
             <div class="col-12 col-md-6 text-end pt-4">
                 <span class="badge bg-info pt-2" style="height:30px;">@Model.Product.PackagingType.Name</span>
@@ -21,18 +20,15 @@
             <div class="container rounded p-2">
                 <div class="row">
                     <div class="col-8 col-lg-8">
-
                         <div class="row pl-2">
-                            <h5 class="text-muted">ISBN : @Model.Product.ISBN</h5>
-                        </div>
-                        <div class="row pl-2">
-                            <h5 class="text-muted pb-2">List Price: <strike>@Model.Product.ListPrice.ToString("c")</strike></h5>
+                            <h5 class="text-muted pb-2">List Price: <strike>@Model.Product.Price.ToString("c")</strike></h5>
                         </div>
                         <div class="row text-center pl-2">
                             <div class="p-1 col-2 border-bottom">
                                 <div>Quantity</div>
                             </div>
-                            <div class="p-1 col-2 border-bottom">
+                            @*//TODO*@
+@*                            <div class="p-1 col-2 border-bottom">
                                 <div>1-50</div>
                             </div>
                             <div class="p-1 col-2 border-bottom">
@@ -40,7 +36,7 @@
                             </div>
                             <div class="p-1 col-2 border-bottom">
                                 <div>100+</div>
-                            </div>
+                            </div>*@
                         </div>
                         <div class="row text-center pl-2" style="color:maroon; font-weight:bold">
                             <div class="p-1 col-2 ">
@@ -49,12 +45,13 @@
                             <div class="p-1 col-2 ">
                                 <div>@Model.Product.Price.ToString("c")</div>
                             </div>
-                            <div class="p-1 col-2 ">
+                            @*//TODO*@
+@*                            <div class="p-1 col-2 ">
                                 <div>@Model.Product.Price50.ToString("c")</div>
                             </div>
                             <div class="p-1 col-2 ">
                                 <div>@Model.Product.Price100.ToString("c")</div>
-                            </div>
+                            </div>*@
                         </div>
                         <div class="row pl-2">
                             <p class="text-secondary">@Model.Product.Description</p>

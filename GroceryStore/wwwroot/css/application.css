@@ -1,0 +1,15 @@
+.navbar{
+    height:80px;
+    padding: 10px 15px;
+}
+
+
+.home-page-carousel img{
+    height:90vh;
+}
+
+@media (max-width: 700px){
+    .home-page-carousel img {
+        height: 50vh;
+    }
+}

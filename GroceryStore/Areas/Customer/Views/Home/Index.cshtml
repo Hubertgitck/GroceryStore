@@ -2,8 +2,80 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+<div class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner home-page-carousel">
+        <div class="carousel-item active ">
+            <img src="/img/homeCarousel1.jpg" class="d-block w-100 img-fluid"/>
+        </div>        
+        <div class="carousel-item">
+            <img src="/img/homeCarousel2.jpg" class="d-block w-100 img-fluid "/>
+        </div>        
+        <div class="carousel-item">
+            <img src="/img/homeCarousel3.jpg" class="d-block w-100 img-fluid"/>
+        </div>
+    </div>
+</div>
 
-<div class="row pb-3">
+<div class="container-fluid pt-5 bg-light">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center pb-4">Welcome to our online grocery shop!</h1>
+            <ul class="d-flex flex-column align-items-center">
+                <li>
+                    We offer a wide selection of fresh fruits and vegetables. Our products are sourced from local farmers and vendors to ensure the highest quality and freshest items for our customers.
+                </li>
+                <li class="py-2">
+                    Our easy-to-use website allows you to browse and shop for items at your convenience, and our fast and reliable delivery service will bring your groceries right to your door.
+                </li>
+                <li>
+                    Create an account with us today to start shopping, save your favorite items, and take advantage of our special deals and promotions.
+                </li>
+            </ul>
+            <h4 class="text-center py-4">
+                Thank you for choosing our online grocery shop for all of your food and household needs.
+                <br />
+                Happy shopping!
+            </h4>
+        </div>
+    </div>
+</div>
+<div class="container-fluid pt-5 bg-primary bg-opacity-25">
+    <div class="row mx-auto">
+        <div class="col-12 pb-3">
+            <h1 class="text-center pb-4">Why us?</h1>
+        </div>
+        <div class="col-md-3 text-center d-flex flex-column">
+            <h4>Convenience</h4> 
+            <p>
+                Shopping for groceries online allows you to purchase items from the comfort of your own home,
+                without the need to physically go to a store.
+            </p>
+        </div>        
+        <div class="col-md-3 text-center d-flex flex-column">
+            <h4>Time-saving</h4> 
+            <p>
+                Online grocery shopping eliminates the need to spend time traveling to and from the store,
+                browsing the aisles, and waiting in long checkout lines.
+            <p/>
+        </div> 
+        <div class="col-md-3 text-center d-flex flex-column">
+            <h4>Variety</h4> 
+            <p>
+                Our online grocery store offer a wider selection of products compared to
+                traditional brick-and-mortar stores.
+            </p>
+        </div>    
+        <div class="col-md-3 text-center d-flex flex-column">
+            <h4>Price comparison</h4>
+            <p>
+                Grocery Store offer competitive prices and frequent discounts,
+                which can help you save money on your grocery bill.
+            </p>
+        </div>
+    </div>
+</div>
+
+@*<div class="row pb-3">
     @foreach(var product in Model)
     {
         <div class="col-lg-3 col-md-6">
@@ -13,13 +85,13 @@
                        <img src="@product.ImageUrl" class="card-img-top rounded"/>
                        <div class="card-body">
                            <div class="pl-1">
-                                <p class="card-title h5 text-primary">@product.Title</p>
-                                <p class="card-title text-info">by <b>@product.Author</b></p>
+                                <p class="card-title h5 text-primary">@product.Name</p>
                            </div>
                            <div class="pl-1">
-                                <p class="card-text">List Price: <strike><b>$@product.ListPrice.ToString("0.00")</b></strike></p>
+                                <p class="card-text">List Price: <strike><b>$@product.Price.ToString("0.00")</b></strike></p>
                             </div>
-                           <div class="pl-1">
+                            @*//TODO
+                       <div class="pl-1">
                                 <p class="card-text">As low as: <b>$@product.Price100.ToString("0.00")</b></p>
                            </div>
                        </div>
@@ -33,4 +105,4 @@
             </div>
         </div>
     }
-</div>
+</div>*@

@@ -175,22 +175,11 @@
 								</div>
 							}
 							<div class="row my-1">
-								@if (Model.OrderHeader.SessionId == null)
-								{
-									<div class="col-3">Payment Due Date</div>
-									<div class="col-9">
-										<input value="@Model.OrderHeader.PaymentDueDate.ToShortDateString()"
-										   readonly type="text" class="form-control" />
-									</div>
-								}
-								else
-								{
-									<div class="col-3">Payment Date</div>
-									<div class="col-9">
-										<input value="@Model.OrderHeader.PaymentDate.ToShortDateString()"
-										   readonly id="paymentDate" type="text" class="form-control" />
-									</div>
-								}
+								<div class="col-3">Payment Date</div>
+								<div class="col-9">
+									<input value="@Model.OrderHeader.PaymentDate.ToShortDateString()"
+										readonly id="paymentDate" type="text" class="form-control" />
+								</div>
 							</div>
 							<div class="row my-1">
 								<div class="col-3">Payment Status</div>
@@ -213,8 +202,7 @@
 									<li class="list-group-item d-flex justify-content-between p-2">
 										<div class="row container">
 											<div class="col-8">
-
-												<h6 class="my-0 text-primary">@detail.Product.Title</h6>
+												<h6 class="my-0 text-primary">@detail.Product.Name</h6>
 												<small class="text-muted">Price : @detail.Price.ToString("c")</small><br />
 												<small class="text-muted">Quantity : @detail.Count</small>
 											</div>

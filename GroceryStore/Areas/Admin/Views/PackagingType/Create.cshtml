@@ -2,22 +2,47 @@
 @{
     ViewData["Title"] = "Create";
 }
+<div class="container-fluid">
+    <div class="row col-md-6 mx-auto">
+        <form method="post">
+            <div class="border p-3 mt-4">
+                <div class="row pb-2">
+                    <h2 class="text-primary">Create Packaging Type </h2>
+                    <hr />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>                
+                <div class="mb-3">
+                    <label asp-for="Weight"></label>
+                    <input asp-for="Weight" class="form-control" />
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="IsWeightInGrams" class="col-12 pb-2"></label>
 
-<form method="post">
-    <div class="border p-3 mt-4">
-        <div class="row pb-2">
-            <h2 class="text-primary">Create PackagingType </h2>
-            <hr />
-        </div>
-        <div class="mb-3">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
-        <a asp-controller="PackagingType" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to list</a>
+                    
+                    <label class="form-check-label pe-2" >
+                        <input asp-for="IsWeightInGrams" type="radio" name="IsWeightInGrams" value="false" />
+                        Kilograms<strong> [kg]</strong>
+                    </label>                    
+                    
+                    <label class="form-check-label pe-2" >
+                        <input asp-for="IsWeightInGrams" type="radio" name="IsWeightInGrams" value="true" />
+                        Grams<strong> [g]</strong>
+                    </label>
+                    <span asp-validation-for="IsWeightInGrams" class="text-danger"></span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+                <a asp-controller="PackagingType" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to list</a>
+            </div>
+        </form>
     </div>
-</form>
+</div>
+
 
 @section Scripts{
     @{

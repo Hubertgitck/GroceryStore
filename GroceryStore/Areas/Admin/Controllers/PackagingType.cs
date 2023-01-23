@@ -35,6 +35,10 @@ namespace GroceryStoreWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (obj.IsWeightInGrams)
+                {
+                    obj.Weight = obj.Weight / SD.KilogramsToGramsFactor;
+                }
                 _unitOfWork.PackagingType.Add(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Packaging Type created succesfully";

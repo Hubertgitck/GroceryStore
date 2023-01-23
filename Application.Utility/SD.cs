@@ -25,5 +25,7 @@ namespace Application.Utility
         public const string PaymentStatusRejected = "Rejected";
 
         public const string SessionCart = "SessionShoppingCart";
+
+        public const double KilogramsToGramsFactor = 1000;
     }
 }

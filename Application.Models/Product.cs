@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System.Xml.Linq;
 
 namespace Application.Models
 {
@@ -18,7 +12,6 @@ namespace Application.Models
         [Required]
         [Range(1, 10000)]
         public double Price { get; set; }
-        public List<PriceThresholds>? PriceThresholds { get; set; }
         [ValidateNever]
         public string ImageUrl { get; set; }
         [Required]

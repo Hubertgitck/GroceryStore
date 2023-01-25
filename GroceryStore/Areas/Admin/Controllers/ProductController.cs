@@ -38,9 +38,10 @@ namespace ApplicationWeb.Areas.Admin.Controllers
                 PackagingTypeList = _unitOfWork.PackagingType.GetAll().Select(
                     u => new SelectListItem
                     {
-                        Text = u.Name,
+                        Text = u.IsWeightInGrams == true ? u.Name + 
+                            $" {u.Weight *SD.KilogramsToGramsFactor}[g]"  : u.Name + $" {u.Weight}[kg]" ,
                         Value = u.Id.ToString(),
-                    }),
+                    })
             };
 
             if (id == null || id == 0)
@@ -64,7 +65,7 @@ namespace ApplicationWeb.Areas.Admin.Controllers
                 if(file != null)
                 {
                     string fileName = Guid.NewGuid().ToString();
-                    var uploads = Path.Combine(wwwRootPath, @"images\products");
+                    var uploads = Path.Combine(wwwRootPath, @"img\products");
                     var extension = Path.GetExtension(file.FileName);
 
                     if(obj.Product.ImageUrl !=null)
@@ -80,7 +81,7 @@ namespace ApplicationWeb.Areas.Admin.Controllers
                     {
                         file.CopyTo(fileStreams);
                     }
-                    obj.Product.ImageUrl = @"\images\products\" + fileName + extension;
+                    obj.Product.ImageUrl = @"\img\products\" + fileName + extension;
                 }
 
                 if (obj.Product.Id == 0)

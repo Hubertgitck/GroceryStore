@@ -24,18 +24,7 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 
 		public IActionResult Index()
 		{
-			IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,PackagingType");
-			return View(productList);
-		}
-		public IActionResult Details(int productId)
-		{
-			ShoppingCart cartObj = new()
-			{
-				Count = 1,
-				ProductId = productId,
-				Product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == productId, includeProperties: "Category,PackagingType")
-			};
-			return View(cartObj);
+			return View();
 		}
 
 		[HttpPost]

@@ -4,6 +4,7 @@ using Application.Models;
 using Application.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GroceryStoreWeb.Areas.Admin.Controllers
 {
@@ -20,6 +21,13 @@ namespace GroceryStoreWeb.Areas.Admin.Controllers
         public IActionResult Index()
         {
             IEnumerable<PackagingType> packagingTypeList = _unitOfWork.PackagingType.GetAll();
+            foreach(var elem in packagingTypeList)
+            {
+                if (elem.IsWeightInGrams)
+                {
+                    elem.Weight *= SD.KilogramsToGramsFactor;
+                }
+            }
             return View(packagingTypeList);
         }
 
@@ -59,6 +67,12 @@ namespace GroceryStoreWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
+            if (packagingTypeFromDb.IsWeightInGrams)
+            {
+                packagingTypeFromDb.Weight *= SD.KilogramsToGramsFactor;
+            }
+
             return View(packagingTypeFromDb);
         }
 
@@ -69,6 +83,10 @@ namespace GroceryStoreWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (obj.IsWeightInGrams)
+                {
+                    obj.Weight /= SD.KilogramsToGramsFactor;
+                }
                 _unitOfWork.PackagingType.Update(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Packaging Type updated succesfully";

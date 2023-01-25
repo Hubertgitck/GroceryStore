@@ -12,8 +12,20 @@
     --bs-table-striped-bg: rgba(120, 194, 173, 0.2);
 }
 
+.card-img-top{
+    width:280px;
+    height:200px;
+    object-fit: cover;
+    object-position:center;
+}
+
 @media (max-width: 700px) {
     .home-page-carousel img {
         height: 50vh;
     }
+    .card-img-top{
+        width: 200px;
+        height: 150px;
+    }
 }
+

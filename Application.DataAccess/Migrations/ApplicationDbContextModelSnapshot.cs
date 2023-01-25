@@ -171,31 +171,6 @@ namespace Application.DataAccess.Migrations
                     b.ToTable("PackagingTypes");
                 });
 
-            modelBuilder.Entity("Application.Models.PriceThresholds", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Threshold")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("PriceThresholds");
-                });
-
             modelBuilder.Entity("Application.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -518,13 +493,6 @@ namespace Application.DataAccess.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("Application.Models.PriceThresholds", b =>
-                {
-                    b.HasOne("Application.Models.Product", null)
-                        .WithMany("PriceThresholds")
-                        .HasForeignKey("ProductId");
-                });
-
             modelBuilder.Entity("Application.Models.Product", b =>
                 {
                     b.HasOne("Application.Models.Category", "Category")
@@ -612,11 +580,6 @@ namespace Application.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Application.Models.Product", b =>
-                {
-                    b.Navigation("PriceThresholds");
                 });
 #pragma warning restore 612, 618
         }

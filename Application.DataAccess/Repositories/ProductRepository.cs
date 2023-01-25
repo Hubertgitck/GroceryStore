@@ -24,7 +24,6 @@ namespace Application.DataAccess.Repositories
             {
                 objFromDb.Name = obj.Name;
                 objFromDb.Price = obj.Price;
-                objFromDb.PriceThresholds = obj.PriceThresholds;
                 objFromDb.Description = obj.Description;
                 objFromDb.CategoryId = obj.CategoryId;
                 objFromDb.PackagingTypeId = obj.PackagingTypeId;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Application.DataAccess.Data;
 using Application.DataAccess.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +20,8 @@ namespace Application.DataAccess.Repositories
             dbSet.Add(entity);
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null,
+            string? thenIncludeProperty = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
@@ -36,10 +32,18 @@ namespace Application.DataAccess.Repositories
             {
                 foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query = query.Include(property);
+                    if (thenIncludeProperty == null)
+                    {
+                        query = query.Include(property);
+                    }
+                    else
+                    {
+						query = query.Include(property)
+                            .Include($"{property}.{thenIncludeProperty}");
+					}
                 }
             }
-            return query.ToList();
+			return query.ToList();
         }
 
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = true)

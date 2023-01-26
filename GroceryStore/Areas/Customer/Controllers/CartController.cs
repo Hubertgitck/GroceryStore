@@ -54,7 +54,7 @@ namespace ApplicationWeb.Areas.Customer.Controllers
             ShoppingCartViewModel = new ShoppingCartViewModel()
             {
                 CartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value,
-                includeProperties: "Product"),
+                includeProperties: "Product", thenIncludeProperty: "PackagingType"),
                 OrderHeader = new()
             };
 
@@ -70,7 +70,8 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 
 			foreach (var cart in ShoppingCartViewModel.CartList)
             {
-                ShoppingCartViewModel.OrderHeader.OrderTotal += (cart.Count * cart.Price);
+                cart.Price = cart.Count * cart.Product.Price;
+				ShoppingCartViewModel.OrderHeader.OrderTotal += cart.Price;
             }
             return View(ShoppingCartViewModel);
 		}

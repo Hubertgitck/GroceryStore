@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Application.Utility;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Application.Models
@@ -24,5 +25,28 @@ namespace Application.Models
         public int PackagingTypeId { get; set; }
         [ValidateNever]
         public PackagingType PackagingType { get; set; }
+
+        public string GetProductNameWithPackagingType()
+        {
+            string? nameWithUnits;
+            var weight = PackagingType.Weight;
+            var name = PackagingType.Name;
+
+            if (PackagingType.IsWeightInGrams)
+            {
+                weight *= SD.KilogramsToGramsFactor;
+                nameWithUnits = weight.ToString() + "g " + name;
+            }
+            else
+            {
+                nameWithUnits = weight.ToString() + "kg " + name;
+            }
+            return nameWithUnits;
+        }
+
+        public double GetPriceFor1kg()
+        {
+            return Price / PackagingType.Weight;
+        }
     }
 }

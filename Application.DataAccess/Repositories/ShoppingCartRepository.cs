@@ -28,5 +28,10 @@ namespace Application.DataAccess.Repositories
             shoppingCart.Count += count;
             return shoppingCart.Count;
         }
+
+        public void Update(ShoppingCart shoppingCart)
+        {
+            _dbContext.Update(shoppingCart);
+        }
     }
 }

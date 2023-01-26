@@ -38,13 +38,11 @@ namespace ApplicationWeb.Areas.Customer.Controllers
                 includeProperties: "Product"),
                 OrderHeader = new()
             };
-            //TODO
-/*            foreach(var cart in ShoppingCartViewModel.CartList)
+
+            foreach (var cart in ShoppingCartViewModel.CartList)
             {
-                cart.Price = GetPriceBasedOnQuantity(cart.Count, cart.Product.Price,
-                    cart.Product.Price50, cart.Product.Price100);
-                ShoppingCartViewModel.OrderHeader.OrderTotal += (cart.Count * cart.Price);
-            }*/
+                ShoppingCartViewModel.OrderHeader.OrderTotal += (cart.Count * cart.Product.Price);
+            }
             return View(ShoppingCartViewModel);
         }
 
@@ -70,13 +68,10 @@ namespace ApplicationWeb.Areas.Customer.Controllers
             ShoppingCartViewModel.OrderHeader.State = ShoppingCartViewModel.OrderHeader.ApplicationUser.State;
             ShoppingCartViewModel.OrderHeader.PostalCode = ShoppingCartViewModel.OrderHeader.ApplicationUser.PostalCode;
 
-            //TODO
-/*			foreach (var cart in ShoppingCartViewModel.CartList)
+			foreach (var cart in ShoppingCartViewModel.CartList)
             {
-                cart.Price = GetPriceBasedOnQuantity(cart.Count, cart.Product.Price,
-                    cart.Product.Price50, cart.Product.Price100);
                 ShoppingCartViewModel.OrderHeader.OrderTotal += (cart.Count * cart.Price);
-            }*/
+            }
             return View(ShoppingCartViewModel);
 		}
 
@@ -94,13 +89,11 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 
             ShoppingCartViewModel.OrderHeader.OrderDate = DateTime.Now;
             ShoppingCartViewModel.OrderHeader.ApplicationUserId = claim.Value;
-            //TODO
-/*            foreach (var cart in ShoppingCartViewModel.CartList)
+
+            foreach (var cart in ShoppingCartViewModel.CartList)
             {
-                cart.Price = GetPriceBasedOnQuantity(cart.Count, cart.Product.Price,
-                    cart.Product.Price50, cart.Product.Price100);
                 ShoppingCartViewModel.OrderHeader.OrderTotal += (cart.Count * cart.Price);
-            }*/
+            }
 			ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == claim.Value);
 
 			ShoppingCartViewModel.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
@@ -228,24 +221,6 @@ namespace ApplicationWeb.Areas.Customer.Controllers
             var count = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).ToList().Count();
             HttpContext.Session.SetInt32(SD.SessionCart,count);
             return RedirectToAction(nameof(Index));
-        }
-
-
-
-        private double GetPriceBasedOnQuantity(double quantity, double price, double price50, double price100)
-        {
-            if (quantity <=50)
-            {
-                return price;
-            }
-            else
-            {
-                if(quantity <= 100)
-                {
-                    return price50;
-                }
-                return price100;
-            }
         }
     }
 }

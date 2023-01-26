@@ -3,84 +3,112 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<form method="post">
-    <input hidden asp-for="ProductId"/>
-    <div class="card container pt-4">
-        <div class="card-header bg-primary text-light ml-0  row ">
-            <div class="col-12 col-md-6">
-                <h1 class="text-white-50">@Model.Product.Name</h1>
+<div class="container-fluid">
+    <form method="post">
+        <input hidden asp-for="ProductId" />
+        <div class="card border-0 container pt-4">
+            <div class="card-header rounded bg-primary text-light row ">
+                <div class="col-12 col-md-6">
+                    <h1>@Model.Product.Name</h1>
+                </div>
+                <div class="col-12 col-md-6 text-end pt-4">
+                    <span class="badge bg-info pt-2" style="height:30px;">@Model.Product.PackagingType.Name</span>
+                    <span class="badge bg-warning pt-2" style="height:30px;">@Model.Product.Category.Name</span>
+                </div>
             </div>
-            <div class="col-12 col-md-6 text-end pt-4">
-                <span class="badge bg-info pt-2" style="height:30px;">@Model.Product.PackagingType.Name</span>
-                <span class="badge bg-warning pt-2" style="height:30px;">@Model.Product.Category.Name</span>
+            <div class="card-body row container">
+                <div class="container rounded p-2">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-8">
+                            <div class="row text-center">
+                                <div class="p-1 col-md-2 col-sm-5 border-bottom">
+                                    Quantity
+                                </div>
+                                <div class="p-1 col-md-2 col-sm-5 border-bottom">
+                                    @Model.Product.GetProductNameWithPackagingType()
+                                </div>
+                                
+                            </div>
+                            <div class="row text-center py-2 text-secondary" style="font-weight:bold">
+                                <div class="p-1 col-md-2 col-sm-5 border-bottom">
+                                    Price
+                                </div>
+                                <div class="p-1 col-md-3 col-sm-5 border-bottom">
+                                    @Model.Product.Price.ToString("c") per  @Model.Product.GetProductNameWithPackagingType()
+                                </div>               
+                            </div>
+                            <div class="row">
+                                <div class="py-3 ">
+                                    <t class="text-info">@Model.Product.Description</t>
+                                </div>
+                            </div>
+                            <div class="row py-4">
+                                <div class="col-md-2 col-sm-5 text-primary"><h4>Count</h4></div>
+                                <div class="col-md-2 col-sm-5"><input id="total" min="1" asp-for="Count" class="form-control" /></div>
+                            </div>
+                            <div class="row pb-2">
+                                <div class="col-md-2 col-sm-5 text-primary">Total</div>
+                                <div id="totalCount" class="col-md-2 col-sm-5 ps-4">
+                                   @(@Model.Product.PackagingType.Weight * @Model.Count + " kg")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-3 offset-lg-1 text-center">
+                            <img src="@Model.Product.ImageUrl" width="100%" class="rounded" />
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="card-body row container">
-            <div class="container rounded p-2">
+            <div class="card-footer">
                 <div class="row">
-                    <div class="col-8 col-lg-8">
-                       @* <div class="row pl-2">
-                            <h5 class="text-muted pb-2">List Price: <strike>@Model.Product.Price.ToString("c")</strike></h5>
-                        </div>*@
-                        <div class="row text-center pl-2">
-                            <div class="p-1 col-2 border-bottom">
-                                <div>Quantity</div>
-                            </div>
-                            @*//TODO*@
-@*                            <div class="p-1 col-2 border-bottom">
-                                <div>1-50</div>
-                            </div>
-                            <div class="p-1 col-2 border-bottom">
-                                <div>51-100</div>
-                            </div>
-                            <div class="p-1 col-2 border-bottom">
-                                <div>100+</div>
-                            </div>*@
-                        </div>
-                        <div class="row text-center pl-2" style="color:maroon; font-weight:bold">
-                            <div class="p-1 col-2 ">
-                                <div>Price</div>
-                            </div>
-                          @*  <div class="p-1 col-2 ">
-                                <div>@Model.Product.Price.ToString("c")</div>
-                            </div>*@
-                            @*//TODO*@
-@*                            <div class="p-1 col-2 ">
-                                <div>@Model.Product.Price50.ToString("c")</div>
-                            </div>
-                            <div class="p-1 col-2 ">
-                                <div>@Model.Product.Price100.ToString("c")</div>
-                            </div>*@
-                        </div>
-                        <div class="row pl-2">
-                            <p class="text-secondary">@Model.Product.Description</p>
-                        </div>
-                        <div class="row pl-2">
-                            <div class="col-2 text-primary"><h4>Count</h4></div>
-                            <div class="col-10"><input asp-for="Count" class="form-control" /></div>
-                        </div>
+                    <div class="col-12 col-md-6 pb-1">
+                        <button class="btn btn-outline-dark form-control " style="height:50px;" asp-action="Index">
+                            Back to List
+                        </button>
                     </div>
-                    <div class="col-12 col-lg-3 offset-lg-1 text-center">
-                        <img src="@Model.Product.ImageUrl" width="100%" class="rounded" />
-                    </div>
+                    @if(Model.Id == 0)
+                    {
+                        <div class="col-12 col-md-6 pb-1">
+                            <button type="submit" value="Add to Cart" class="btn btn-success btn-primary form-control" style="height:50px;">
+                                Add to Cart</button>
+                        </div>
+                    }else{
+                        <div class="col-12 col-md-6 pb-1">
+                            <button type="submit" value="Add to Cart" class="btn btn-success btn-primary form-control" style="height:50px;">
+                                Update Count
+                            </button>
+                        </div>
+                    }
+                    
                 </div>
             </div>
         </div>
-        <div class="card-footer">
-            <div class="row">
-                <div class="col-12 col-md-6 pb-1">
-                    <button class="btn btn-success form-control " style="height:50px;" asp-action="Index">
-                        Back to List
-                    </button> 
-                </div>
-                <div class="col-12 col-md-6 pb-1">
-                    <button type="submit" value="Add to Cart" class="btn btn-primary form-control" style="height:50px;">Add to Cart</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
+    </form>
+</div>
+
+@section Scripts{
+    <script asp-append-version="true">
+        $(document).ready(function () {
+            var interval;
+            
+            $("#total").mousedown(function () {
+                interval = setInterval(function () {
+                    updateTotalCount();
+                }, 100);
+            });
+
+            $("#total").mouseup(function () {
+                updateTotalCount();
+                clearInterval(interval);
+            });
+        });
+
+        function updateTotalCount(){
+            var newValue = $("#total").val();
+            $("#totalCount").text((@Model.Product.PackagingType.Weight * newValue).toFixed(2) + " kg");
+        }
+    </script>
+}
 
 
 

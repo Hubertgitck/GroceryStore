@@ -18,6 +18,13 @@
     object-fit: cover;
     object-position:center;
 }
+.card-container:hover{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
+}
+
+.card-container {
+    transition: all 0.4s ease-in-out;
+}
 
 @media (max-width: 700px) {
     .home-page-carousel img {

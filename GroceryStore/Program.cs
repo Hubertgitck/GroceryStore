@@ -7,6 +7,7 @@ using Application.DataAccess.Data;
 using Stripe;
 using Application.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +45,9 @@ builder.Services.AddAuthentication().AddFacebook(options =>
     options.AppSecret = "0b1bca47860390ae68bc9fc2aa0f12fd";
 });
 
-
+CultureInfo culture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture= culture;
+CultureInfo.DefaultThreadCurrentUICulture= culture;
 
 var app = builder.Build();
 

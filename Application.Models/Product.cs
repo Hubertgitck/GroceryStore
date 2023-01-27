@@ -26,7 +26,7 @@ namespace Application.Models
         [ValidateNever]
         public PackagingType PackagingType { get; set; }
 
-        public string GetProductNameWithPackagingType()
+        public string GetPackagingTypeWithQuantityUnit()
         {
             string? nameWithUnits;
             var weight = PackagingType.Weight;

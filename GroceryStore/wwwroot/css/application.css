@@ -26,6 +26,20 @@
     transition: all 0.4s ease-in-out;
 }
 
+.show, .collapsing {
+    background-color: var(--bs-primary);
+    z-index: 999;
+    border-radius: 15px;
+
+}
+.show .nav-item, .collapsing .nav-item {
+    margin: 0 auto 0 auto;
+}
+
+.show .nav-item > form, .collapsing > * button {
+    padding-bottom: 10px;
+}
+
 @media (max-width: 700px) {
     .home-page-carousel img {
         height: 50vh;

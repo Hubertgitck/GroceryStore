@@ -33,78 +33,25 @@ namespace ApplicationWeb.Areas.Admin.Controllers
 			OrderViewModel = new OrderViewModel()
 			{
 				OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId, includeProperties: "ApplicationUser"),
-				OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includeProperties: "Product"),
+				OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includeProperties: "Product", thenIncludeProperty: "PackagingType"),
 			};
 
 			return View(OrderViewModel);
-		}
-		[ActionName("Details")]
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult Details_PAY_NOW()
-		{
-		OrderViewModel.OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(
-			u => u.Id == OrderViewModel.OrderHeader.Id, includeProperties: "ApplicationUser");
-		OrderViewModel.OrderDetail = _unitOfWork.OrderDetail.GetAll(
-			u => u.OrderId == OrderViewModel.OrderHeader.Id, includeProperties: "Product");
-
-			var domain = "https://localhost:44350/";
-			var options = new SessionCreateOptions
-			{
-				PaymentMethodTypes = new List<string>
-				{
-					"card",
-				},
-				LineItems = new List<SessionLineItemOptions>(),
-				Mode = "payment",
-				SuccessUrl = domain + $"admin/order/PaymentConfirmation?orderHeaderId={OrderViewModel.OrderHeader.Id}",
-				CancelUrl = domain + $"admin/order/details?orderId={OrderViewModel.OrderHeader.Id}",
-			};
-
-			foreach (var item in OrderViewModel.OrderDetail)
-			{
-				{
-					var sessionLineItem = new SessionLineItemOptions
-					{
-						PriceData = new SessionLineItemPriceDataOptions
-						{
-							UnitAmount = (long)(item.Price * 100),
-							Currency = "usd",
-							ProductData = new SessionLineItemPriceDataProductDataOptions
-							{
-								Name = item.Product.Name
-							},
-						},
-						Quantity = item.Count,
-					};
-					options.LineItems.Add(sessionLineItem);
-				}
-			}
-			var service = new SessionService();
-			Session session = service.Create(options);
-
-			_unitOfWork.OrderHeader.UpdateStripePaymentID(OrderViewModel.OrderHeader.Id,
-				session.Id, session.PaymentIntentId);
-			_unitOfWork.Save();
-
-			Response.Headers.Add("Location", session.Url);
-			return new StatusCodeResult(303);
 		}
 
 		public IActionResult PaymentConfirmation(int orderHeaderId)
 		{
 			OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderHeaderId);
-			if (orderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment)
+
+			var service = new SessionService();
+			Session session = service.Get(orderHeader.SessionId);
+			if (session.PaymentStatus.ToLower() == "paid")
 			{
-				var service = new SessionService();
-				Session session = service.Get(orderHeader.SessionId);
-				if (session.PaymentStatus.ToLower() == "paid")
-				{
-					_unitOfWork.OrderHeader.UpdateStripePaymentID(orderHeaderId, orderHeader.SessionId, session.PaymentIntentId);
-					_unitOfWork.OrderHeader.UpdateStatus(orderHeaderId, orderHeader.OrderStatus, SD.PaymentStatusApproved);
-					_unitOfWork.Save();
-				}
+				_unitOfWork.OrderHeader.UpdateStripePaymentID(orderHeaderId, orderHeader.SessionId, session.PaymentIntentId);
+				_unitOfWork.OrderHeader.UpdateStatus(orderHeaderId, orderHeader.OrderStatus, SD.PaymentStatusApproved);
+				_unitOfWork.Save();
 			}
+
 			return View(orderHeaderId);
 		}
 
@@ -219,9 +166,6 @@ namespace ApplicationWeb.Areas.Admin.Controllers
 
 			switch (status)
 			{
-                case "pending":
-                    orderHeaders =  orderHeaders.Where( u=> u.PaymentStatus == SD.PaymentStatusDelayedPayment);
-                    break;
 				case "inprocess":
                     orderHeaders = orderHeaders.Where(u => u.OrderStatus == SD.StatusInProcess);
                     break;

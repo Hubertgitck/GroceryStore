@@ -6,7 +6,6 @@ using Application.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Stripe.Checkout;
 
 namespace ApplicationWeb.Areas.Customer.Controllers
@@ -84,24 +83,36 @@ namespace ApplicationWeb.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-
             ShoppingCartViewModel.CartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value,
                 includeProperties: "Product");
 
+            if(ShoppingCartViewModel.CartList.Any())
+            {
+                return ProceedToPayment(claim);
+            }
+            else
+            {
+                TempData["error"] = "Your cart is empty. Please, add any product first.";
+                return RedirectToAction("Index", "Shop");
+            }
+		}
+
+        private IActionResult ProceedToPayment(Claim claim)
+        {
             ShoppingCartViewModel.OrderHeader.OrderDate = DateTime.Now;
             ShoppingCartViewModel.OrderHeader.ApplicationUserId = claim.Value;
 
             foreach (var cart in ShoppingCartViewModel.CartList)
             {
-                ShoppingCartViewModel.OrderHeader.OrderTotal += (cart.Count * cart.Price);
+                cart.Price = cart.Count * cart.Product.Price;
+                ShoppingCartViewModel.OrderHeader.OrderTotal += cart.Price;
             }
-			ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == claim.Value);
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == claim.Value);
 
-			ShoppingCartViewModel.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
-			ShoppingCartViewModel.OrderHeader.OrderStatus = SD.StatusApproved;
+            ShoppingCartViewModel.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
+            ShoppingCartViewModel.OrderHeader.OrderStatus = SD.StatusPending;
 
-
-			_unitOfWork.OrderHeader.Add(ShoppingCartViewModel.OrderHeader);
+            _unitOfWork.OrderHeader.Add(ShoppingCartViewModel.OrderHeader);
             _unitOfWork.Save();
 
             foreach (var cart in ShoppingCartViewModel.CartList)
@@ -120,7 +131,7 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 
             //Stripe settings
 
-            var domain = "https://localhost:44350/";
+            var domain = "https://localhost:44349/";
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>
@@ -147,7 +158,7 @@ namespace ApplicationWeb.Areas.Customer.Controllers
                                 Name = item.Product.Name
                             },
                         },
-                        Quantity = item.Count,
+                        Quantity = 1,
                     };
                     options.LineItems.Add(sessionLineItem);
                 }
@@ -161,25 +172,22 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
-            
-		}
+        }
 
         public IActionResult OrderConfirmation(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault( u => u.Id== id,includeProperties: "ApplicationUser");
-			if(orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
-            {
-				var service = new SessionService();
-				Session session = service.Get(orderHeader.SessionId);
-				if (session.PaymentStatus.ToLower() == "paid")
-				{
-					_unitOfWork.OrderHeader.UpdateStripePaymentID(id, orderHeader.SessionId, session.PaymentIntentId);
-					_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
-					_unitOfWork.Save();
-				}
+
+			var service = new SessionService();
+			Session session = service.Get(orderHeader.SessionId);
+			if (session.PaymentStatus.ToLower() == "paid")
+			{
+				_unitOfWork.OrderHeader.UpdateStripePaymentID(id, orderHeader.SessionId, session.PaymentIntentId);
+				_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+				_unitOfWork.Save();
 			}
 
-            _emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "New Order - Grocery Store","<p>New Order Created</p>");
+            //_emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "New Order - Grocery Store","<p>New Order Created</p>");
 
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
                 .GetAll( u => u.ApplicationUserId == orderHeader.ApplicationUserId ).ToList();

@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<Product>
 
-<div class="row py-3 px-5 col-xl-10 mx-auto ">
+<div class="row py-3 px-5 col-xl-11 mx-auto ">
     @foreach (var product in Model)
     {
-        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-10 rounded">
+        <div class="col-lg-4 col-md-6 col-sm-10 rounded">
             <div class="row p-2">
                 <div class="col-12 pb-1">
                     <div class="card border-0 pb-1">
@@ -16,7 +16,7 @@
                                 <div>
                                     <p class="card-text">
                                         Price: <b>$@product.Price.ToString("0.00")</b>
-                                        for @product.GetProductNameWithPackagingType()
+                                        for @product.GetPackagingTypeWithQuantityUnit()
                                     </p>
                                 </div>
                                 <div>

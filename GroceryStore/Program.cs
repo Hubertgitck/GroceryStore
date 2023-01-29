@@ -25,7 +25,10 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProvid
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = $"/Identity/Account/Login";
@@ -46,8 +49,8 @@ builder.Services.AddAuthentication().AddFacebook(options =>
 });
 
 CultureInfo culture = new CultureInfo("en-US");
-CultureInfo.DefaultThreadCurrentCulture= culture;
-CultureInfo.DefaultThreadCurrentUICulture= culture;
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 var app = builder.Build();
 
@@ -64,7 +67,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
+
 SeedDatabase();
 app.UseAuthentication();
 
@@ -86,3 +91,4 @@ void SeedDatabase()
         dbInitializer.Initialize();
     }
 }
+

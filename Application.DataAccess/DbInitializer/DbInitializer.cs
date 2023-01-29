@@ -26,7 +26,7 @@ namespace Application.DataAccess.DbInitializer
             _roleManager = roleManager;
             _dbContext = applicationDbContext;
         }
-        public async void Initialize()
+        public async Task Initialize()
         {
             try
             {
@@ -39,9 +39,8 @@ namespace Application.DataAccess.DbInitializer
             {
 
             }
-            var checkIfAdminRoleExists = await _roleManager.RoleExistsAsync(SD.Role_Admin);
 
-            if (!checkIfAdminRoleExists)
+            if (!await _roleManager.RoleExistsAsync(SD.Role_Admin))
             {
                 await _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin));
                 await _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee));

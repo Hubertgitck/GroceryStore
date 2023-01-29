@@ -9,10 +9,10 @@ Online Grocery Store project. The inspiration to create came from an idea of a f
 - product management panel that allows adding new products and edditing existing ones [admin and eployeee only]
 
 - payment processing using Stripe, if you want to test the payments, please use below data:<br>
-email: test@test.com
-card number:  4242 4242 4242 4242
-MM / RR : 12/34 ; CVC: 123
-name: test
+email: test@test.com<br>
+card number:  4242 4242 4242 4242<br>
+MM / RR : 12/34 ; CVC: 123<br>
+name: test<br>
 
 - external login using Facebook
 

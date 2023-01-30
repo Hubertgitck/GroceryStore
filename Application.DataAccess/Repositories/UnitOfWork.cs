@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using Application.DataAccess.Data;
 using Application.DataAccess.Repositories.IRepository;
 using Application.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Application.DataAccess.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _dbContext;
+        public readonly ApplicationDbContext _dbContext;
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -35,5 +37,5 @@ namespace Application.DataAccess.Repositories
         {
             _dbContext.SaveChanges();
         }
-    }
+	}
 }

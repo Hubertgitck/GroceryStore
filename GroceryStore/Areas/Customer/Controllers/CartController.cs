@@ -194,7 +194,8 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 			}
 			//Stripe settings
 
-			var domain = _stripeSettings.Domain ;
+			var domain = ShoppingCartViewModel.PaymentDomain;
+            
 			var options = new SessionCreateOptions
 			{
 				PaymentMethodTypes = new List<string>

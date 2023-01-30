@@ -6,5 +6,6 @@ namespace Application.Models.ViewModels
     {
         public IEnumerable<ShoppingCart> CartList { get; set; }
         public OrderHeader OrderHeader { get; set; }
+        public string PaymentDomain { get; set; }
     }
 }

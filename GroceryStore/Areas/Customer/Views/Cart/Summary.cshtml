@@ -2,9 +2,9 @@
 @using Microsoft.Extensions.Options
 @inject IOptions<Application.Utility.StripeSettings> Stripe
 
-
 <form method="post">
 	<br />
+	<input asp-for="PaymentDomain" value="@Stripe.Value.Domain" hidden/>
 	<div class="container">
 		<div class="card p-1 ">
 			<div class="card-header text-bg-dark ms-0">

@@ -28,8 +28,7 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var claim = GetUserClaim();
 
             ShoppingCartViewModel = new ShoppingCartViewModel()
             {
@@ -47,8 +46,7 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 
 		public IActionResult Summary()
 		{
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var claim = GetUserClaim();
 
             ShoppingCartViewModel = new ShoppingCartViewModel()
             {
@@ -80,8 +78,7 @@ namespace ApplicationWeb.Areas.Customer.Controllers
         [ActionName("Summary")]
         public IActionResult SummaryPOST()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var claim = GetUserClaim();
 
             ShoppingCartViewModel.CartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value,
                 includeProperties: "Product");
@@ -231,5 +228,11 @@ namespace ApplicationWeb.Areas.Customer.Controllers
             HttpContext.Session.SetInt32(SD.SessionCart,count);
             return RedirectToAction(nameof(Index));
         }
-    }
+		private Claim GetUserClaim()
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			return claim;
+		}
+	}
 }

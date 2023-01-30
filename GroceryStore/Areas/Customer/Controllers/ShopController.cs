@@ -30,6 +30,7 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 		}
 		public IActionResult Details(int productId)
 		{
+
 			var claim = GetUserClaim();
 
 			ShoppingCart cartFromDb = GetCartByUserClaimAndProductId(claim, productId);

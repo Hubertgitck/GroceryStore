@@ -1,4 +1,5 @@
 ﻿using Application.DataAccess.Repositories.IRepository;
+using Application.Models;
 using Application.Models.ViewModels;
 using Application.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ApplicationWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-	[Authorize(Roles = SD.Role_Admin)]
+	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
 	public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -35,13 +36,16 @@ namespace ApplicationWeb.Areas.Admin.Controllers
                         Text = u.Name,
                         Value = u.Id.ToString(),
                     }),
-                PackagingTypeList = _unitOfWork.PackagingType.GetAll().Select(
-                    u => new SelectListItem
-                    {
-                        Text = u.IsWeightInGrams == true ? u.Name + 
-                            $" {u.Weight *SD.KilogramsToGramsFactor}[g]"  : u.Name + $" {u.Weight}[kg]" ,
-                        Value = u.Id.ToString(),
-                    })
+                PackagingTypeList = _unitOfWork.PackagingType
+                    .GetAll()
+                    .OrderBy(u => u.Weight)
+                    .Select(
+                        u => new SelectListItem
+                        {
+                            Text = u.IsWeightInGrams == true ? u.Name +
+                                $" {u.Weight * SD.KilogramsToGramsFactor}[g]" : u.Name + $" {u.Weight}[kg]",
+                            Value = u.Id.ToString(),
+                        })
             };
 
             if (id == null || id == 0)

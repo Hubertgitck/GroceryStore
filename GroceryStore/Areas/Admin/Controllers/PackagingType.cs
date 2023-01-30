@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace GroceryStoreWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-	[Authorize(Roles = SD.Role_Admin)]
+	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
 	public class PackagingTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -1,4 +1,4 @@
-# GroceryStore <a href="mysite.com">LINK</a>
+# GroceryStore <a href="https://grocerystoreonline.azurewebsites.net/">LINK</a>
 
 Online Grocery Store project. The inspiration to create came from an idea of a friend who someday wants to open such a store. The following has been implemented :
 

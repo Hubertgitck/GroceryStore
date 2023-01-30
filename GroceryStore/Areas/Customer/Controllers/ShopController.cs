@@ -5,7 +5,6 @@ using Application.Models;
 using Application.Models.ViewModels;
 using Application.Utility;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicationWeb.Areas.Customer.Controllers
@@ -32,7 +31,6 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 		[Authorize]
 		public IActionResult Details(int productId)
 		{
-
 			var claim = GetUserClaim();
 
 			ShoppingCart cartFromDb = GetCartByUserClaimAndProductId(claim, productId);

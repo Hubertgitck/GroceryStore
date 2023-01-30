@@ -8,6 +8,7 @@ using Stripe;
 using Application.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Globalization;
+using ApplicationWeb.Areas.Customer.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
+builder.Services.Configure<CartController>(builder.Configuration.GetSection("Stripe"));
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -70,7 +73,7 @@ app.UseRouting();
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
-SeedDatabase();
+await SeedDatabase();
 app.UseAuthentication();
 
 app.UseAuthorization();
@@ -83,7 +86,7 @@ app.MapControllerRoute(
 
 app.Run();
 
-async void SeedDatabase()
+async Task SeedDatabase()
 {
     using (var scope = app.Services.CreateScope())
     {

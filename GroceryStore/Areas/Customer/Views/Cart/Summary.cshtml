@@ -90,7 +90,7 @@
 								<li class="list-group-item d-flex justify-content-between">
 									<div>
 										<h6 class="my-0">@details.Product.Name</h6>
-										<small class="text-muted">Quantity: @details.Product</small>
+										<small class="text-muted">Quantity: @details.Count x @details.Product.GetPackagingTypeWithQuantityUnit()</small>
 									</div>
 									<span class="text-muted">@(details.Price.ToString("c")) </span>
 								</li>
@@ -110,7 +110,7 @@
 							@DateTime.Now.AddDays(3).ToShortDateString() - @DateTime.Now.AddDays(5).ToShortDateString()
 						</p>
 					</div>
-					<div class="col-12 col-md-4">
+					<div class="col-12 col-md-4  my-auto">
 						<button type="submit" value="Place Order" class="btn btn-primary form-control">Place Order</button>
 					</div>
 				</div>

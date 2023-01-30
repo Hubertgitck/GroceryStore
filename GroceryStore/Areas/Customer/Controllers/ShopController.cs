@@ -28,6 +28,8 @@ namespace ApplicationWeb.Areas.Customer.Controllers
 				
 			return View(productsList);
 		}
+
+		[Authorize]
 		public IActionResult Details(int productId)
 		{
 

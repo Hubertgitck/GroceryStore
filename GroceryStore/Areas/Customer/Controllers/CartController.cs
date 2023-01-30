@@ -17,18 +17,15 @@ namespace ApplicationWeb.Areas.Customer.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
-		private readonly StripeSettings _stripeSettings;
 
 		[BindProperty]
         public ShoppingCartViewModel ShoppingCartViewModel { get; set; }
         public int OrderTotal { get; set; }
 
-        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender,
-            IOptions<StripeSettings> stripeSettings)
+        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
         {
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
-			_stripeSettings = stripeSettings.Value;
         }
 
         public IActionResult Index()

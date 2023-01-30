@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<Product>
 
+@{
+    ViewData["Title"] = "Shop";
+}
 <div class="row py-3 px-5 col-xl-11 mx-auto ">
     @foreach (var product in Model)
     {

@@ -51,4 +51,8 @@
         height: 150px;
     }
 }
-
+@media (max-width: 334px) {
+    .navbar-brand{
+        font-size: 14px !important;
+    }
+}

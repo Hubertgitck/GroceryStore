@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Application.Utility\Application.Utility.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Using Include="System.ComponentModel.DataAnnotations"/>
+	</ItemGroup>
+
 </Project>

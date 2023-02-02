@@ -1,11 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Security.Claims;
-using Application.DataAccess.Repositories.IRepository;
-using Application.Models;
-using Application.Models.ViewModels;
-using Application.Utility;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicationWeb.Areas.Customer.Controllers;
 

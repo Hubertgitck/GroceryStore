@@ -1,7 +1,4 @@
-﻿using Application.DataAccess.Data;
-using Application.DataAccess.Repositories.IRepository;
-
-namespace Application.DataAccess.Repositories;
+﻿namespace Application.DataAccess.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {

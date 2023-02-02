@@ -1,9 +1,4 @@
-﻿using Application.DataAccess.Repositories.IRepository;
-using Application.Models.ViewModels;
-using Application.Utility;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ApplicationWeb.Areas.Admin.Controllers;
 

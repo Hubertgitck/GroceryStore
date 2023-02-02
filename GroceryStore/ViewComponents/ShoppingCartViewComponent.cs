@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Application.DataAccess.Repositories.IRepository;
-using Application.Utility;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicationWeb.ViewComponents;

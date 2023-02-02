@@ -36,10 +36,10 @@
         <div class="p-2">
             <ul class="list-group list-group-horizontal-sm">
                 <a style="text-decoration:none" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">
-                <li class="list-group-item @inprocess">In Process</li>
+                    <li class="list-group-item @inprocess">In Process</li>
                 </a>
                 <a style="text-decoration:none" asp-controller="Order" asp-action="Index" asp-route-status="pending">
-                <li class="list-group-item @pending">Payment Pending</li>
+                    <li class="list-group-item @pending">Payment Pending</li>
                 </a>
                 <a style="text-decoration:none" asp-controller="Order" asp-action="Index" asp-route-status="completed">
                     <li class="list-group-item @completed">Completed</li>
@@ -55,8 +55,7 @@
     </div>
 
     <div class=" table-responsive col-11 mx-auto">
-            <table id="tblData" class="table table-bordered table-
-d" style="width:100%">
+            <table id="tblData" class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
                 <th>ID</th>

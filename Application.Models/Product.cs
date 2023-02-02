@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Application.Utility;
+﻿using Application.Utility;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Application.Models;

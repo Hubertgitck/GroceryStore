@@ -1,10 +1,4 @@
-﻿using Application.DataAccess.Repositories.IRepository;
-using Application.Models;
-using Application.Utility;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace ApplicationWeb.Areas.Admin.Controllers;
+﻿namespace ApplicationWeb.Areas.Admin.Controllers;
 
 [Area("Admin")]
 [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]

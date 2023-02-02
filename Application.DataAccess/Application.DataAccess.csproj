@@ -21,4 +21,10 @@
     <ProjectReference Include="..\Application.Utility\Application.Utility.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Using Include="Application.DataAccess.Data"/>
+		<Using Include="Application.DataAccess.Repositories.IRepository"/>
+		<Using Include="Application.Models"/>
+	</ItemGroup>
+
 </Project>

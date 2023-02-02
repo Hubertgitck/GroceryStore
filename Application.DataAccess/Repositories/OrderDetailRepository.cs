@@ -1,8 +1,4 @@
-﻿using Application.DataAccess.Data;
-using Application.DataAccess.Repositories.IRepository;
-using Application.Models;
-
-namespace Application.DataAccess.Repositories;
+﻿namespace Application.DataAccess.Repositories;
 
 public class OrderDetailRepository : Repository<OrderDetail>, IOrderDetailRepository
 {

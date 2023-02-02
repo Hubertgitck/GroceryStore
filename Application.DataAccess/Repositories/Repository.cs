@@ -1,6 +1,4 @@
 ﻿using System.Linq.Expressions;
-using Application.DataAccess.Data;
-using Application.DataAccess.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.DataAccess.Repositories;

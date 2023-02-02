@@ -7,43 +7,43 @@ using Application.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApplicationWeb.Areas.Customer.Controllers
+namespace ApplicationWeb.Areas.Customer.Controllers;
+
+[Area("Customer")]
+public class ShopController : Controller
 {
-	[Area("Customer")]
-	public class ShopController : Controller
+	private readonly ILogger<ShopController> _logger;
+	private readonly IUnitOfWork _unitOfWork;
+
+	public ShopController(ILogger<ShopController> logger, IUnitOfWork unitOfWork)
 	{
-		private readonly ILogger<ShopController> _logger;
-		private readonly IUnitOfWork _unitOfWork;
+		_logger = logger;
+		_unitOfWork = unitOfWork;
+	}
 
-		public ShopController(ILogger<ShopController> logger, IUnitOfWork unitOfWork)
-		{
-			_logger = logger;
-			_unitOfWork = unitOfWork;
-		}
-
-		public IActionResult Index()
-		{
+	public IActionResult Index()
+	{
             var productsList = _unitOfWork.Product.GetAll(includeProperties: "Category,PackagingType");
-				
-			return View(productsList);
-		}
+			
+		return View(productsList);
+	}
 
-		[Authorize]
-		public IActionResult Details(int productId)
-		{
-			var claim = GetUserClaim();
+	[Authorize]
+	public IActionResult Details(int productId)
+	{
+		var claim = GetUserClaim();
 
-			ShoppingCart cartFromDb = GetCartByUserClaimAndProductId(claim, productId);
+		ShoppingCart cartFromDb = GetCartByUserClaimAndProductId(claim, productId);
 
-			Product product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == productId, includeProperties: "Category,PackagingType");
+		Product product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == productId, includeProperties: "Category,PackagingType");
 
             if (cartFromDb != null)
-			{
-				cartFromDb.Product = product;
+		{
+			cartFromDb.Product = product;
                 return View(cartFromDb);
-			}
-			else
-			{
+		}
+		else
+		{
                 ShoppingCart cartObj = new()
                 {
                     Count = 1,
@@ -52,47 +52,47 @@ namespace ApplicationWeb.Areas.Customer.Controllers
                 };
                 return View(cartObj);
             }	
-		}
+	}
 
-        [HttpPost]
-		[ValidateAntiForgeryToken]
-		[Authorize]
-		public IActionResult Details(ShoppingCart shoppingCart)
-		{
+    [HttpPost]
+	[ValidateAntiForgeryToken]
+	[Authorize]
+	public IActionResult Details(ShoppingCart shoppingCart)
+	{
             var claim = GetUserClaim();
             shoppingCart.ApplicationUserId = claim.Value;
 
-			ShoppingCart cartFromDb = GetCartByUserClaimAndProductId(claim, shoppingCart.ProductId);
+		ShoppingCart cartFromDb = GetCartByUserClaimAndProductId(claim, shoppingCart.ProductId);
 
-			if (cartFromDb == null)
-			{
-				_unitOfWork.ShoppingCart.Add(shoppingCart);
-				_unitOfWork.Save();
-				TempData["success"] = "Product added to cart succesfully";
+		if (cartFromDb == null)
+		{
+			_unitOfWork.ShoppingCart.Add(shoppingCart);
+			_unitOfWork.Save();
+			TempData["success"] = "Product added to cart succesfully";
                 HttpContext.Session.SetInt32(SD.SessionCart,
-					_unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).ToList().Count());
-			}
-			else
-			{
-				cartFromDb.Count = shoppingCart.Count;
+				_unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).ToList().Count());
+		}
+		else
+		{
+			cartFromDb.Count = shoppingCart.Count;
                 TempData["success"] = "Shopping Cart updated succesfully";
                 _unitOfWork.ShoppingCart.Update(cartFromDb);
-				_unitOfWork.Save();
-			}
-
-			return RedirectToAction(nameof(Index));
+			_unitOfWork.Save();
 		}
 
-		public IActionResult Privacy()
-		{
-			return View();
-		}
+		return RedirectToAction(nameof(Index));
+	}
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
+	public IActionResult Privacy()
+	{
+		return View();
+	}
+
+	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+	public IActionResult Error()
+	{
+		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+	}
 
         private Claim GetUserClaim()
         {
@@ -108,4 +108,3 @@ namespace ApplicationWeb.Areas.Customer.Controllers
                 u => u.ApplicationUserId == claim.Value && u.ProductId == productId);
         }
     }
-}

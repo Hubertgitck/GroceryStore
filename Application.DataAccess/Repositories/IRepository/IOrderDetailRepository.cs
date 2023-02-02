@@ -1,9 +1,8 @@
 ﻿using Application.Models;
 
-namespace Application.DataAccess.Repositories.IRepository
+namespace Application.DataAccess.Repositories.IRepository;
+
+public interface IOrderDetailRepository : IRepository<OrderDetail>
 {
-    public interface IOrderDetailRepository : IRepository<OrderDetail>
-    {
-        void Update(OrderDetail obj);
-    }
+    void Update(OrderDetail obj);
 }

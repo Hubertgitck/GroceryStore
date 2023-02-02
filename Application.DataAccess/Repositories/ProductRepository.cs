@@ -1,39 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.DataAccess.Data;
+﻿using Application.DataAccess.Data;
 using Application.DataAccess.Repositories.IRepository;
 using Application.Models;
 
-namespace Application.DataAccess.Repositories
+namespace Application.DataAccess.Repositories;
+
+public class ProductRepository : Repository<Product>, IProductRepository
 {
-    public class ProductRepository : Repository<Product>, IProductRepository
+    private readonly ApplicationDbContext _dbContext;
+    public ProductRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
-        private readonly ApplicationDbContext _dbContext;
-        public ProductRepository(ApplicationDbContext dbContext) : base(dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        _dbContext = dbContext;
+    }
 
-        public void Update(Product obj)
+    public void Update(Product obj)
+    {
+        var objFromDb = _dbContext.Products.FirstOrDefault(p => p.Id == obj.Id);
+        if (objFromDb != null)
         {
-            var objFromDb = _dbContext.Products.FirstOrDefault(p => p.Id == obj.Id);
-            if (objFromDb != null)
+            objFromDb.Name = obj.Name;
+            objFromDb.Price = obj.Price;
+            objFromDb.Description = obj.Description;
+            objFromDb.CategoryId = obj.CategoryId;
+            objFromDb.PackagingTypeId = obj.PackagingTypeId;
+
+            if (obj.ImageUrl != null)
             {
-                objFromDb.Name = obj.Name;
-                objFromDb.Price = obj.Price;
-                objFromDb.Description = obj.Description;
-                objFromDb.CategoryId = obj.CategoryId;
-                objFromDb.PackagingTypeId = obj.PackagingTypeId;
-
-                if (obj.ImageUrl != null)
-                {
-                    objFromDb.ImageUrl = obj.ImageUrl;
-                }
+                objFromDb.ImageUrl = obj.ImageUrl;
             }
-
         }
+
     }
 }

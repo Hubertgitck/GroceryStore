@@ -1,9 +1,8 @@
 ﻿using Application.Models;
 
-namespace Application.DataAccess.Repositories.IRepository
+namespace Application.DataAccess.Repositories.IRepository;
+
+public interface IProductRepository : IRepository<Product>
 {
-    public interface IProductRepository : IRepository<Product>
-    {
-        void Update(Product obj);
-    }
+    void Update(Product obj);
 }

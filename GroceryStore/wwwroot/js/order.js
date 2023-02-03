@@ -30,6 +30,9 @@ function loadDataTable(status) {
         "ajax": {
             "url": "/Admin/Order/GetAll?status=" + status
         },
+        "language": {
+            "emptyTable": "You did not order anything yet!"
+        },
         "columns": [
             { "data": "id" , "width": "15%"},
             { "data": "name" , "width": "15%"},
@@ -49,6 +52,6 @@ function loadDataTable(status) {
                 },
                 "width": "15%"
             },
-            ]
-        });
+        ]
+    });
 }

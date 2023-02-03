@@ -143,7 +143,7 @@ public class OrderController : Controller
 		if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
 		{
                 orderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
-            }
+        }
 		else
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -152,7 +152,7 @@ public class OrderController : Controller
 				u => u.ApplicationUserId == claim.Value,includeProperties: "ApplicationUser"
 				);
 
-            }
+        }
 
             orderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
 

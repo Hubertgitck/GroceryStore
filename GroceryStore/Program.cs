@@ -1,11 +1,9 @@
 using Application.DataAccess.DbInitializer;
-using Application.DataAccess.Repositories.IRepository;
 using Application.DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Application.DataAccess.Data;
 using Stripe;
-using Application.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Globalization;
 

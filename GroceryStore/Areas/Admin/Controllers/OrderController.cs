@@ -149,27 +149,23 @@ public class OrderController : Controller
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 orderHeaders = _unitOfWork.OrderHeader.GetAll(
-				u => u.ApplicationUserId == claim.Value,includeProperties: "ApplicationUser"
-				);
-
+				u => u.ApplicationUserId == claim.Value,includeProperties: "ApplicationUser");
         }
-
-            orderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
 
 		switch (status)
 		{
 			case "inprocess":
                     orderHeaders = orderHeaders.Where(u => u.OrderStatus == SD.StatusInProcess);
                     break;
-                case "completed":
+            case "completed":
                     orderHeaders = orderHeaders.Where(u => u.OrderStatus == SD.StatusShipped);
                     break;             
 			case "approved":
                     orderHeaders = orderHeaders.Where(u => u.OrderStatus == SD.StatusApproved);
                     break;
-                default:
+            default:
                     break;
-            }
+        }
 
 		return Json(new { data = orderHeaders });
 	}

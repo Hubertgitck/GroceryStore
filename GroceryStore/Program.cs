@@ -44,8 +44,8 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddAuthentication().AddFacebook(options =>
 {
-    options.AppId = "486030693704999";
-    options.AppSecret = "0b1bca47860390ae68bc9fc2aa0f12fd";
+    options.AppId = builder.Configuration.GetSection("FacebookAuth:AppId").Get<string>();
+    options.AppSecret = builder.Configuration.GetSection("FacebookAuth:AppSecret").Get<string>();
 });
 
 CultureInfo culture = new CultureInfo("en-US");

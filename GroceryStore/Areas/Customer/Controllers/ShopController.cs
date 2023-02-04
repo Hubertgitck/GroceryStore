@@ -16,11 +16,24 @@ public class ShopController : Controller
 
 	public IActionResult Index(string category)
 	{
+		IEnumerable<Product> productsList;
+
+        if (string.IsNullOrEmpty(category))
+        {
+			productsList = _unitOfWork.Product.GetAll(includeProperties: "Category,PackagingType")
+				.OrderBy(u => u.Category.DisplayOrder);
+		}
+		else
+		{
+            productsList = _unitOfWork.Product.GetAll(u => u.Category.Name == category,
+               includeProperties: "Category,PackagingType")
+				.OrderBy(u => u.Category.DisplayOrder);
+        }
+
         ShopIndexViewModel shopIndexViewModel = new()
         {
-			ProductsList = _unitOfWork.Product.GetAll(u => u.Category.Name == category ,
-			   includeProperties: "Category,PackagingType"),
-			CategoryList = _unitOfWork.Category.GetAll()
+			ProductsList = productsList,
+            CategoryList = _unitOfWork.Category.GetAll()
 		};
 
     return View(shopIndexViewModel);

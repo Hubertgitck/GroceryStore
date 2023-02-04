@@ -14,13 +14,18 @@ public class ShopController : Controller
 		_unitOfWork = unitOfWork;
 	}
 
-	public IActionResult Index()
+	public IActionResult Index(string category)
 	{
-            var productsList = _unitOfWork.Product.GetAll(includeProperties: "Category,PackagingType");
-			
-		return View(productsList);
-	}
+        ShopIndexViewModel shopIndexViewModel = new()
+        {
+			ProductsList = _unitOfWork.Product.GetAll(u => u.Category.Name == category ,
+			   includeProperties: "Category,PackagingType"),
+			CategoryList = _unitOfWork.Category.GetAll()
+		};
 
+    return View(shopIndexViewModel);
+    } 
+	
 	[Authorize]
 	public IActionResult Details(int productId)
 	{
@@ -30,21 +35,21 @@ public class ShopController : Controller
 
 		Product product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == productId, includeProperties: "Category,PackagingType");
 
-            if (cartFromDb != null)
+        if (cartFromDb != null)
 		{
 			cartFromDb.Product = product;
-                return View(cartFromDb);
+            return View(cartFromDb);
 		}
 		else
 		{
-                ShoppingCart cartObj = new()
-                {
-                    Count = 1,
-                    ProductId = productId,
-                    Product = product
-                };
-                return View(cartObj);
-            }	
+            ShoppingCart cartObj = new()
+            {
+                Count = 1,
+                ProductId = productId,
+                Product = product
+            };
+            return View(cartObj);
+        }	
 	}
 
     [HttpPost]
@@ -52,8 +57,8 @@ public class ShopController : Controller
 	[Authorize]
 	public IActionResult Details(ShoppingCart shoppingCart)
 	{
-            var claim = GetUserClaim();
-            shoppingCart.ApplicationUserId = claim.Value;
+        var claim = GetUserClaim();
+        shoppingCart.ApplicationUserId = claim.Value;
 
 		ShoppingCart cartFromDb = GetCartByUserClaimAndProductId(claim, shoppingCart.ProductId);
 
@@ -62,14 +67,14 @@ public class ShopController : Controller
 			_unitOfWork.ShoppingCart.Add(shoppingCart);
 			_unitOfWork.Save();
 			TempData["success"] = "Product added to cart succesfully";
-                HttpContext.Session.SetInt32(SD.SessionCart,
+            HttpContext.Session.SetInt32(SD.SessionCart,
 				_unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).ToList().Count());
 		}
 		else
 		{
 			cartFromDb.Count = shoppingCart.Count;
-                TempData["success"] = "Shopping Cart updated succesfully";
-                _unitOfWork.ShoppingCart.Update(cartFromDb);
+            TempData["success"] = "Shopping Cart updated succesfully";
+            _unitOfWork.ShoppingCart.Update(cartFromDb);
 			_unitOfWork.Save();
 		}
 

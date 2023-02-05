@@ -5,7 +5,8 @@ using Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Infrastructure;
+using FluentAssertions;
+using System.Collections.Generic;
 
 namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
@@ -36,7 +37,7 @@ public class CategoryControllerTests
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsAssignableFrom<IEnumerable<Category>>(viewResult.Model);
-        Assert.Equal(categoryList, model);
+        categoryList.Should().BeEquivalentTo(model);
     }
 
     [Fact]
@@ -47,9 +48,10 @@ public class CategoryControllerTests
 
         // Act
         var result = controller.Create();
+        var viewResult = (ViewResult)result;
 
         // Assert
-        Assert.IsType<ViewResult>(result);
+        viewResult.Should().BeOfType(typeof(ViewResult));
     }
 
     [Fact]
@@ -88,8 +90,8 @@ public class CategoryControllerTests
         var tempDataValue = Assert.IsType<string>(controller.TempData["success"]);
         var redirectResult = Assert.IsType<RedirectToActionResult>(result);
 
-        Assert.Equal("Category created succesfully", tempDataValue);
-        Assert.Equal("Index", redirectResult.ActionName);
+        tempDataValue.Should().Be("Category created succesfully");
+        redirectResult.ActionName.Should().Be("Index");
     }
 
     [Fact]
@@ -109,7 +111,7 @@ public class CategoryControllerTests
         _unitOfWorkMock.Verify(u => u.Save(), Times.Never());
 
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Same(category, viewResult.Model);
+        viewResult.Model.Should().Be(category);
     }
 
     private IEnumerable<Category> GetCategoryTestList()

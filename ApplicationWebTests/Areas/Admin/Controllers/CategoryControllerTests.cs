@@ -48,9 +48,9 @@ public class CategoryControllerTests
 
         // Act
         var result = controller.Create();
-        var viewResult = (ViewResult)result;
 
         // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
         viewResult.Should().BeOfType(typeof(ViewResult));
     }
 
@@ -58,12 +58,12 @@ public class CategoryControllerTests
     public void Create_WithValidCategory_AddsCategoryToUnitOfWork()
     {
         // Arrange
-        _unitOfWorkMock.Setup(u => u.Category.Add(It.IsAny<Category>()));
+        var category = GetTestCategory();
+        _unitOfWorkMock.Setup(u => u.Category.Add(category));
         _unitOfWorkMock.Setup(u => u.Save());
 
         var controller = new CategoryController(_unitOfWorkMock.Object);
         controller.TempData = _tempData;
-        var category = GetTestCategory();
 
         // Act
         var result = controller.Create(category);
@@ -77,11 +77,11 @@ public class CategoryControllerTests
     public void Create_WithValidCategory_RedirectsToIndex()
     {
         // Arrange
-        _unitOfWorkMock.Setup(u => u.Category.Add(It.IsAny<Category>()));
+        var category = GetTestCategory();
+        _unitOfWorkMock.Setup(u => u.Category.Add(category));
         _unitOfWorkMock.Setup(u => u.Save());
         var controller = new CategoryController(_unitOfWorkMock.Object);
         controller.TempData = _tempData;
-        var category = GetTestCategory();
 
         // Act
         var result = controller.Create(category);
@@ -98,9 +98,10 @@ public class CategoryControllerTests
     public void Create_WithInvalidCategory_ReturnsViewResultWithSameCategory()
     {
         // Arrange
-        var controller = new CategoryController(_unitOfWorkMock.Object);
-        controller.ModelState.AddModelError("Name", "Required");
         var category = new Category();
+        var controller = new CategoryController(_unitOfWorkMock.Object);
+
+        controller.ModelState.AddModelError("Name", "Required");
         controller.TempData = _tempData;
 
         // Act

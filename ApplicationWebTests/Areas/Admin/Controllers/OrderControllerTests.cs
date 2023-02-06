@@ -1,11 +1,15 @@
-﻿using Application.Models.ViewModels;
+﻿using System.Linq.Expressions;
+using Application.Models;
+using Application.Models.ViewModels;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
 public class OrderControllerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+
     [Fact]
     public void Index_ReturnsViewResult()
     {
@@ -20,17 +24,30 @@ public class OrderControllerTests
         viewResult.Should().BeOfType<ViewResult>();
     }
 
-/*    [Theory]
-    [InlineData(1)]
-    public IActionResult Details(int orderId)
+    [Fact]
+    public void Details_ReturnsViewResult_WithCorrectOrderViewModel()
     {
-        _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault();
-        OrderViewModel = new OrderViewModel()
-        {
-            OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId, includeProperties: "ApplicationUser"),
-            OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includeProperties: "Product", thenIncludeProperty: "PackagingType"),
-        };
+        // Arrange
+        var orderId = 1;
+        var orderHeader = new OrderHeader();
+        var orderDetail = new List<OrderDetail>();
+        _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), true))
+            .Returns(orderHeader);
+        _unitOfWorkMock.Setup(u => u.OrderDetail.GetAll(It.IsAny<Expression<Func<OrderDetail, bool>>>(), It.IsAny<string>(), It.IsAny<string>()))
+            .Returns(orderDetail);
 
-        return View(OrderViewModel);
-    }*/
+        var controller = new OrderController(_unitOfWorkMock.Object);
+        // Act
+        var result = controller.Details(orderId);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+
+        viewResult.Model.Should().BeOfType<OrderViewModel>();
+        var model = viewResult.Model as OrderViewModel;
+
+        model.OrderHeader.Should().Be(orderHeader);
+        model.OrderDetail.Should().BeEquivalentTo(orderDetail);
+    }
 }

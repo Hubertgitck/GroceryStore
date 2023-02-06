@@ -1,12 +1,8 @@
-﻿using Xunit;
-using Application.DataAccess.Repositories.IRepository;
-using Moq;
-using Application.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Application.Models;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Http;
 using FluentAssertions;
-using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
@@ -28,16 +24,19 @@ public class CategoryControllerTests
     {
         // Arrange
         var categoryList = GetCategoryTestList();
-        _unitOfWorkMock.Setup(u => u.Category.GetAll(default,default,default)).Returns(categoryList);
+        _unitOfWorkMock.Setup(u => u.Category.GetAll(It.IsAny<Expression<Func<Category, bool>>>(), It.IsAny<string>(), It.IsAny<string>()))
+            .Returns(categoryList);
         var controller = new CategoryController(_unitOfWorkMock.Object);
 
         // Act
         var result = controller.Index();
 
         // Assert
-        var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsAssignableFrom<IEnumerable<Category>>(viewResult.Model);
-        categoryList.Should().BeEquivalentTo(model);
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+
+        viewResult.Model.Should().BeAssignableTo<IEnumerable<Category>>();
+        viewResult.Model.Should().BeEquivalentTo(categoryList);
     }
 
     [Fact]
@@ -50,7 +49,7 @@ public class CategoryControllerTests
         var result = controller.Create();
 
         // Assert
-        var viewResult = Assert.IsType<ViewResult>(result);
+        var viewResult = result as ViewResult;
         viewResult.Should().BeOfType(typeof(ViewResult));
     }
 
@@ -87,8 +86,8 @@ public class CategoryControllerTests
         var result = controller.Create(category);
 
         // Assert
-        var tempDataValue = Assert.IsType<string>(controller.TempData["success"]);
-        var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+        var tempDataValue = controller.TempData["success"] as string;
+        var redirectResult = result as RedirectToActionResult;
 
         tempDataValue.Should().Be("Category created succesfully");
         redirectResult.ActionName.Should().Be("Index");
@@ -111,7 +110,7 @@ public class CategoryControllerTests
         _unitOfWorkMock.Verify(u => u.Category.Add(It.IsAny<Category>()), Times.Never());
         _unitOfWorkMock.Verify(u => u.Save(), Times.Never());
 
-        var viewResult = Assert.IsType<ViewResult>(result);
+        var viewResult = result as ViewResult;
         viewResult.Model.Should().Be(category);
     }
 

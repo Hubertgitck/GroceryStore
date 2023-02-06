@@ -22,11 +22,13 @@ public class OrderController : Controller
 	}		
 	public IActionResult Details(int orderId)
 	{
-		OrderViewModel = new OrderViewModel()
+		var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId, includeProperties: "ApplicationUser");
+		var orderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includeProperties: "Product", thenIncludeProperty: "PackagingType");
+        OrderViewModel = new OrderViewModel()
 		{
-			OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId, includeProperties: "ApplicationUser"),
-			OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includeProperties: "Product", thenIncludeProperty: "PackagingType"),
-		};
+			OrderHeader = orderHeader,
+			OrderDetail = orderDetail
+        };
 
 		return View(OrderViewModel);
 	}

@@ -8,16 +8,16 @@ namespace ApplicationWeb.Areas.Admin.Controllers;
 public class OrderController : Controller
 {
 	private readonly IUnitOfWork _unitOfWork;
-    private readonly StripeSessionProvider _stripeSession;
+    private readonly StripeServiceProvider _stripeServices;
 
 
     [BindProperty]
 	public OrderViewModel? OrderViewModel { get; set; }
 
-	public OrderController(IUnitOfWork unitOfWork, StripeSessionProvider stripeSessionProvider)
+	public OrderController(IUnitOfWork unitOfWork, StripeServiceProvider stripeServices)
 	{
 		_unitOfWork = unitOfWork;
-        _stripeSession = stripeSessionProvider;
+        _stripeServices = stripeServices;
     }
 
 	public IActionResult Index()
@@ -39,7 +39,7 @@ public class OrderController : Controller
 	{
 		OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderHeaderId);
 
-		Session session = _stripeSession.GetStripeSession(orderHeader.SessionId);
+		Session session = _stripeServices.GetStripeSession(orderHeader.SessionId);
 
 		if (session.PaymentStatus.ToLower() == "paid")
 		{
@@ -112,21 +112,14 @@ public class OrderController : Controller
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
-	public IActionResult CancelOrder()
+	public IActionResult CancelOrder(OrderViewModel orderViewModel)
 	{
 		var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(
-			u => u.Id == OrderViewModel.OrderHeader.Id, tracked: false);
+			u => u.Id == orderViewModel.OrderHeader.Id, tracked: false);
 
 		if (orderHeader.PaymentStatus == SD.PaymentStatusApproved)
 		{
-			var options = new RefundCreateOptions
-			{
-				Reason = RefundReasons.RequestedByCustomer,
-				PaymentIntent = orderHeader.PaymentIntendId
-			};
-
-			var service = new RefundService();
-			Refund refund = service.Create(options);
+			_stripeServices.GetRefundService(orderHeader.PaymentIntendId!);
 			_unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled, SD.StatusRefunded);
 		}
 		else
@@ -136,7 +129,7 @@ public class OrderController : Controller
 		_unitOfWork.Save();
 
 		TempData["Success"] = "Order Cancelled Successfully";
-		return RedirectToAction("Details", "Order", new { orderId = OrderViewModel.OrderHeader.Id });
+		return RedirectToAction("Details", "Order", new { orderId = orderViewModel.OrderHeader.Id });
 	}
 
 	#region API CALLS

@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Http;
-using System.Linq.Expressions;
-
-namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
+﻿namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
 public class CategoryControllerTests
 {
@@ -33,7 +29,7 @@ public class CategoryControllerTests
         result.Should().BeOfType<ViewResult>();
         var viewResult = result as ViewResult;
 
-        viewResult.Model.Should().BeAssignableTo<IEnumerable<Category>>();
+        viewResult!.Model.Should().BeAssignableTo<IEnumerable<Category>>();
         viewResult.Model.Should().BeEquivalentTo(categoryList);
     }
 
@@ -52,13 +48,12 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public void Create_WithValidCategory_AddsCategoryToUnitOfWork()
+    public void Create_WithValidCategory_AddsCategoryToUnitOfWorkAndRedirectsToIndex()
     {
         // Arrange
         var category = GetTestCategory();
         _unitOfWorkMock.Setup(u => u.Category.Add(category));
         _unitOfWorkMock.Setup(u => u.Save());
-
         var controller = new CategoryController(_unitOfWorkMock.Object);
         controller.TempData = _tempData;
 
@@ -68,27 +63,12 @@ public class CategoryControllerTests
         // Assert
         _unitOfWorkMock.Verify(u => u.Category.Add(category), Times.Once());
         _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
-    }
 
-    [Fact]
-    public void Create_WithValidCategory_RedirectsToIndex()
-    {
-        // Arrange
-        var category = GetTestCategory();
-        _unitOfWorkMock.Setup(u => u.Category.Add(category));
-        _unitOfWorkMock.Setup(u => u.Save());
-        var controller = new CategoryController(_unitOfWorkMock.Object);
-        controller.TempData = _tempData;
-
-        // Act
-        var result = controller.Create(category);
-
-        // Assert
         var tempDataValue = controller.TempData["success"] as string;
         var redirectResult = result as RedirectToActionResult;
 
         tempDataValue.Should().Be("Category created succesfully");
-        redirectResult.ActionName.Should().Be("Index");
+        redirectResult!.ActionName.Should().Be("Index");
     }
 
     [Fact]
@@ -109,7 +89,7 @@ public class CategoryControllerTests
         _unitOfWorkMock.Verify(u => u.Save(), Times.Never());
 
         var viewResult = result as ViewResult;
-        viewResult.Model.Should().Be(category);
+        viewResult!.Model.Should().Be(category);
     }
 
     private IEnumerable<Category> GetCategoryTestList()

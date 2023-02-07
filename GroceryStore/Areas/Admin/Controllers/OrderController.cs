@@ -10,6 +10,7 @@ public class OrderController : Controller
 	private readonly IUnitOfWork _unitOfWork;
     private readonly StripeSessionProvider _stripeSession;
 
+
     [BindProperty]
 	public OrderViewModel? OrderViewModel { get; set; }
 
@@ -53,58 +54,59 @@ public class OrderController : Controller
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
-	public IActionResult UpdateOrderDetail()
+	public IActionResult UpdateOrderDetail(OrderViewModel orderViewModel)
 	{
-		var orderHEaderFromDb = _unitOfWork.OrderHeader.GetFirstOrDefault(
-			u => u.Id == OrderViewModel.OrderHeader.Id, tracked: false);
-		orderHEaderFromDb.Name = OrderViewModel.OrderHeader.Name;
-		orderHEaderFromDb.PhoneNumber = OrderViewModel.OrderHeader.PhoneNumber;
-		orderHEaderFromDb.StreetAddress = OrderViewModel.OrderHeader.StreetAddress;
-		orderHEaderFromDb.City = OrderViewModel.OrderHeader.City;
-		orderHEaderFromDb.State = OrderViewModel.OrderHeader.State;
-		orderHEaderFromDb.PostalCode = OrderViewModel.OrderHeader.PostalCode;
-		if (OrderViewModel.OrderHeader.Carrier != null)
+		var orderHeaderFromDb = _unitOfWork.OrderHeader.GetFirstOrDefault(
+			u => u.Id == orderViewModel.OrderHeader.Id, tracked: false);
+        orderHeaderFromDb.Name = orderViewModel.OrderHeader.Name;
+        orderHeaderFromDb.PhoneNumber = orderViewModel.OrderHeader.PhoneNumber;
+        orderHeaderFromDb.StreetAddress = orderViewModel.OrderHeader.StreetAddress;
+        orderHeaderFromDb.City = orderViewModel.OrderHeader.City;
+        orderHeaderFromDb.State = orderViewModel.OrderHeader.State;
+        orderHeaderFromDb.PostalCode = orderViewModel.OrderHeader.PostalCode;
+		if (orderViewModel.OrderHeader.Carrier != null)
 		{
-			orderHEaderFromDb.Carrier = OrderViewModel.OrderHeader.Carrier;
+            orderHeaderFromDb.Carrier = orderViewModel.OrderHeader.Carrier;
 		}
-		if (OrderViewModel.OrderHeader.TrackingNumber != null)
+		if (orderViewModel.OrderHeader.TrackingNumber != null)
 		{
-			orderHEaderFromDb.TrackingNumber = OrderViewModel.OrderHeader.TrackingNumber;
+            orderHeaderFromDb.TrackingNumber = orderViewModel.OrderHeader.TrackingNumber;
 		}
-		_unitOfWork.OrderHeader.Update(orderHEaderFromDb);
+		_unitOfWork.OrderHeader.Update(orderHeaderFromDb);
 		_unitOfWork.Save();
-		TempData["Success"] = "Order Details Updated Successfully.";
-		return RedirectToAction("Details", "Order", new { orderId = orderHEaderFromDb.Id });
+		TempData["Success"] = "Order Details Updated Successfully";
+		return RedirectToAction("Details", "Order", new { orderId = orderHeaderFromDb.Id });
 	}		
+
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
-	public IActionResult StartProcessing()
+	public IActionResult StartProcessing(OrderViewModel orderViewModel)
 	{
-		var id = OrderViewModel.OrderHeader.Id;
+		var id = orderViewModel.OrderHeader.Id;
 
 		_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusInProcess);
 		_unitOfWork.Save();
-		TempData["Success"] = "Order Details Updated Successfully.";
+		TempData["Success"] = "Order processing started";
 		return RedirectToAction("Details", "Order", new { orderId = id });
 	}		
 	
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
-	public IActionResult ShipOrder()
+	public IActionResult ShipOrder(OrderViewModel orderViewModel)
 	{
 		var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(
-			u => u.Id == OrderViewModel.OrderHeader.Id, tracked: false);
-		orderHeader.TrackingNumber = OrderViewModel.OrderHeader.TrackingNumber;
-		orderHeader.Carrier = OrderViewModel.OrderHeader.Carrier;
+			u => u.Id == orderViewModel.OrderHeader.Id, tracked: false);
+		orderHeader.TrackingNumber = orderViewModel.OrderHeader.TrackingNumber;
+		orderHeader.Carrier = orderViewModel.OrderHeader.Carrier;
 		orderHeader.OrderStatus = SD.StatusShipped;
 		orderHeader.ShippingDate = DateTime.Now;
 
 		_unitOfWork.OrderHeader.Update(orderHeader);
 		_unitOfWork.Save();
-		TempData["Success"] = "Order Shipped Successfully.";
-		return RedirectToAction("Details", "Order", new { orderId = OrderViewModel.OrderHeader.Id });
+		TempData["Success"] = "Order Shipped Successfully";
+		return RedirectToAction("Details", "Order", new { orderId = orderViewModel.OrderHeader.Id });
 	}		
 
 	[HttpPost]
@@ -133,7 +135,7 @@ public class OrderController : Controller
 		}
 		_unitOfWork.Save();
 
-		TempData["Success"] = "Order Cancelled Successfully.";
+		TempData["Success"] = "Order Cancelled Successfully";
 		return RedirectToAction("Details", "Order", new { orderId = OrderViewModel.OrderHeader.Id });
 	}
 

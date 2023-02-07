@@ -28,6 +28,10 @@
 		<Using Include="Application.DataAccess.Repositories.IRepository"/>
 		<Using Include="Xunit"/>
 		<Using Include="Moq"/>
+		<Using Include="Application.Models"/>
+		<Using Include="FluentAssertions"/>
+		<Using Include="System.Linq.Expressions"/>
+		
 	</ItemGroup>
 
 </Project>

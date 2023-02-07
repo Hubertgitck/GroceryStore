@@ -8,26 +8,27 @@ namespace ApplicationWeb.Areas.Admin.Controllers;
 public class OrderController : Controller
 {
 	private readonly IUnitOfWork _unitOfWork;
-	[BindProperty]
-	public OrderViewModel OrderViewModel { get; set; }
+    private readonly StripeSessionProvider _stripeSession;
 
-	public OrderController(IUnitOfWork unitOfWork)
+    [BindProperty]
+	public OrderViewModel? OrderViewModel { get; set; }
+
+	public OrderController(IUnitOfWork unitOfWork, StripeSessionProvider stripeSessionProvider)
 	{
 		_unitOfWork = unitOfWork;
-	}
+        _stripeSession = stripeSessionProvider;
+    }
 
 	public IActionResult Index()
 	{
 		return View();
 	}		
 	public IActionResult Details(int orderId)
-	{
-		var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId, includeProperties: "ApplicationUser");
-		var orderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includeProperties: "Product", thenIncludeProperty: "PackagingType");
-        OrderViewModel = new OrderViewModel()
+	{  
+		OrderViewModel = new OrderViewModel()
 		{
-			OrderHeader = orderHeader,
-			OrderDetail = orderDetail
+			OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId, includeProperties: "ApplicationUser"),
+			OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includeProperties: "Product", thenIncludeProperty: "PackagingType")
         };
 
 		return View(OrderViewModel);
@@ -37,8 +38,8 @@ public class OrderController : Controller
 	{
 		OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderHeaderId);
 
-		var service = new SessionService();
-		Session session = service.Get(orderHeader.SessionId);
+		Session session = _stripeSession.GetStripeSession(orderHeader.SessionId);
+
 		if (session.PaymentStatus.ToLower() == "paid")
 		{
 			_unitOfWork.OrderHeader.UpdateStripePaymentID(orderHeaderId, orderHeader.SessionId, session.PaymentIntentId);

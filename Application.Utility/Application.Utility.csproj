@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.12" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
     <PackageReference Include="MimeKit" Version="3.4.3" />
+    <PackageReference Include="Stripe.net" Version="41.4.0" />
   </ItemGroup>
 
 </Project>

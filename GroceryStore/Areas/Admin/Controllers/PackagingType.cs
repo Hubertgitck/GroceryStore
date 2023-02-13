@@ -1,8 +1,9 @@
-﻿namespace GroceryStoreWeb.Areas.Admin.Controllers;
+﻿namespace ApplicationWeb.Areas.Admin.Controllers;
+
 
 [Area("Admin")]
-	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
-	public class PackagingTypeController : Controller
+[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+public class PackagingTypeController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -31,20 +32,20 @@
     //POST
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(PackagingType obj)
+    public IActionResult Create(PackagingType packagingType)
     {
         if (ModelState.IsValid)
         {
-            if (obj.IsWeightInGrams)
+            if (packagingType.IsWeightInGrams)
             {
-                obj.Weight = obj.Weight / SD.KilogramsToGramsFactor;
+                packagingType.Weight = packagingType.Weight / SD.KilogramsToGramsFactor;
             }
-            _unitOfWork.PackagingType.Add(obj);
+            _unitOfWork.PackagingType.Add(packagingType);
             _unitOfWork.Save();
             TempData["success"] = "Packaging Type created succesfully";
             return RedirectToAction("Index");
         }
-        return View(obj);
+        return View(packagingType);
     }
 
     public IActionResult Edit(int? id)
@@ -71,20 +72,20 @@
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(PackagingType obj)
+    public IActionResult Edit(PackagingType packagingType)
     {
         if (ModelState.IsValid)
         {
-            if (obj.IsWeightInGrams)
+            if (packagingType.IsWeightInGrams)
             {
-                obj.Weight /= SD.KilogramsToGramsFactor;
+                packagingType.Weight /= SD.KilogramsToGramsFactor;
             }
-            _unitOfWork.PackagingType.Update(obj);
+            _unitOfWork.PackagingType.Update(packagingType);
             _unitOfWork.Save();
             TempData["success"] = "Packaging Type updated succesfully";
             return RedirectToAction("Index");
         }
-        return View(obj);
+        return View(packagingType);
     }
 
     public IActionResult Delete(int? id)
@@ -99,6 +100,7 @@
         {
             return NotFound();
         }
+
         return View(packagingTypeFromDb);
     }
 
@@ -107,16 +109,16 @@
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
-        var obj = _unitOfWork.PackagingType.GetFirstOrDefault(u => u.Id == id);
-        if (obj == null)
+        var packagingType = _unitOfWork.PackagingType.GetFirstOrDefault(u => u.Id == id);
+
+        if (packagingType == null)
         {
             return NotFound();
         }
 
-        _unitOfWork.PackagingType.Remove(obj);
+        _unitOfWork.PackagingType.Remove(packagingType);
         _unitOfWork.Save();
         TempData["success"] = "Packaging Type deleted succesfully";
         return RedirectToAction("Index");
-
     }
 }

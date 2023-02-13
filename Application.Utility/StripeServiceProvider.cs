@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Options;
-using Stripe;
+﻿using Stripe;
 using Stripe.Checkout;
 
 namespace Application.Utility;
 
-public class StripeServiceProvider
+public class StripeServiceProvider 
 {
     public virtual Session GetStripeSession(string sessionId)
     {

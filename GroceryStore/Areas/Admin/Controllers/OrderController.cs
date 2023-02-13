@@ -1,5 +1,4 @@
-﻿using Stripe;
-using Stripe.Checkout;
+﻿using Stripe.Checkout;
 
 namespace ApplicationWeb.Areas.Admin.Controllers;
 
@@ -9,7 +8,6 @@ public class OrderController : Controller
 {
 	private readonly IUnitOfWork _unitOfWork;
     private readonly StripeServiceProvider _stripeServices;
-
 
     [BindProperty]
 	public OrderViewModel? OrderViewModel { get; set; }
@@ -26,13 +24,13 @@ public class OrderController : Controller
 	}		
 	public IActionResult Details(int orderId)
 	{  
-		OrderViewModel = new OrderViewModel()
+		var orderViewModel = new OrderViewModel()
 		{
 			OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId, includeProperties: "ApplicationUser"),
 			OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includeProperties: "Product", thenIncludeProperty: "PackagingType")
         };
 
-		return View(OrderViewModel);
+		return View(orderViewModel);
 	}
 
 	public IActionResult PaymentConfirmation(int orderHeaderId)
@@ -146,8 +144,8 @@ public class OrderController : Controller
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                orderHeaders = _unitOfWork.OrderHeader.GetAll(
-				u => u.ApplicationUserId == claim.Value,includeProperties: "ApplicationUser");
+            orderHeaders = _unitOfWork.OrderHeader.GetAll(
+			u => u.ApplicationUserId == claim.Value,includeProperties: "ApplicationUser");
         }
 
 		switch (status)

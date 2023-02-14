@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Application.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ApplicationWeb.Areas.Admin.Controllers;
 
@@ -18,28 +19,23 @@ public class ProductController : Controller
     {
         return View();
     }
-    public IActionResult Upsert(int? id)
+    public IActionResult Upsert(int? id, ProductViewModel productViewModel)
     {
-        ProductViewModel productViewModel = new()
-        {
-            Product = new(),
-            CategoryList = _unitOfWork.Category.GetAll().Select(
-                u => new SelectListItem
+        productViewModel.Product = new();
+        productViewModel.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString(),
-                }),
-            PackagingTypeList = _unitOfWork.PackagingType
+                });
+        productViewModel.PackagingTypeList = _unitOfWork.PackagingType
                 .GetAll()
                 .OrderBy(u => u.Weight)
-                .Select(
-                    u => new SelectListItem
+                .Select(u => new SelectListItem
                     {
                         Text = u.IsWeightInGrams == true ? u.Name +
                             $" {u.Weight * SD.KilogramsToGramsFactor}[g]" : u.Name + $" {u.Weight}[kg]",
                         Value = u.Id.ToString(),
-                    })
-        };
+                    });
 
         if (id == null || id == 0)
         {
@@ -54,9 +50,9 @@ public class ProductController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Upsert(ProductViewModel obj, IFormFile? file)
+    public IActionResult Upsert(ProductViewModel productViewModel, IFormFile? file)
     {
-        if (ModelState.IsValid)
+        if (ModelState.IsValid) 
         {
             string wwwRootPath = _hostEnvironment.WebRootPath;
             if(file != null)
@@ -65,9 +61,9 @@ public class ProductController : Controller
                 var uploads = Path.Combine(wwwRootPath, @"img\products");
                 var extension = Path.GetExtension(file.FileName);
 
-                if(obj.Product.ImageUrl !=null)
+                if(productViewModel.Product.ImageUrl !=null)
                 {
-                    var oldImagePath = Path.Combine(wwwRootPath, obj.Product.ImageUrl.TrimStart('\\'));
+                    var oldImagePath = Path.Combine(wwwRootPath, productViewModel.Product.ImageUrl.TrimStart('\\'));
                     if(System.IO.File.Exists(oldImagePath))
                     {
                         System.IO.File.Delete(oldImagePath);
@@ -78,22 +74,23 @@ public class ProductController : Controller
                 {
                     file.CopyTo(fileStreams);
                 }
-                obj.Product.ImageUrl = @"\img\products\" + fileName + extension;
+                productViewModel.Product.ImageUrl = @"\img\products\" + fileName + extension;
             }
 
-            if (obj.Product.Id == 0)
+            if (productViewModel.Product.Id == 0)
             {
-                _unitOfWork.Product.Add(obj.Product);
+                _unitOfWork.Product.Add(productViewModel.Product);
+                TempData["success"] = "Product created successfully";
             }
             else
             {
-                _unitOfWork.Product.Update(obj.Product);
+                _unitOfWork.Product.Update(productViewModel.Product);
+                TempData["success"] = "Product updated successfully";
             }
             _unitOfWork.Save();
-            TempData["success"] = "Product created successfully";
             return RedirectToAction("Index");
         }
-        return View(obj);
+        return View(productViewModel);
     }
 
     #region API CALLS

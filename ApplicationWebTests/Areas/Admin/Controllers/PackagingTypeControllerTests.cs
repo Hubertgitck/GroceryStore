@@ -16,7 +16,7 @@ public class PackagingTypeControllerTests
     [Fact]
     public void Index_ReturnsViewResultWithListOfAllPackagingTypes()
     {
-        // Arrange
+        //Arrange
         var packagingTypeList = new List<PackagingType>
         {
             GetTestPackagingType(),
@@ -26,10 +26,10 @@ public class PackagingTypeControllerTests
             .Returns(packagingTypeList);
         var controller = new PackagingTypeController(_unitOfWorkMock.Object);
 
-        // Act
+        //Act
         var result = controller.Index();
 
-        // Assert
+        //Assert
         result.Should().BeOfType<ViewResult>();
         var viewResult = result as ViewResult;
 
@@ -39,13 +39,13 @@ public class PackagingTypeControllerTests
     [Fact]
     public void CreateAction_ReturnsViewResult()
     {
-        // Arrange
+        //Arrange
         var controller = new PackagingTypeController(_unitOfWorkMock.Object);
 
-        // Act
+        //Act
         var result = controller.Create();
 
-        // Assert
+        //Assert
         result.Should().BeOfType<ViewResult>();
     }
 

@@ -67,7 +67,7 @@ public class ProductControllerTests
 
     [Theory]
     [InlineData(0)]
-    public void Upsert_WithValidModelAndNonExistingProductInDatabase_RedirectsToIndex(int productId)
+    public void Upsert_WithValidModelAndNonExistingProductInDatabase_AddsProductAndRedirectsToIndex(int productId)
     {
         //Arrange
         var productViewModel = new Mock<ProductViewModel>().Object;
@@ -93,7 +93,7 @@ public class ProductControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void Upsert_WithValidModelAndExistingProductInDatabase_RedirectsToIndex(int productId)
+    public void Upsert_WithValidModelAndExistingProductInDatabase_UpdatesProductAndRedirectsToIndex(int productId)
     {
         //Arrange
         var productViewModel = new Mock<ProductViewModel>().Object;

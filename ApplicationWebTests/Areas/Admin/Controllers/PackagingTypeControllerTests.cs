@@ -1,11 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
-using Application.Models;
-using Application.Models.ViewModels;
-using Application.Utility;
-using Microsoft.AspNetCore.Mvc;
-
-namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
+﻿namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
 public class PackagingTypeControllerTests
 {
@@ -21,7 +14,7 @@ public class PackagingTypeControllerTests
     }
 
     [Fact]
-    public void Index_ShouldReturnViewResultWithListOfAllPackagingTypes()
+    public void Index_ReturnsViewResultWithListOfAllPackagingTypes()
     {
         // Arrange
         var packagingTypeList = new List<PackagingType>
@@ -44,7 +37,7 @@ public class PackagingTypeControllerTests
     }
 
     [Fact]
-    public void CreateAction_ShouldReturnViewResult()
+    public void CreateAction_ReturnsViewResult()
     {
         // Arrange
         var controller = new PackagingTypeController(_unitOfWorkMock.Object);
@@ -57,7 +50,7 @@ public class PackagingTypeControllerTests
     }
 
     [Fact]
-    public void Create_WithValidModel_ShouldRedirectToIndex()
+    public void Create_WithValidModel_RedirectsToIndex()
     {
         //Arrange
         var packagingType = GetTestPackagingType();
@@ -80,7 +73,7 @@ public class PackagingTypeControllerTests
     }
 
     [Fact]
-    public void Create_WithInvalidModel_ShouldRedirectBackToEditView()
+    public void Create_WithInvalidModel_RedirectsBackToEditView()
     {
         //Arrange
         var packagingType = GetTestPackagingType();
@@ -100,7 +93,7 @@ public class PackagingTypeControllerTests
     [Theory]
     [InlineData(null)]
     [InlineData(0)]
-    public void Edit_WithNullOrZeroValuePackagingTypeId_ShouldReturnNotFound(int? packagingTypeId)
+    public void Edit_WithNullOrZeroValuePackagingTypeId_ReturnsNotFound(int? packagingTypeId)
     {
         //Arrange
         var controller = new PackagingTypeController(_unitOfWorkMock.Object);
@@ -114,7 +107,7 @@ public class PackagingTypeControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void Edit_WithValidPackagingTypeIdButPackagingTypeNotInDatabase_ShouldReturnNotFound(int packagingTypeId)
+    public void Edit_WithValidPackagingTypeIdButPackagingTypeNotInDatabase_ReturnsNotFound(int packagingTypeId)
     {
         //Arrange
         PackagingType packagingType = null!;
@@ -131,7 +124,7 @@ public class PackagingTypeControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void Edit_WithValidPackagingTypeIdAndPackagingTypeFoundInDb_ShouldReturnViewWithThatPackagingType(int packagingTypeId)
+    public void Edit_WithValidPackagingTypeIdAndPackagingTypeFoundInDb_ReturnsViewWithThatPackagingType(int packagingTypeId)
     {
         //Arrange
         PackagingType packagingType = GetTestPackagingType();
@@ -149,7 +142,7 @@ public class PackagingTypeControllerTests
     }
 
     [Fact]
-    public void EditPost_WithValidModel_ShouldRedirectToIndex()
+    public void EditPost_WithValidModel_RedirecstToIndex()
     {
         //Arrange
         var packagingType = GetTestPackagingType();
@@ -172,7 +165,7 @@ public class PackagingTypeControllerTests
     }
 
     [Fact]
-    public void EditPost_WithInvalidModel_ShouldRedirectBackToEditView()
+    public void EditPost_WithInvalidModel_RedirectsBackToEditView()
     {
         //Arrange
         var packagingType = GetTestPackagingType();
@@ -192,7 +185,7 @@ public class PackagingTypeControllerTests
     [Theory]
     [InlineData(null)]
     [InlineData(0)]
-    public void Delete_WithNullOrZeroValue_ShouldReturnNotFound(int? packagingTypeId)
+    public void Delete_WithNullOrZeroValue_ReturnsNotFound(int? packagingTypeId)
     {
         //Arrange
         var controller = new PackagingTypeController(_unitOfWorkMock.Object);
@@ -206,7 +199,7 @@ public class PackagingTypeControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void Delete_WithValidPackagingTypeIdButPackagingTypeNotInDatabase_ShouldReturnNotFound(int packagingTypeId)
+    public void Delete_WithValidPackagingTypeIdButPackagingTypeNotInDatabase_ReturnsNotFound(int packagingTypeId)
     {
         //Arrange
         PackagingType packagingType = null!;
@@ -223,7 +216,7 @@ public class PackagingTypeControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void Delete_WithValidPackagingTypeIdAndPackagingTypeFoundInDb_ShouldReturnViewWithThatPackagingType(int packagingTypeId)
+    public void Delete_WithValidPackagingTypeIdAndPackagingTypeFoundInDb_ReturnsViewWithThatPackagingType(int packagingTypeId)
     {
         //Arrange
         PackagingType packagingType = GetTestPackagingType();
@@ -242,7 +235,7 @@ public class PackagingTypeControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void DeletePost_WithPackagingTypeNotFoundInDatabase_ShouldReturnNotFound(int packagingTypeId)
+    public void DeletePost_WithPackagingTypeNotFoundInDatabase_ReturnsNotFound(int packagingTypeId)
     {
         //Arrange
         PackagingType packagingType = null!;
@@ -259,7 +252,7 @@ public class PackagingTypeControllerTests
     }
     [Theory]
     [InlineData(1)]
-    public void DeletePost_WithPackagingTypeFoundInDatabase_ShouldRedirectToIndex(int packagingTypeId)
+    public void DeletePost_WithPackagingTypeFoundInDatabase_RedirectsToIndex(int packagingTypeId)
     {
         //Arrange
         PackagingType packagingType = GetTestPackagingType();

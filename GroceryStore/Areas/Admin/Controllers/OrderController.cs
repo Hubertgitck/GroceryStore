@@ -72,7 +72,7 @@ public class OrderController : Controller
 		}
 		_unitOfWork.OrderHeader.Update(orderHeaderFromDb);
 		_unitOfWork.Save();
-		TempData["Success"] = "Order Details Updated Successfully";
+		TempDataHelper.SetSuccess(this, "Order Details Updated Successfully");
 		return RedirectToAction("Details", "Order", new { orderId = orderHeaderFromDb.Id });
 	}		
 
@@ -85,8 +85,8 @@ public class OrderController : Controller
 
 		_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusInProcess);
 		_unitOfWork.Save();
-		TempData["Success"] = "Order processing started";
-		return RedirectToAction("Details", "Order", new { orderId = id });
+        TempDataHelper.SetSuccess(this, "Order processing started");
+        return RedirectToAction("Details", "Order", new { orderId = id });
 	}		
 	
 	[HttpPost]
@@ -103,8 +103,8 @@ public class OrderController : Controller
 
 		_unitOfWork.OrderHeader.Update(orderHeader);
 		_unitOfWork.Save();
-		TempData["Success"] = "Order Shipped Successfully";
-		return RedirectToAction("Details", "Order", new { orderId = orderViewModel.OrderHeader.Id });
+        TempDataHelper.SetSuccess(this, "Order Shipped Successfully");
+        return RedirectToAction("Details", "Order", new { orderId = orderViewModel.OrderHeader.Id });
 	}		
 
 	[HttpPost]
@@ -126,7 +126,7 @@ public class OrderController : Controller
 		}
 		_unitOfWork.Save();
 
-		TempData["Success"] = "Order Cancelled Successfully";
+		TempDataHelper.SetSuccess(this, "Order Cancelled Successfully");
 		return RedirectToAction("Details", "Order", new { orderId = orderViewModel.OrderHeader.Id });
 	}
 

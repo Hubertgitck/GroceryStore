@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Utility;
 
@@ -8,6 +10,4 @@ public static class TempDataHelper
     {
         controller.TempData["success"] = message;
     }
-
-
 }

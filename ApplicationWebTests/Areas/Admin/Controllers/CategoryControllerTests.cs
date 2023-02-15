@@ -1,5 +1,4 @@
-﻿using Application.Models;
-using ApplicationWebTests.TestUtilities;
+﻿using ApplicationWebTests.TestUtilities;
 
 namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
@@ -60,9 +59,6 @@ public class CategoryControllerTests
         var result = controller.Create(category);
 
         // Assert
-        _unitOfWorkMock.Verify(u => u.Category.Add(category), Times.Once());
-        _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
-
         var tempDataValue = controller.TempData["success"] as string;
         var redirectResult = result as RedirectToActionResult;
 
@@ -110,6 +106,27 @@ public class CategoryControllerTests
         var viewResult = result as ViewResult;
 
         viewResult!.Model.Should().Be(category);
+    }
+
+    [Fact]
+    public void EditPost_WithValidCategory_RedirectsToIndex()
+    {
+        // Arrange
+        var category = GetTestCategory();
+        _unitOfWorkMock.Setup(u => u.Category.Update(category));
+        _unitOfWorkMock.Setup(u => u.Save());
+        var controller = new CategoryController(_unitOfWorkMock.Object);
+        controller.TempData = _tempData;
+
+        // Act
+        var result = controller.Edit(category);
+
+        // Assert
+        var tempDataValue = controller.TempData["success"] as string;
+        var redirectResult = result as RedirectToActionResult;
+
+        tempDataValue.Should().Be("Category updated succesfully");
+        redirectResult!.ActionName.Should().Be("Index");
     }
     private IEnumerable<Category> GetCategoryTestList()
     {

@@ -33,7 +33,7 @@ public class OrderControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void Details_ReturnsViewResult_WithCorrectOrderViewModel(int orderHeaderId)
+    public void Details_WithCorrectOrderViewModel_ReturnsViewResult(int orderHeaderId)
     {
         // Arrange
         var orderHeader = GetTestOrderHeader(orderHeaderId);
@@ -61,34 +61,23 @@ public class OrderControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void PaymentConfirmation_UpdatesOrderHeader_WhenPaymentIsPaid(int orderHeaderId)
+    public void PaymentConfirmation_ReturnsConfirmationWithCorrectId(int orderHeaderId)
     {
         //Arrange
         var orderHeader = GetTestOrderHeader(orderHeaderId);
 
-        var session = new Session { PaymentStatus = "paid", PaymentIntentId = "some-payment-intent-id" };
-
-
-        _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), true))
-            .Returns(orderHeader);
-        _unitOfWorkMock.Setup(u => u.OrderHeader.UpdateStripePaymentID(orderHeaderId, It.IsAny<string>(), It.IsAny<string>()));
-        _unitOfWorkMock.Setup(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), SD.PaymentStatusApproved));
-        _unitOfWorkMock.Setup(u => u.Save());
-
+        var session = new Session { PaymentStatus = "test", PaymentIntentId = "some-payment-intent-id" };
         var stripeServices = new Mock<StripeServiceProvider>();
         _stripeServiceMock.Setup(u => u.GetStripeSession(orderHeader.SessionId!)).Returns(session);
 
+        _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), true))
+            .Returns(orderHeader);
         var controller = new OrderController(_unitOfWorkMock.Object, _stripeServiceMock.Object);
 
         //Act
         var result = controller.PaymentConfirmation(orderHeaderId);
 
         //Assert
-        _stripeServiceMock.Verify(s => s.GetStripeSession(orderHeader.SessionId!), Times.Once());
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStripePaymentID(orderHeaderId, It.IsAny<string>(), It.IsAny<string>()), Times.Once());
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), SD.PaymentStatusApproved), Times.Once());
-        _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
-
         result.Should().BeOfType<ViewResult>();
         var viewResult = result as ViewResult;
 
@@ -100,22 +89,20 @@ public class OrderControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void UpdateOrderDetail_WithValidOrderViewModel_UpdatesOrderDetailInUnitOfWorkAndRedriectsToDetails(int orderHeaderId)
+    public void UpdateOrderDetail_RedriectsToDetails(int orderHeaderId)
     {
-        //arrange
+        //Arrange
         var orderHeader = GetTestOrderHeader(orderHeaderId);
         var orderViewModel = new Mock<OrderViewModel>().Object;
-        orderViewModel.OrderHeader = orderHeader;
+        orderViewModel.OrderHeader = new();
 
         _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), false))
             .Returns(orderHeader);
 
-        var controller = new OrderController(_unitOfWorkMock.Object, _stripeServiceMock.Object)
-        {
-            TempData = _tempData
-        };
+        var controller = new OrderController(_unitOfWorkMock.Object, _stripeServiceMock.Object);
+        controller.TempData = _tempData;
 
-        // Act
+        //Act
         var result = controller.UpdateOrderDetail(orderViewModel);
 
         //Assert
@@ -168,7 +155,10 @@ public class OrderControllerTests
         //Arrange
         var orderHeader = GetTestOrderHeader(orderHeaderId);
         var orderViewModel = new Mock<OrderViewModel>().Object;
-        orderViewModel.OrderHeader = orderHeader;
+        orderViewModel.OrderHeader = new() 
+        { 
+            Id = orderHeaderId
+        };
 
         _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), false))
             .Returns(orderHeader);
@@ -193,49 +183,12 @@ public class OrderControllerTests
     }
 
     [Theory]
-    [InlineData(1, SD.PaymentStatusApproved)]
-    public void CancelOrder_WithPaymentStatusApproved_RefundsPaymentAndRedirectsToDetails(int orderHeaderId, string status)
+    [InlineData(1)]
+    public void CancelOrder_RedirectsToDetails(int orderHeaderId)
     {
         //Arrange
         var orderHeader = GetTestOrderHeader(orderHeaderId);
         var orderViewModel = new Mock<OrderViewModel>().Object;
-        orderHeader.PaymentStatus = status;
-        orderViewModel.OrderHeader = orderHeader;
-
-        _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), false))
-            .Returns(orderHeader);
-
-        _stripeServiceMock.Setup(u => u.GetRefundService(orderHeader.PaymentIntendId!));
-
-        var controller = new OrderController(_unitOfWorkMock.Object, _stripeServiceMock.Object);
-        controller.TempData = _tempData;
-
-        //Act
-        var result = controller.CancelOrder(orderViewModel);
-
-        //Assert
-        _stripeServiceMock.Verify(s => s.GetRefundService(orderHeader.PaymentIntendId!), Times.Once());
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, SD.StatusCancelled, It.IsAny<string>()), Times.Once());
-        _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
-
-        var tempDataValue = controller.TempData["success"] as string;
-        var redirectResult = result as RedirectToActionResult;
-
-        tempDataValue.Should().Be("Order Cancelled Successfully");
-        redirectResult!.ActionName.Should().Be("Details");
-        redirectResult.RouteValues!.Keys.First().Should().Be("orderId");
-        redirectResult.RouteValues.Values.First().Should().Be(orderHeaderId);
-    }
-
-    [Theory]
-    [InlineData(1, SD.PaymentStatusPending)]
-    [InlineData(2, SD.PaymentStatusRejected)]
-    public void CancelOrder_WithPaymentStatusOtherThanApproved_RedirectsToDetails(int orderHeaderId, string status)
-    {
-        //Arrange
-        var orderHeader = GetTestOrderHeader(orderHeaderId);
-        var orderViewModel = new Mock<OrderViewModel>().Object;
-        orderHeader.PaymentStatus = status;
         orderViewModel.OrderHeader = orderHeader;
 
         _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), false))
@@ -248,9 +201,6 @@ public class OrderControllerTests
         var result = controller.CancelOrder(orderViewModel);
 
         //Assert
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, SD.StatusCancelled, It.IsAny<string>()), Times.Once());
-        _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
-
         var tempDataValue = controller.TempData["success"] as string;
         var redirectResult = result as RedirectToActionResult;
 

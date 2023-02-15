@@ -1,5 +1,6 @@
 ﻿using Application.Models;
 using Application.Models.ViewModels;
+using ApplicationWebTests.TestUtilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,15 +10,12 @@ namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 public class ProductControllerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
-    private readonly Mock<ITempDataProvider> _tempDataProviderMock = new();
-    private readonly TempDataDictionaryFactory _tempDataDictionaryFactory;
     private readonly ITempDataDictionary _tempData;
     private readonly Mock<IWebHostEnvironment> _webHostEnvironmentMock = new();
 
     public ProductControllerTests()
     {
-        _tempDataDictionaryFactory = new TempDataDictionaryFactory(_tempDataProviderMock.Object);
-        _tempData = _tempDataDictionaryFactory.GetTempData(new DefaultHttpContext());
+        _tempData = TempDataProvider.GetTempDataMock();
     }
 
     [Fact]

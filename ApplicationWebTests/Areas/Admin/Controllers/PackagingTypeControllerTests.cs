@@ -1,16 +1,15 @@
-﻿namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
+﻿using ApplicationWebTests.TestUtilities;
+
+namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
 public class PackagingTypeControllerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
-    private readonly Mock<ITempDataProvider> _tempDataProviderMock = new();
-    private readonly TempDataDictionaryFactory _tempDataDictionaryFactory;
     private readonly ITempDataDictionary _tempData;
 
     public PackagingTypeControllerTests()
     {
-        _tempDataDictionaryFactory = new TempDataDictionaryFactory(_tempDataProviderMock.Object);
-        _tempData = _tempDataDictionaryFactory.GetTempData(new DefaultHttpContext());
+        _tempData = TempDataProvider.GetTempDataMock();
     }
 
     [Fact]

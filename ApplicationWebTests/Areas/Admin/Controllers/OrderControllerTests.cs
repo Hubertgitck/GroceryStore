@@ -2,6 +2,7 @@
 using Application.Models.ViewModels;
 using Application.Utility;
 using ApplicationWeb.Areas.Admin.Controllers;
+using ApplicationWebTests.TestUtilities;
 using Stripe.Checkout;
 
 namespace ApplicationWebTests.Areas.Admin.Controllers;
@@ -9,15 +10,12 @@ namespace ApplicationWebTests.Areas.Admin.Controllers;
 public class OrderControllerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
-    private readonly Mock<ITempDataProvider> _tempDataProviderMock = new();
-    private readonly TempDataDictionaryFactory _tempDataDictionaryFactory;
     private readonly ITempDataDictionary _tempData;
     private readonly Mock<StripeServiceProvider> _stripeServiceMock = new(MockBehavior.Loose);
 
     public OrderControllerTests()
     {
-        _tempDataDictionaryFactory = new TempDataDictionaryFactory(_tempDataProviderMock.Object);
-        _tempData = _tempDataDictionaryFactory.GetTempData(new DefaultHttpContext());
+        _tempData = TempDataProvider.GetTempDataMock();
     }
 
     [Fact]

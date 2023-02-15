@@ -1,18 +1,15 @@
 ﻿using Application.Models;
+using ApplicationWebTests.TestUtilities;
 
 namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
 public class CategoryControllerTests
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
-    private readonly ITempDataProvider _tempDataProvider;
-    private readonly TempDataDictionaryFactory _tempDataDictionaryFactory;
     private readonly ITempDataDictionary _tempData;
     public CategoryControllerTests()
     {
-        _tempDataProvider = Mock.Of<ITempDataProvider>();
-        _tempDataDictionaryFactory = new TempDataDictionaryFactory(_tempDataProvider);
-        _tempData = _tempDataDictionaryFactory.GetTempData(new DefaultHttpContext());
+        _tempData = TempDataProvider.GetTempDataMock();
     }
 
     [Fact]

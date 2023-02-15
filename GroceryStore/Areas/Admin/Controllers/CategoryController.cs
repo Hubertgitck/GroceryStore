@@ -23,16 +23,16 @@ public class CategoryController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Category obj)
+    public IActionResult Create(Category category)
     {
         if (ModelState.IsValid)
         {
-            _unitOfWork.Category.Add(obj);
+            _unitOfWork.Category.Add(category);
             _unitOfWork.Save();
-            TempData["success"] = "Category created succesfully";
+            TempDataWriter.Write(this, "success", "Category created succesfully");
             return RedirectToAction("Index");
         }
-        return View(obj);
+        return View(category);
     }
 
     public IActionResult Edit(int? id)
@@ -53,16 +53,16 @@ public class CategoryController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(Category obj)
+    public IActionResult Edit(Category category)
     {
         if (ModelState.IsValid)
         {
-            _unitOfWork.Category.Update(obj);
+            _unitOfWork.Category.Update(category);
             _unitOfWork.Save();
-            TempData["success"] = "Category updated succesfully";
+            TempDataWriter.Write(this, "success", "Category updated succesfully");
             return RedirectToAction("Index");
         }
-        return View(obj);
+        return View(category);
     }
 
     public IActionResult Delete(int? id)
@@ -85,15 +85,15 @@ public class CategoryController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
-        var obj = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
-        if (obj == null)
+        var category = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
+        if (category == null)
         {
             return NotFound();
         }
 
-        _unitOfWork.Category.Remove(obj);
+        _unitOfWork.Category.Remove(category);
         _unitOfWork.Save();
-        TempData["success"] = "Category deleted succesfully";
+        TempDataWriter.Write(this, "success", "Category deleted succesfully");
         return RedirectToAction("Index");
     }
 }

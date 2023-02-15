@@ -1,4 +1,6 @@
-﻿namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
+﻿using Application.Models;
+
+namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
 public class CategoryControllerTests
 {
@@ -34,7 +36,7 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public void Create_ReturnsAViewResult()
+    public void Create_ReturnsViewResult()
     {
         // Arrange
         var controller = new CategoryController(_unitOfWorkMock.Object);
@@ -72,19 +74,19 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public void Create_WithInvalidCategory_ReturnsViewResultWithSameCategory()
+    public void Create_WithInvalidCategory_ReturnsViewResultWithThatCategory()
     {
-        // Arrange
-        var category = new Category();
+        //Arrange
+        var category = GetTestCategory();
         var controller = new CategoryController(_unitOfWorkMock.Object);
 
         controller.ModelState.AddModelError("Name", "Required");
         controller.TempData = _tempData;
 
-        // Act
+        //Act
         var result = controller.Create(category);
 
-        // Assert
+        //Assert
         _unitOfWorkMock.Verify(u => u.Category.Add(It.IsAny<Category>()), Times.Never());
         _unitOfWorkMock.Verify(u => u.Save(), Times.Never());
 
@@ -92,6 +94,26 @@ public class CategoryControllerTests
         viewResult!.Model.Should().Be(category);
     }
 
+    [Theory]
+    [InlineData(1)]
+    public void Edit_WithExistingCategory_ReturnsViewWithThatCategory(int categoryId)
+    {
+        //Arrange
+        var category = GetTestCategory();
+        _unitOfWorkMock.Setup(u => u.Category.GetFirstOrDefault(It.IsAny<Expression<Func<Category, bool>>>(), It.IsAny<string>(), true))
+            .Returns(category);
+
+        var controller = new CategoryController(_unitOfWorkMock.Object);
+
+        //Act
+        var result = controller.Edit(categoryId);
+
+        //Assert
+        result.Should().BeOfType<ViewResult>();
+        var viewResult = result as ViewResult;
+
+        viewResult!.Model.Should().Be(category);
+    }
     private IEnumerable<Category> GetCategoryTestList()
     {
         var categoryList = new List<Category>
@@ -102,7 +124,7 @@ public class CategoryControllerTests
         };
         return categoryList;
     }
-    public static Category GetTestCategory()
+    private Category GetTestCategory()
     {
         return new Category { Id = 1, Name = "Test", DisplayOrder = 1 };
     }

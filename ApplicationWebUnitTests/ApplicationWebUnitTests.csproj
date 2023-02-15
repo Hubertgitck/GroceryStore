@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
 
-		<IsPackable>false</IsPackable>
-	</PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="6.9.0" />
@@ -22,8 +22,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\GroceryStore\ApplicationWeb.csproj" />
 	</ItemGroup>
-	
-    <ItemGroup>
+
+	<ItemGroup>
 		<Using Include="Microsoft.AspNetCore.Mvc" />
 		<Using Include="Application.DataAccess.Repositories.IRepository" />
 		<Using Include="Xunit" />

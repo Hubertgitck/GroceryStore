@@ -1,9 +1,10 @@
 ﻿using System.Security.Claims;
 using Application.Models.ViewModels;
 using Application.Utility;
+using ApplicationWeb.Areas.Admin.Controllers;
 using Stripe.Checkout;
 
-namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
+namespace ApplicationWebTests.Areas.Admin.Controllers;
 
 public class OrderControllerTests
 {
@@ -78,7 +79,7 @@ public class OrderControllerTests
 
         var stripeServices = new Mock<StripeServiceProvider>();
         _stripeServiceMock.Setup(u => u.GetStripeSession(orderHeader.SessionId!)).Returns(session);
-        
+
         var controller = new OrderController(_unitOfWorkMock.Object, _stripeServiceMock.Object);
 
         //Act
@@ -87,7 +88,7 @@ public class OrderControllerTests
         //Assert
         _stripeServiceMock.Verify(s => s.GetStripeSession(orderHeader.SessionId!), Times.Once());
         _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStripePaymentID(orderHeaderId, It.IsAny<string>(), It.IsAny<string>()), Times.Once());
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), SD.PaymentStatusApproved), Times.Once()); 
+        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), SD.PaymentStatusApproved), Times.Once());
         _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
 
         result.Should().BeOfType<ViewResult>();
@@ -301,7 +302,7 @@ public class OrderControllerTests
             TrackingNumber = "987654321",
             SessionId = "Test-session",
             PaymentIntendId = "Some-payment-IntendId"
-    };
+        };
         return orderHeader;
     }
 

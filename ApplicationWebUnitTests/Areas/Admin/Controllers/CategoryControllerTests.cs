@@ -80,16 +80,54 @@ public class CategoryControllerTests
         _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
     }
 
-    private IEnumerable<Category> GetCategoryTestList()
+    [Theory]
+    [InlineData(null)]
+    [InlineData(0)]
+    public void Delete_WithNullOrZeroId_ReturnsNotFound(int? categoryId)
     {
-        var categoryList = new List<Category>
-        {
-            new Category { Id = 1, Name = "Category 1" },
-            new Category { Id = 2, Name = "Category 2" },
-            new Category { Id = 3, Name = "Category 3" }
-        };
-        return categoryList;
+        //Arrange
+        var controller = new CategoryController(_unitOfWorkMock.Object);
+
+        //Act
+        var result = controller.Delete(categoryId);
+
+        //Assert
+        result.Should().BeOfType<NotFoundResult>();
     }
+
+    [Theory]
+    [InlineData(1)]
+    public void Delete_WithNonExistingCategory_ReturnsNotFound(int categoryId)
+    {
+        //Arrange
+        Category category = null!;
+        _unitOfWorkMock.Setup(u => u.Category.GetFirstOrDefault(It.IsAny<Expression<Func<Category, bool>>>(), It.IsAny<string>(), true))
+            .Returns(category);
+        var controller = new CategoryController(_unitOfWorkMock.Object);
+
+        //Act
+        var result = controller.Delete(categoryId);
+
+        //Assert
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public void DeletePost_WithNonExistingCategory_ReturnsNotFound()
+    {
+        //Arrange
+        Category category = null!;
+        _unitOfWorkMock.Setup(u => u.Category.GetFirstOrDefault(It.IsAny<Expression<Func<Category, bool>>>(), It.IsAny<string>(), true))
+            .Returns(category);
+        var controller = new CategoryController(_unitOfWorkMock.Object);
+
+        //Act
+        var result = controller.DeletePost(It.IsAny<int>());
+
+        //Assert
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
     private Category GetTestCategory()
     {
         return new Category { Id = 1, Name = "Test", DisplayOrder = 1 };

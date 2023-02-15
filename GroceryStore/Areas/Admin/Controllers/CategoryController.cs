@@ -29,7 +29,7 @@ public class CategoryController : Controller
         {
             _unitOfWork.Category.Add(category);
             _unitOfWork.Save();
-            TempDataWriter.Write(this, "success", "Category created succesfully");
+            TempDataHelper.SetSuccess(this, "Category created succesfully");
             return RedirectToAction("Index");
         }
         return View(category);
@@ -59,7 +59,7 @@ public class CategoryController : Controller
         {
             _unitOfWork.Category.Update(category);
             _unitOfWork.Save();
-            TempDataWriter.Write(this, "success", "Category updated succesfully");
+            TempDataHelper.SetSuccess(this, "Category updated succesfully");
             return RedirectToAction("Index");
         }
         return View(category);
@@ -83,7 +83,7 @@ public class CategoryController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult DeletePOST(int? id)
+    public IActionResult DeletePost(int? id)
     {
         var category = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
         if (category == null)
@@ -93,7 +93,7 @@ public class CategoryController : Controller
 
         _unitOfWork.Category.Remove(category);
         _unitOfWork.Save();
-        TempDataWriter.Write(this, "success", "Category deleted succesfully");
+        TempDataHelper.SetSuccess(this, "Category deleted succesfully");
         return RedirectToAction("Index");
     }
 }

@@ -2,10 +2,12 @@
 
 namespace Application.Utility;
 
-public static class TempDataWriter
+public static class TempDataHelper
 {
-    public static void Write(Controller controller, string key, string message)
+    public static void SetSuccess(Controller controller, string message)
     {
-        controller.TempData[key] = message;
+        controller.TempData["success"] = message;
     }
+
+
 }

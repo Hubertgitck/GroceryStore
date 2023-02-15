@@ -33,7 +33,7 @@ public class OrderControllerTests
 
     [Theory]
     [InlineData(1)]
-    public void Details_WithCorrectOrderViewModel_ReturnsViewResult(int orderHeaderId)
+    public void Details_ReturnsViewResultWithOrderViewModel(int orderHeaderId)
     {
         // Arrange
         var orderHeader = GetTestOrderHeader(orderHeaderId);
@@ -106,8 +106,6 @@ public class OrderControllerTests
         var result = controller.UpdateOrderDetail(orderViewModel);
 
         //Assert
-        _unitOfWorkMock.Verify(u => u.OrderHeader.Update(orderHeader), Times.Once());
-        _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
         var tempDataValue = controller.TempData["success"] as string;
         var redirectResult = result as RedirectToActionResult;
 

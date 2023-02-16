@@ -1,19 +1,22 @@
-﻿namespace ApplicationWeb.Areas.Admin.Controllers;
+﻿using ApplicationWeb.Mediator.Requests;
+using MediatR;
+
+namespace ApplicationWeb.Areas.Admin.Controllers;
 
 [Area("Admin")]
 [Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 public class CategoryController : Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMediator _mediator;
 
-    public CategoryController(IUnitOfWork unitOfWork)
+    public CategoryController(IMediator mediator)
     {
-        _unitOfWork = unitOfWork;
+        _mediator = mediator;
     }
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        IEnumerable<Category> categoryList = _unitOfWork.Category.GetAll();
-        return View(categoryList);
+        var result = await _mediator.Send(new GetAllCategories());
+        return View(result);
     }
 
     public IActionResult Create()
@@ -27,15 +30,14 @@ public class CategoryController : Controller
     {
         if (ModelState.IsValid)
         {
-            _unitOfWork.Category.Add(category);
-            _unitOfWork.Save();
+            _mediator.Send(new AddCategory(category));
             TempDataHelper.SetSuccess(this, "Category created succesfully");
             return RedirectToAction("Index");
         }
         return View(category);
     }
 
-    public IActionResult Edit(int? id)
+    /*public IActionResult Edit(int? id)
     {
         if (id == null || id == 0)
         {
@@ -95,5 +97,5 @@ public class CategoryController : Controller
         _unitOfWork.Save();
         TempDataHelper.SetSuccess(this, "Category deleted succesfully");
         return RedirectToAction("Index");
-    }
+    }*/
 }

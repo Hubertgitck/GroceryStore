@@ -128,13 +128,13 @@ public class OrderControllerTests
         {
             TempData = _tempData
         };
-        _unitOfWorkMock.Setup(u => u.OrderHeader.UpdateStatus(orderHeaderId, SD.StatusInProcess, It.IsAny<string>()));
+        _unitOfWorkMock.Setup(u => u.OrderHeader.UpdateStatus(orderHeaderId, Constants.StatusInProcess, It.IsAny<string>()));
 
         // Act
         var result = controller.StartProcessing(orderViewModel);
 
         //Assert
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, SD.StatusInProcess, It.IsAny<string>()), Times.Once());
+        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, Constants.StatusInProcess, It.IsAny<string>()), Times.Once());
         _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
 
         var tempDataValue = controller.TempData["success"] as string;
@@ -222,7 +222,7 @@ public class OrderControllerTests
         _unitOfWorkMock.Setup(x => x.OrderHeader.GetAll(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), It.IsAny<string>()))
             .Returns(orderHeaders);
         var controller = new OrderController(_unitOfWorkMock.Object, _stripeServiceMock.Object);
-        controller.ControllerContext = GetTestControllerContext(SD.Role_Admin);
+        controller.ControllerContext = GetTestControllerContext(Constants.RoleAdmin);
 
         // Act
         var result = controller.GetAll(status);

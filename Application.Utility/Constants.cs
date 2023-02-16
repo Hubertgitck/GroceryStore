@@ -1,10 +1,10 @@
 ﻿namespace Application.Utility;
 
-public static class SD
+public static class Constants
 {
-    public const string Role_Individual = "Individual";
-    public const string Role_Admin = "Admin";
-    public const string Role_Employee = "Employee";
+    public const string RoleIndividual = "Individual";
+    public const string RoleAdmin = "Admin";
+    public const string RoleEmployee = "Employee";
 
     public const string StatusPending = "Pending";
     public const string StatusApproved = "Approved";

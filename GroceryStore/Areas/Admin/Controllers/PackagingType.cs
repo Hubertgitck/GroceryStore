@@ -1,7 +1,7 @@
 ﻿namespace ApplicationWeb.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 public class PackagingTypeController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -17,7 +17,7 @@ public class PackagingTypeController : Controller
         {
             if (elem.IsWeightInGrams)
             {
-                elem.Weight *= SD.KilogramsToGramsFactor;
+                elem.Weight *= Constants.KilogramsToGramsFactor;
             }
         }
         return View(packagingTypeList);
@@ -37,7 +37,7 @@ public class PackagingTypeController : Controller
         {
             if (packagingType.IsWeightInGrams)
             {
-                packagingType.Weight = packagingType.Weight / SD.KilogramsToGramsFactor;
+                packagingType.Weight = packagingType.Weight / Constants.KilogramsToGramsFactor;
             }
             _unitOfWork.PackagingType.Add(packagingType);
             _unitOfWork.Save();
@@ -62,7 +62,7 @@ public class PackagingTypeController : Controller
 
         if (packagingTypeFromDb.IsWeightInGrams)
         {
-            packagingTypeFromDb.Weight *= SD.KilogramsToGramsFactor;
+            packagingTypeFromDb.Weight *= Constants.KilogramsToGramsFactor;
         }
 
         return View(packagingTypeFromDb);
@@ -77,7 +77,7 @@ public class PackagingTypeController : Controller
         {
             if (packagingType.IsWeightInGrams)
             {
-                packagingType.Weight /= SD.KilogramsToGramsFactor;
+                packagingType.Weight /= Constants.KilogramsToGramsFactor;
             }
             _unitOfWork.PackagingType.Update(packagingType);
             _unitOfWork.Save();

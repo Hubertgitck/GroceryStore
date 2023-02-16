@@ -35,23 +35,23 @@ public class DbInitializer : IDbInitializer
             //TODO
         }
 
-        if (!await _roleManager.RoleExistsAsync(SD.Role_Admin))
+        if (!await _roleManager.RoleExistsAsync(Constants.RoleAdmin))
         {
             await CreateRoles();
             await CreateAdminUser();
 
             ApplicationUser user = _dbContext.ApplicationUsers.FirstOrDefault(u => u.Email == initialAdminEmail);
 
-            await _userManager.AddToRoleAsync(user, SD.Role_Admin);
+            await _userManager.AddToRoleAsync(user, Constants.RoleAdmin);
         }
         return;
     }
 
     private async Task CreateRoles()
     {
-        await _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin));
-        await _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee));
-        await _roleManager.CreateAsync(new IdentityRole(SD.Role_Individual));
+        await _roleManager.CreateAsync(new IdentityRole(Constants.RoleAdmin));
+        await _roleManager.CreateAsync(new IdentityRole(Constants.RoleEmployee));
+        await _roleManager.CreateAsync(new IdentityRole(Constants.RoleIndividual));
     }
 
     private async Task CreateAdminUser()

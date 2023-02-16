@@ -42,7 +42,7 @@ public class OrderController : Controller
 		if (session.PaymentStatus.ToLower() == "paid")
 		{
 			_unitOfWork.OrderHeader.UpdateStripePaymentID(orderHeaderId, orderHeader.SessionId, session.PaymentIntentId);
-			_unitOfWork.OrderHeader.UpdateStatus(orderHeaderId, orderHeader.OrderStatus, SD.PaymentStatusApproved);
+			_unitOfWork.OrderHeader.UpdateStatus(orderHeaderId, orderHeader.OrderStatus, Constants.PaymentStatusApproved);
 			_unitOfWork.Save();
 		}
 
@@ -51,7 +51,7 @@ public class OrderController : Controller
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 	public IActionResult UpdateOrderDetail(OrderViewModel orderViewModel)
 	{
 		var orderHeaderFromDb = _unitOfWork.OrderHeader.GetFirstOrDefault(
@@ -78,12 +78,12 @@ public class OrderController : Controller
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 	public IActionResult StartProcessing(OrderViewModel orderViewModel)
 	{
 		var id = orderViewModel.OrderHeader.Id;
 
-		_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusInProcess);
+		_unitOfWork.OrderHeader.UpdateStatus(id, Constants.StatusInProcess);
 		_unitOfWork.Save();
         TempDataHelper.SetSuccess(this, "Order processing started");
         return RedirectToAction("Details", "Order", new { orderId = id });
@@ -91,14 +91,14 @@ public class OrderController : Controller
 	
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 	public IActionResult ShipOrder(OrderViewModel orderViewModel)
 	{
 		var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(
 			u => u.Id == orderViewModel.OrderHeader.Id, tracked: false);
 		orderHeader.TrackingNumber = orderViewModel.OrderHeader.TrackingNumber;
 		orderHeader.Carrier = orderViewModel.OrderHeader.Carrier;
-		orderHeader.OrderStatus = SD.StatusShipped;
+		orderHeader.OrderStatus = Constants.StatusShipped;
 		orderHeader.ShippingDate = DateTime.Now;
 
 		_unitOfWork.OrderHeader.Update(orderHeader);
@@ -109,20 +109,20 @@ public class OrderController : Controller
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 	public IActionResult CancelOrder(OrderViewModel orderViewModel)
 	{
 		var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(
 			u => u.Id == orderViewModel.OrderHeader.Id, tracked: false);
 
-		if (orderHeader.PaymentStatus == SD.PaymentStatusApproved)
+		if (orderHeader.PaymentStatus == Constants.PaymentStatusApproved)
 		{
 			_stripeServices.GetRefundService(orderHeader.PaymentIntendId!);
-			_unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled, SD.StatusRefunded);
+			_unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusRefunded);
 		}
 		else
 		{
-			_unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled, SD.StatusCancelled);
+			_unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusCancelled);
 		}
 		_unitOfWork.Save();
 
@@ -136,7 +136,7 @@ public class OrderController : Controller
 	{
 		IEnumerable<OrderHeader> orderHeaders;
 
-		if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+		if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 		{
                 orderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
         }
@@ -151,13 +151,13 @@ public class OrderController : Controller
 		switch (status)
 		{
 			case "inprocess":
-                    orderHeaders = orderHeaders.Where(u => u.OrderStatus == SD.StatusInProcess);
+                    orderHeaders = orderHeaders.Where(u => u.OrderStatus == Constants.StatusInProcess);
                     break;
             case "completed":
-                    orderHeaders = orderHeaders.Where(u => u.OrderStatus == SD.StatusShipped);
+                    orderHeaders = orderHeaders.Where(u => u.OrderStatus == Constants.StatusShipped);
                     break;             
 			case "approved":
-                    orderHeaders = orderHeaders.Where(u => u.OrderStatus == SD.StatusApproved);
+                    orderHeaders = orderHeaders.Where(u => u.OrderStatus == Constants.StatusApproved);
                     break;
             default:
                     break;

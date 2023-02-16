@@ -161,7 +161,7 @@ namespace ApplicationWeb.Areas.Identity.Pages.Account
 
                     if(Input.Role == null)
                     {
-                        await _userManager.AddToRoleAsync(user, SD.Role_Individual);
+                        await _userManager.AddToRoleAsync(user, Constants.RoleIndividual);
                     }
                     else
                     {
@@ -186,7 +186,7 @@ namespace ApplicationWeb.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        if (User.IsInRole(SD.Role_Admin))
+                        if (User.IsInRole(Constants.RoleAdmin))
                         {
                             TempData["success"] = "New User Created Succesfully";
                         }

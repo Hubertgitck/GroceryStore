@@ -7,7 +7,7 @@
 
 <div class="container">
     <div class="row col-12 col-lg-10 mx-auto">
-        @if (User.IsInRole(SD.Role_Admin))
+        @if (User.IsInRole(Constants.RoleAdmin))
         {
             <h1 class="pt-4"> Register - ADMIN PORTAL</h1>
         }
@@ -64,7 +64,7 @@
                         <label asp-for="Input.ConfirmPassword"></label>
                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                     </div>
-                    @if (User.IsInRole(SD.Role_Admin))
+                    @if (User.IsInRole(Constants.RoleAdmin))
                     {
                         <div class="col-12 form-floating py-2">
                             <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
@@ -77,7 +77,7 @@
                     </div>
                 </form>
             </div>
-            @if (!User.IsInRole(SD.Role_Admin))
+            @if (!User.IsInRole(Constants.RoleAdmin))
             {
                 <div class="col-md-4">
                     <section>

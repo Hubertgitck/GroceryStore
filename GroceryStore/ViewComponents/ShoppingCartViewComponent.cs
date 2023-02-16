@@ -15,15 +15,15 @@ public class ShoppingCartViewComponent : ViewComponent
         var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
         if (claim != null)
         {
-            if (HttpContext.Session.GetInt32(SD.SessionCart) != null)
+            if (HttpContext.Session.GetInt32(Constants.SessionCart) != null)
             {
-                return View(HttpContext.Session.GetInt32(SD.SessionCart));
+                return View(HttpContext.Session.GetInt32(Constants.SessionCart));
             }
             else
             {
-                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart
+                HttpContext.Session.SetInt32(Constants.SessionCart, _unitOfWork.ShoppingCart
                     .GetAll(u => u.ApplicationUserId == claim.Value).ToList().Count());
-                return View(HttpContext.Session.GetInt32(SD.SessionCart));
+                return View(HttpContext.Session.GetInt32(Constants.SessionCart));
             }
         }
         else

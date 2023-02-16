@@ -97,7 +97,7 @@ public class CartController : Controller
         if (session.PaymentStatus.ToLower() == "paid")
         {
             _unitOfWork.OrderHeader.UpdateStripePaymentID(id, orderHeader.SessionId, session.PaymentIntentId);
-            _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+            _unitOfWork.OrderHeader.UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
             _unitOfWork.Save();
         }
 
@@ -126,7 +126,7 @@ public class CartController : Controller
         {
             _unitOfWork.ShoppingCart.Remove(cart);
             var count = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).ToList().Count() - 1;
-            HttpContext.Session.SetInt32(SD.SessionCart, count);
+            HttpContext.Session.SetInt32(Constants.SessionCart, count);
         }
         else
         {
@@ -142,7 +142,7 @@ public class CartController : Controller
         _unitOfWork.ShoppingCart.Remove(cart);
         _unitOfWork.Save();
         var count = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).ToList().Count();
-        HttpContext.Session.SetInt32(SD.SessionCart, count);
+        HttpContext.Session.SetInt32(Constants.SessionCart, count);
         return RedirectToAction(nameof(Index));
     }
     private Claim GetUserClaim()
@@ -163,8 +163,8 @@ public class CartController : Controller
         }
         ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == claim.Value);
 
-        ShoppingCartViewModel.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
-        ShoppingCartViewModel.OrderHeader.OrderStatus = SD.StatusPending;
+        ShoppingCartViewModel.OrderHeader.PaymentStatus = Constants.PaymentStatusPending;
+        ShoppingCartViewModel.OrderHeader.OrderStatus = Constants.StatusPending;
 
         _unitOfWork.OrderHeader.Add(ShoppingCartViewModel.OrderHeader);
         _unitOfWork.Save();

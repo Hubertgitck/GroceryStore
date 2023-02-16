@@ -179,7 +179,7 @@ namespace ApplicationWeb.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, SD.Role_Individual);
+                    await _userManager.AddToRoleAsync(user, Constants.RoleIndividual);
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {

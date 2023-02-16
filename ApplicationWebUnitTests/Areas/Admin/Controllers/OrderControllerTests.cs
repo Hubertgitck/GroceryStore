@@ -30,7 +30,7 @@ public class OrderControllerTests
         _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), true))
             .Returns(orderHeader);
         _unitOfWorkMock.Setup(u => u.OrderHeader.UpdateStripePaymentID(orderHeaderId, It.IsAny<string>(), It.IsAny<string>()));
-        _unitOfWorkMock.Setup(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), SD.PaymentStatusApproved));
+        _unitOfWorkMock.Setup(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), Constants.PaymentStatusApproved));
         _unitOfWorkMock.Setup(u => u.Save());
 
         var stripeServices = new Mock<StripeServiceProvider>();
@@ -44,7 +44,7 @@ public class OrderControllerTests
         //Assert
         _stripeServiceMock.Verify(s => s.GetStripeSession(orderHeader.SessionId!), Times.Once());
         _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStripePaymentID(orderHeaderId, It.IsAny<string>(), It.IsAny<string>()), Times.Once());
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), SD.PaymentStatusApproved), Times.Once());
+        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), Constants.PaymentStatusApproved), Times.Once());
         _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
     }
 
@@ -99,7 +99,7 @@ public class OrderControllerTests
     }
 
     [Theory]
-    [InlineData(1, SD.PaymentStatusApproved)]
+    [InlineData(1, Constants.PaymentStatusApproved)]
     public void CancelOrder_WithPaymentStatusApproved_RefundsPaymentAndUpdatesStatus(int orderHeaderId, string status)
     {
         //Arrange
@@ -120,12 +120,12 @@ public class OrderControllerTests
 
         //Assert
         _stripeServiceMock.Verify(s => s.GetRefundService(orderHeader.PaymentIntendId!), Times.Once());
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, SD.StatusCancelled, It.IsAny<string>()), Times.Once());
+        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, Constants.StatusCancelled, It.IsAny<string>()), Times.Once());
     }
 
     [Theory]
-    [InlineData(1, SD.PaymentStatusPending)]
-    [InlineData(2, SD.PaymentStatusRejected)]
+    [InlineData(1, Constants.PaymentStatusPending)]
+    [InlineData(2, Constants.PaymentStatusRejected)]
     public void CancelOrder_WithPaymentStatusOtherThanApproved_JustUpdatesStatus(int orderHeaderId, string status)
     {
         //Arrange
@@ -144,7 +144,7 @@ public class OrderControllerTests
         var result = controller.CancelOrder(orderViewModel);
 
         //Assert
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, SD.StatusCancelled, It.IsAny<string>()), Times.Once());
+        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, Constants.StatusCancelled, It.IsAny<string>()), Times.Once());
     }
 
     private OrderHeader GetTestOrderHeader(int id)

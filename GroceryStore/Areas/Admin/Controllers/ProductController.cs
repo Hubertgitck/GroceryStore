@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace ApplicationWeb.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 public class ProductController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -33,7 +33,7 @@ public class ProductController : Controller
                 .Select(u => new SelectListItem
                     {
                         Text = u.IsWeightInGrams == true ? u.Name +
-                            $" {u.Weight * SD.KilogramsToGramsFactor}[g]" : u.Name + $" {u.Weight}[kg]",
+                            $" {u.Weight * Constants.KilogramsToGramsFactor}[g]" : u.Name + $" {u.Weight}[kg]",
                         Value = u.Id.ToString(),
                     });
 

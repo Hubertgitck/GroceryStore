@@ -33,7 +33,7 @@ public class Product
 
         if (PackagingType.IsWeightInGrams)
         {
-            weight *= SD.KilogramsToGramsFactor;
+            weight *= Constants.KilogramsToGramsFactor;
             nameWithUnits = weight.ToString() + "g " + name;
         }
         else

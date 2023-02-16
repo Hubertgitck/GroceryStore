@@ -159,6 +159,9 @@ public class OrderController : Controller
 			case "approved":
                     orderHeaders = orderHeaders.Where(u => u.OrderStatus == Constants.StatusApproved);
                     break;
+            case "pending":
+					orderHeaders = orderHeaders.Where(u => u.OrderStatus == Constants.StatusPending);
+					break;
             default:
                     break;
         }

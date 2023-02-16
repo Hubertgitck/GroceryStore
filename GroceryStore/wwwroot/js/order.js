@@ -2,27 +2,21 @@
 
 $(document).ready(function () {
     var url = window.location.search;
-    if (url.includes("inprocess")) {
-        loadDataTable("inprocess");
-    }
-    else {
-        if (url.includes("completed")) {
-            loadDataTable("completed");
-        }
-        else {
-            if (url.includes("pending")) {
-                loadDataTable("pending");
-            }
-            else {
-                if (url.includes("approved")) {
-                    loadDataTable("approved");
-                }
-                else {
-                    loadDataTable("all");
-                }
-            }
+    var urlParams = {
+        "inprocess": "inprocess",
+        "completed": "completed",
+        "pending": "pending",
+        "approved": "approved"
+    };
+
+    var param;
+    for (var key in urlParams) {
+        if (url.includes(key)) {
+            param = urlParams[key];
+            break;
         }
     }
+    loadDataTable(param);
 });
 
 function loadDataTable(status) {

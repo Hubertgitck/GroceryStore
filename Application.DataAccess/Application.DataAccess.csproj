@@ -23,7 +23,7 @@
 
 	<ItemGroup>
 		<Using Include="Application.DataAccess.Data"/>
-		<Using Include="Application.DataAccess.Repositories.IRepository"/>
+		<Using Include="Application.DataAccess.Repositories.Interfaces"/>
 		<Using Include="Application.Models"/>
 	</ItemGroup>
 

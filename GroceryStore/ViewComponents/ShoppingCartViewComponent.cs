@@ -1,8 +1,4 @@
-﻿using System.Security.Claims;
-using Application.DataAccess.Repositories.IRepository;
-using Microsoft.AspNetCore.Mvc;
-
-namespace ApplicationWeb.ViewComponents;
+﻿namespace ApplicationWeb.ViewComponents;
 
 public class ShoppingCartViewComponent : ViewComponent
 {

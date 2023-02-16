@@ -1,4 +1,4 @@
-﻿namespace Application.DataAccess.Repositories.IRepository;
+﻿namespace Application.DataAccess.Repositories.Interfaces;
 
 public interface ICategoryRepository : IRepository<Category>
 {

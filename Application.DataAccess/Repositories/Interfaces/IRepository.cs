@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Application.DataAccess.Repositories.IRepository;
+namespace Application.DataAccess.Repositories.Interfaces;
 
 public interface IRepository<T> where T : class
 {

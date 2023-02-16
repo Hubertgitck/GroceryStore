@@ -26,7 +26,7 @@
 
 	<ItemGroup>
 		<Using Include="Microsoft.AspNetCore.Mvc" />
-		<Using Include="Application.DataAccess.Repositories.IRepository" />
+		<Using Include="Application.DataAccess.Repositories.Interfaces" />
 		<Using Include="Xunit" />
 		<Using Include="Moq" />
 		<Using Include="Application.Models" />

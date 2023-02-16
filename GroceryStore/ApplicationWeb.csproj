@@ -35,7 +35,7 @@
 		<Using Include="Application.Models"/>
 		<Using Include="Application.Models.ViewModels"/>
 		<Using Include="Application.Utility"/>
-		<Using Include="Application.DataAccess.Repositories.IRepository"/>
+		<Using Include="Application.DataAccess.Repositories.Interfaces"/>
 		<Using Include="Microsoft.AspNetCore.Authorization"/>
 		<Using Include="Microsoft.AspNetCore.Mvc"/>
 		<Using Include="System.Security.Claims"/>

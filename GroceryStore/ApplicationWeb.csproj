@@ -8,6 +8,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
 		<PackageReference Include="MediatR" Version="12.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.13" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.13" />
@@ -40,7 +41,8 @@
 		<Using Include="Microsoft.AspNetCore.Authorization" />
 		<Using Include="Microsoft.AspNetCore.Mvc" />
 		<Using Include="System.Security.Claims" />
-		<Using Include="MediatR;" />
+		<Using Include="MediatR" />
+		<Using Include="ApplicationWeb.Mediator.DTO" />
 	</ItemGroup>
 
 </Project>

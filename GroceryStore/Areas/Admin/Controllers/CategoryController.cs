@@ -1,5 +1,5 @@
-﻿using ApplicationWeb.Mediator.Requests;
-using MediatR;
+﻿using ApplicationWeb.Mediator.Commands.CategoryCommands;
+using ApplicationWeb.Mediator.Requests.CategoryRequests;
 
 namespace ApplicationWeb.Areas.Admin.Controllers;
 
@@ -26,76 +26,71 @@ public class CategoryController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Category category)
+    public async Task<IActionResult> Create(CategoryDto category)
     {
         if (ModelState.IsValid)
         {
-            _mediator.Send(new AddCategory(category));
+            await _mediator.Send(new AddCategory(category));
             TempDataHelper.SetSuccess(this, "Category created succesfully");
             return RedirectToAction("Index");
         }
         return View(category);
     }
 
-    /*public IActionResult Edit(int? id)
+    public async Task<IActionResult> Edit(int? id)
     {
-        if (id == null || id == 0)
+        try
+        {
+            var result = await _mediator.Send(new GetCategoryById(id));
+            return View(result);
+        }
+        catch (Exception)
         {
             return NotFound();
-        }
-        var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(c => c.Id == id);
-
-        if (categoryFromDb == null)
-        {
-            return NotFound();
-        }
-        return View(categoryFromDb);
+        } 
     }
 
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(Category category)
+    public async Task<IActionResult> Edit(CategoryDto category)
     {
         if (ModelState.IsValid)
         {
-            _unitOfWork.Category.Update(category);
-            _unitOfWork.Save();
+            await _mediator.Send(new EditCategory(category));
             TempDataHelper.SetSuccess(this, "Category updated succesfully");
             return RedirectToAction("Index");
         }
         return View(category);
     }
-
-    public IActionResult Delete(int? id)
+       
+    public async Task<IActionResult> Delete(int? id)
     {
-        if (id == null || id == 0)
+        try
+        {
+            var result = await _mediator.Send(new GetCategoryById(id));
+            return View(result);
+        }
+        catch (Exception)
         {
             return NotFound();
         }
-        var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
-
-        if (categoryFromDb == null)
-        {
-            return NotFound();
-        }
-        return View(categoryFromDb);
     }
 
-
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult DeletePost(int? id)
+    public async Task<IActionResult> DeletePost(int? id)
     {
-        var category = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
-        if (category == null)
+        try
+        {
+            await _mediator.Send(new DeleteCategory(id));
+            TempDataHelper.SetSuccess(this, "Category deleted succesfully");
+            return RedirectToAction("Index");
+        }
+        catch (Exception)
         {
             return NotFound();
         }
-
-        _unitOfWork.Category.Remove(category);
-        _unitOfWork.Save();
-        TempDataHelper.SetSuccess(this, "Category deleted succesfully");
-        return RedirectToAction("Index");
-    }*/
+    }
 }

@@ -6,6 +6,8 @@ using Application.DataAccess.Data;
 using Stripe;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Globalization;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +50,7 @@ builder.Services.AddAuthentication().AddFacebook(options =>
 });
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 CultureInfo culture = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = culture;

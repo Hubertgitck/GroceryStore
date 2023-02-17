@@ -26,6 +26,10 @@
     transition: all 0.4s ease-in-out;
 }
 
+.dropdown-item{
+    color: white;
+}
+
 .show, .collapsing {
     background-color: var(--bs-primary);
     z-index: 999;

@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using Application.Models;
-using ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
-using AutoMapper;
+﻿using ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 

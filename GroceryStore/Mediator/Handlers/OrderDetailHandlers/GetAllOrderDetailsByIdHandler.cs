@@ -1,5 +1,4 @@
-﻿using ApplicationWeb.Mediator.Requests.CategoryRequests;
-using AutoMapper;
+﻿using ApplicationWeb.Mediator.Requests.OrderDetailRequests;
 
 namespace ApplicationWeb.Mediator.Handlers.OrderDetailHandlers;
 

@@ -1,6 +1,5 @@
 ﻿using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
 
-
 namespace ApplicationWeb.Mediator.Handlers.OrderHeaderHandlers;
 
 public class CancelOrderHandler : IRequestHandler<CancelOrder>

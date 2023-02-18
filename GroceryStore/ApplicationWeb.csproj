@@ -43,6 +43,7 @@
 		<Using Include="Microsoft.AspNetCore.Mvc" />
 		<Using Include="System.Security.Claims" />
 		<Using Include="MediatR" />
+		<Using Include="AutoMapper" />
 		<Using Include="ApplicationWeb.Mediator.DTO" />
 	</ItemGroup>
 

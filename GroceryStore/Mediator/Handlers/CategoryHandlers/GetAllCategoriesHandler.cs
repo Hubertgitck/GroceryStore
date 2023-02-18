@@ -1,5 +1,4 @@
 ﻿using ApplicationWeb.Mediator.Requests.CategoryRequests;
-using AutoMapper;
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 

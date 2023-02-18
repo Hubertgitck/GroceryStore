@@ -1,7 +1,4 @@
 ﻿using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
-using ApplicationWeb.Mediator.DTO;
-using ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
-using AutoMapper;
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 

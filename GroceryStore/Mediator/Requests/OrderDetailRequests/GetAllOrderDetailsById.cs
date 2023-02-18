@@ -1,4 +1,4 @@
-﻿namespace ApplicationWeb.Mediator.Requests.CategoryRequests;
+﻿namespace ApplicationWeb.Mediator.Requests.OrderDetailRequests;
 
 public class GetAllOrderDetailsById : IRequest<IEnumerable<OrderDetailDto>>
 {

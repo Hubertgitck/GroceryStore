@@ -1,8 +1,4 @@
-﻿
-using Application.Models;
-using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
-using ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
-using AutoMapper;
+﻿using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
 using Stripe.Checkout;
 
 namespace ApplicationWeb.Mediator.Handlers.OrderHeaderHandlers;

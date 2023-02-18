@@ -1,4 +1,4 @@
-﻿@model ShoppingCartViewModel
+﻿@model ShoppingCartViewDto
 @using Microsoft.Extensions.Options
 @inject IOptions<StripeSettings> Stripe
 
@@ -31,8 +31,8 @@
 									<label>Name</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="OrderHeader.Name" class="form-control" />
-									<span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+									<input asp-for="@Model.OrderHeaderDto.Name" class="form-control" />
+								<span asp-validation-for="@Model.OrderHeaderDto.Name" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -40,8 +40,8 @@
 									<label>Phone</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="OrderHeader.PhoneNumber" class="form-control" />
-									<span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+								<input asp-for="@Model.OrderHeaderDto.PhoneNumber" class="form-control" />
+								<span asp-validation-for="@Model.OrderHeaderDto.PhoneNumber" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -49,8 +49,8 @@
 									<label>Street Address</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="OrderHeader.StreetAddress" class="form-control" />
-									<span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
+								<input asp-for="@Model.OrderHeaderDto.StreetAddress" class="form-control" />
+								<span asp-validation-for="@Model.OrderHeaderDto.StreetAddress" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -58,8 +58,8 @@
 									<label>City</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="OrderHeader.City" class="form-control" />
-									<span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+								<input asp-for="@Model.OrderHeaderDto.City" class="form-control" />
+								<span asp-validation-for="@Model.OrderHeaderDto.City" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -67,8 +67,8 @@
 									<label>State</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="OrderHeader.State" class="form-control" />
-									<span asp-validation-for="OrderHeader.State" class="text-danger"></span>
+								<input asp-for="@Model.OrderHeaderDto.State" class="form-control" />
+								<span asp-validation-for="@Model.OrderHeaderDto.State" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -76,8 +76,8 @@
 									<label>Postal Code</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="OrderHeader.PostalCode" class="form-control" />
-									<span asp-validation-for="OrderHeader.PostalCode" class="text-danger"></span>
+								<input asp-for="@Model.OrderHeaderDto.PostalCode" class="form-control" />
+								<span asp-validation-for="@Model.OrderHeaderDto.PostalCode" class="text-danger"></span>
 								</div>
 							</div>
 						</div>
@@ -89,15 +89,15 @@
 								@foreach(var details in Model.CartList){
 								<li class="list-group-item d-flex justify-content-between">
 									<div>
-										<h6 class="my-0">@details.Product.Name</h6>
-										<small class="text-muted">Quantity: @details.Count x @details.Product.GetPackagingTypeWithQuantityUnit()</small>
+										<h6 class="my-0">@details.ProductDto.Name</h6>
+										<small class="text-muted">Quantity: @details.Count x @details.ProductDto.GetPackagingTypeWithQuantityUnit()</small>
 									</div>
 									<span class="text-muted">@(details.Price.ToString("c")) </span>
 								</li>
 								}
 								<li class="list-group-item d-flex justify-content-between bg-light">
 									<small class="text-info">Total </small>
-									<strong class="text-info">@Model.OrderHeader.OrderTotal.ToString("c")</strong>
+									<strong class="text-info">@Model.OrderHeaderDto.OrderTotal.ToString("c")</strong>
 								</li>
 							</ul>
 						</div>

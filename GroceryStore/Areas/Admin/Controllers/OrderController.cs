@@ -1,4 +1,5 @@
-﻿using Stripe.Checkout;
+﻿using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
+using ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
 
 namespace ApplicationWeb.Areas.Admin.Controllers;
 
@@ -6,167 +7,92 @@ namespace ApplicationWeb.Areas.Admin.Controllers;
 [Authorize]
 public class OrderController : Controller
 {
-	private readonly IUnitOfWork _unitOfWork;
-    private readonly StripeServiceProvider _stripeServices;
+    private readonly IMediator _mediator;
 
     [BindProperty]
-	public OrderViewModel? OrderViewModel { get; set; }
+	public OrderDto? OrderViewModel { get; set; }
 
-	public OrderController(IUnitOfWork unitOfWork, StripeServiceProvider stripeServices)
-	{
-		_unitOfWork = unitOfWork;
-        _stripeServices = stripeServices;
+    public OrderController(IMediator mediator)
+    {
+        _mediator = mediator;
     }
 
-	public IActionResult Index()
+    public IActionResult Index()
 	{
 		return View();
 	}		
-	public IActionResult Details(int orderId)
+	public async Task<IActionResult> Details(int orderId)
 	{  
-		var orderViewModel = new OrderViewModel()
+		var orderDto = new OrderDto()
 		{
-			OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId, includeProperties: "ApplicationUser"),
-			OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includeProperties: "Product", thenIncludeProperty: "PackagingType")
+			OrderHeaderDto = await _mediator.Send(new GetOrderHeaderById(orderId)),
+			OrderDetailDtos = await _mediator.Send(new GetAllOrderDetailsById(orderId))
         };
 
-		return View(orderViewModel);
+		return View(orderDto);
 	}
 
-	public IActionResult PaymentConfirmation(int orderHeaderId)
+	public async Task<IActionResult> PaymentConfirmation(int orderHeaderId)
 	{
-		OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderHeaderId);
-
-		Session session = _stripeServices.GetStripeSession(orderHeader.SessionId);
-
-		if (session.PaymentStatus.ToLower() == "paid")
-		{
-			_unitOfWork.OrderHeader.UpdateStripePaymentID(orderHeaderId, orderHeader.SessionId, session.PaymentIntentId);
-			_unitOfWork.OrderHeader.UpdateStatus(orderHeaderId, orderHeader.OrderStatus, Constants.PaymentStatusApproved);
-			_unitOfWork.Save();
-		}
+		await _mediator.Send(new PaymentConfirmation(orderHeaderId));
 
 		return View(orderHeaderId);
 	}
-
+    
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
-	public IActionResult UpdateOrderDetail(OrderViewModel orderViewModel)
+	public async Task<IActionResult> UpdateOrderDetail(OrderHeaderDto orderHeaderDto)
 	{
-		var orderHeaderFromDb = _unitOfWork.OrderHeader.GetFirstOrDefault(
-			u => u.Id == orderViewModel.OrderHeader.Id, tracked: false);
-        orderHeaderFromDb.Name = orderViewModel.OrderHeader.Name;
-        orderHeaderFromDb.PhoneNumber = orderViewModel.OrderHeader.PhoneNumber;
-        orderHeaderFromDb.StreetAddress = orderViewModel.OrderHeader.StreetAddress;
-        orderHeaderFromDb.City = orderViewModel.OrderHeader.City;
-        orderHeaderFromDb.State = orderViewModel.OrderHeader.State;
-        orderHeaderFromDb.PostalCode = orderViewModel.OrderHeader.PostalCode;
-		if (orderViewModel.OrderHeader.Carrier != null)
-		{
-            orderHeaderFromDb.Carrier = orderViewModel.OrderHeader.Carrier;
-		}
-		if (orderViewModel.OrderHeader.TrackingNumber != null)
-		{
-            orderHeaderFromDb.TrackingNumber = orderViewModel.OrderHeader.TrackingNumber;
-		}
-		_unitOfWork.OrderHeader.Update(orderHeaderFromDb);
-		_unitOfWork.Save();
+		var result = await _mediator.Send(new UpdateOrderHeader(orderHeaderDto));
 		TempDataHelper.SetSuccess(this, "Order Details Updated Successfully");
-		return RedirectToAction("Details", "Order", new { orderId = orderHeaderFromDb.Id });
-	}		
 
+		return RedirectToAction("Details", "Order", new { orderId = result });
+	}
+    
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
-	public IActionResult StartProcessing(OrderViewModel orderViewModel)
+	public async Task<IActionResult> StartProcessing(OrderHeader orderHeaderDto)
 	{
-		var id = orderViewModel.OrderHeader.Id;
+		await _mediator.Send(new StartProcessing(orderHeaderDto.Id));
 
-		_unitOfWork.OrderHeader.UpdateStatus(id, Constants.StatusInProcess);
-		_unitOfWork.Save();
         TempDataHelper.SetSuccess(this, "Order processing started");
-        return RedirectToAction("Details", "Order", new { orderId = id });
-	}		
-	
-	[HttpPost]
-	[ValidateAntiForgeryToken]
-	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
-	public IActionResult ShipOrder(OrderViewModel orderViewModel)
-	{
-		var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(
-			u => u.Id == orderViewModel.OrderHeader.Id, tracked: false);
-		orderHeader.TrackingNumber = orderViewModel.OrderHeader.TrackingNumber;
-		orderHeader.Carrier = orderViewModel.OrderHeader.Carrier;
-		orderHeader.OrderStatus = Constants.StatusShipped;
-		orderHeader.ShippingDate = DateTime.Now;
-
-		_unitOfWork.OrderHeader.Update(orderHeader);
-		_unitOfWork.Save();
-        TempDataHelper.SetSuccess(this, "Order Shipped Successfully");
-        return RedirectToAction("Details", "Order", new { orderId = orderViewModel.OrderHeader.Id });
-	}		
-
-	[HttpPost]
-	[ValidateAntiForgeryToken]
-	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
-	public IActionResult CancelOrder(OrderViewModel orderViewModel)
-	{
-		var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(
-			u => u.Id == orderViewModel.OrderHeader.Id, tracked: false);
-
-		if (orderHeader.PaymentStatus == Constants.PaymentStatusApproved)
-		{
-			_stripeServices.GetRefundService(orderHeader.PaymentIntendId!);
-			_unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusRefunded);
-		}
-		else
-		{
-			_unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusCancelled);
-		}
-		_unitOfWork.Save();
-
-		TempDataHelper.SetSuccess(this, "Order Cancelled Successfully");
-		return RedirectToAction("Details", "Order", new { orderId = orderViewModel.OrderHeader.Id });
+        return RedirectToAction("Details", "Order", new { orderId = orderHeaderDto.Id });
 	}
 
-	#region API CALLS
-	[HttpGet]
-	public IActionResult GetAll(string status)
+    
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
+	public async Task<IActionResult> ShipOrder(OrderHeaderDto orderHeaderDto)
 	{
-		IEnumerable<OrderHeader> orderHeaders;
+		await _mediator.Send(new ShipOrder(orderHeaderDto));
 
-		if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
-		{
-                orderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
-        }
-		else
-		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            orderHeaders = _unitOfWork.OrderHeader.GetAll(
-			u => u.ApplicationUserId == claim.Value,includeProperties: "ApplicationUser");
-        }
+        TempDataHelper.SetSuccess(this, "Order Shipped Successfully");
+        return RedirectToAction("Details", "Order", new { orderId = orderHeaderDto.Id });
+	}
 
-		switch (status)
-		{
-			case "inprocess":
-                    orderHeaders = orderHeaders.Where(u => u.OrderStatus == Constants.StatusInProcess);
-                    break;
-            case "completed":
-                    orderHeaders = orderHeaders.Where(u => u.OrderStatus == Constants.StatusShipped);
-                    break;             
-			case "approved":
-                    orderHeaders = orderHeaders.Where(u => u.OrderStatus == Constants.StatusApproved);
-                    break;
-            case "pending":
-					orderHeaders = orderHeaders.Where(u => u.OrderStatus == Constants.StatusPending);
-					break;
-            default:
-                    break;
-        }
+    
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
+	public async Task<IActionResult> CancelOrder(OrderHeaderDto orderHeaderDto)
+	{
+		var orderId = orderHeaderDto.Id;
+		await _mediator.Send(new CancelOrder(orderId));
 
-		return Json(new { data = orderHeaders });
+		TempDataHelper.SetSuccess(this, "Order Cancelled Successfully");
+		return RedirectToAction("Details", "Order", new { orderId });
+	}
+
+    #region API CALLS
+    [HttpGet]
+	public async Task<IActionResult> GetAll(string status)
+	{
+		var result = await _mediator.Send(new GetAllOrderHeaders(User, status));
+
+		return Json(new { data = result });
 	}
 	#endregion
 }

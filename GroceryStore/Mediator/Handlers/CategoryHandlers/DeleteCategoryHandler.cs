@@ -1,6 +1,4 @@
-﻿using Application.Models;
-using ApplicationWeb.Mediator.Commands.CategoryCommands;
-using AutoMapper;
+﻿using ApplicationWeb.Mediator.Commands.CategoryCommands;
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 

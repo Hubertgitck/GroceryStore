@@ -24,27 +24,4 @@ public class Product
     public int PackagingTypeId { get; set; }
     [ValidateNever]
     public PackagingType PackagingType { get; set; }
-
-    public string GetPackagingTypeWithQuantityUnit()
-    {
-        string? nameWithUnits;
-        var weight = PackagingType.Weight;
-        var name = PackagingType.Name;
-
-        if (PackagingType.IsWeightInGrams)
-        {
-            weight *= Constants.KilogramsToGramsFactor;
-            nameWithUnits = weight.ToString() + "g " + name;
-        }
-        else
-        {
-            nameWithUnits = weight.ToString() + "kg " + name;
-        }
-        return nameWithUnits;
-    }
-
-    public double GetPriceFor1kg()
-    {
-        return Price / PackagingType.Weight;
-    }
 }

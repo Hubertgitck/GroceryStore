@@ -31,7 +31,7 @@ function loadDataTable(status) {
             { "data": "id" , "width": "15%"},
             { "data": "name" , "width": "15%"},
             { "data": "phoneNumber" , "width": "15%"},
-            { "data": "applicationUser.email" , "width": "15%"},
+            { "data": "applicationUserDto.email" , "width": "15%"},
             { "data": "orderStatus" , "width": "15%"},
             { "data": "orderTotal" , "width": "15%"},
             {

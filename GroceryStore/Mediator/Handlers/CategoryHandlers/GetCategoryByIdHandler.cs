@@ -31,5 +31,4 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryById, CategoryD
 
         return Task.FromResult(categoryDto);
     }
-
 }

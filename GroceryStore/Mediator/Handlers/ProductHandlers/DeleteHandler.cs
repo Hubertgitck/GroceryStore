@@ -5,13 +5,11 @@ namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 public class GetProductByIdHandler : IRequestHandler<DeleteCommand, Dictionary<string, string>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly IWebHostEnvironment _hostEnvironment;
 
-    public GetProductByIdHandler(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment hostEnvironment)
+    public GetProductByIdHandler(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _hostEnvironment = hostEnvironment;
     }
 

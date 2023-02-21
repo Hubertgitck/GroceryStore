@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Globalization;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Utility.Middleware;
+using Application.Utility.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,13 +58,15 @@ CultureInfo culture = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;
 
+builder.Services.AddScoped<ExceptionHandlingMiddleware>();
+builder.Services.AddScoped<RequestTimeMiddleware>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -75,8 +79,11 @@ StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey"
 
 SeedDatabase();
 app.UseAuthentication();
-
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<RequestTimeMiddleware>();
+
 app.UseSession();
 
 app.MapRazorPages();

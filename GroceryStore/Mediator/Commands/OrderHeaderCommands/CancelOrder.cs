@@ -1,11 +1,10 @@
-﻿namespace ApplicationWeb.Mediator.Commands.OrderHeaderCommands
+﻿namespace ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
+
+public record CancelOrder : IRequest
 {
-    public class CancelOrder : IRequest
+    public readonly int Id;
+    public CancelOrder(int id)
     {
-        public readonly int Id;
-        public CancelOrder(int id)
-        {
-            Id = id;
-        }
+        Id = id;
     }
 }

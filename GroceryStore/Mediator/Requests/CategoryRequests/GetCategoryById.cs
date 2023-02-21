@@ -1,6 +1,6 @@
 ﻿namespace ApplicationWeb.Mediator.Requests.CategoryRequests;
 
-public class GetCategoryById : IRequest<CategoryDto>
+public record GetCategoryById : IRequest<CategoryDto>
 {
     public int? Id;
 

@@ -15,7 +15,7 @@ public class EditCategoryHandler : IRequestHandler<EditCategory>
 
     public Task Handle(EditCategory request, CancellationToken cancellationToken)
     {
-        var categoryToEditInDb = _mapper.Map<Category>(request.Category);
+        var categoryToEditInDb = _mapper.Map<Category>(request.CategoryDto);
         _unitOfWork.Category.Update(categoryToEditInDb);
         _unitOfWork.Save();
 

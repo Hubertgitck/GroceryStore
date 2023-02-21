@@ -1,4 +1,5 @@
-﻿using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
+﻿using Application.Utility.Exceptions;
+using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
 
 namespace ApplicationWeb.Mediator.Handlers.OrderHeaderHandlers;
 
@@ -15,6 +16,11 @@ public class ShipOrderHandler : IRequestHandler<ShipOrder>
     {
         var orderHeaderFromDb = _unitOfWork.OrderHeader.GetFirstOrDefault(
             u => u.Id == request.OrderHeaderDto.Id, tracked: false);
+
+        if (orderHeaderFromDb == null)
+        {
+            throw new NotFoundException("Order Header with given ID was not found in database");
+        }
 
         orderHeaderFromDb.TrackingNumber = request.OrderHeaderDto.TrackingNumber;
         orderHeaderFromDb.Carrier = request.OrderHeaderDto.Carrier;

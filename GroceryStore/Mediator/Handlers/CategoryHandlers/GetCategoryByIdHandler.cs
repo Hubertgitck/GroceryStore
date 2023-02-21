@@ -1,4 +1,5 @@
-﻿using ApplicationWeb.Mediator.Requests.CategoryRequests;
+﻿using Application.Utility.Exceptions;
+using ApplicationWeb.Mediator.Requests.CategoryRequests;
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 
@@ -17,13 +18,13 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryById, CategoryD
     {
         if (request.Id == null || request.Id == 0)
         {
-            throw new Exception();
+            throw new ArgumentException("Invalid id");
         }
         var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(c => c.Id == request.Id);
 
         if (categoryFromDb == null)
         {
-            throw new Exception();
+            throw new NotFoundException("Category with given ID was not found in database");
         }
 
         var categoryDto = _mapper.Map<CategoryDto>(categoryFromDb);

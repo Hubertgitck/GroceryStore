@@ -1,6 +1,6 @@
 ﻿namespace ApplicationWeb.Mediator.Requests.OrderDetailRequests;
 
-public class GetAllOrderDetailsById : IRequest<IEnumerable<OrderDetailDto>>
+public record GetAllOrderDetailsById : IRequest<IEnumerable<OrderDetailDto>>
 {
     public int Id;
 

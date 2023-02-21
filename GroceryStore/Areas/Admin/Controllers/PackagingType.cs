@@ -1,29 +1,28 @@
-﻿namespace ApplicationWeb.Areas.Admin.Controllers;
+﻿using ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
+using ApplicationWeb.Mediator.DTO;
+using ApplicationWeb.Mediator.Requests.CategoryRequests;
+using ApplicationWeb.Mediator.Requests.PackagingTypeRequests;
+
+namespace ApplicationWeb.Areas.Admin.Controllers;
 
 [Area("Admin")]
 [Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 public class PackagingTypeController : Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMediator _mediator;
 
-    public PackagingTypeController(IUnitOfWork unitOfWork)
+    public PackagingTypeController(IMediator mediator)
     {
-        _unitOfWork = unitOfWork;
+        _mediator = mediator;
     }
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        IEnumerable<PackagingType> packagingTypeList = _unitOfWork.PackagingType.GetAll();
-        foreach(var elem in packagingTypeList)
-        {
-            if (elem.IsWeightInGrams)
-            {
-                elem.Weight *= Constants.KilogramsToGramsFactor;
-            }
-        }
-        return View(packagingTypeList);
+        var result = await _mediator.Send(new GetAllPackagingTypes());
+
+        return View(result);
     }
 
-    public IActionResult Create()
+   public IActionResult Create()
     {
         return View();
     }
@@ -31,92 +30,49 @@ public class PackagingTypeController : Controller
     //POST
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(PackagingType packagingType)
+    public async Task<IActionResult> Create(PackagingTypeDto packagingTypeDto)
     {
         if (ModelState.IsValid)
         {
-            if (packagingType.IsWeightInGrams)
-            {
-                packagingType.Weight = packagingType.Weight / Constants.KilogramsToGramsFactor;
-            }
-            _unitOfWork.PackagingType.Add(packagingType);
-            _unitOfWork.Save();
+            await _mediator.Send(new AddPackagingType(packagingTypeDto));
             TempData["success"] = "Packaging Type created succesfully";
             return RedirectToAction("Index");
         }
-        return View(packagingType);
+        return View(packagingTypeDto);
     }
 
-    public IActionResult Edit(int? id)
+    public async Task<IActionResult> Edit(int? id)
     {
-        if (id == null || id == 0)
-        {
-            return NotFound();
-        }
-        var packagingTypeFromDb = _unitOfWork.PackagingType.GetFirstOrDefault(c => c.Id == id);
-
-        if (packagingTypeFromDb == null)
-        {
-            return NotFound();
-        }
-
-        if (packagingTypeFromDb.IsWeightInGrams)
-        {
-            packagingTypeFromDb.Weight *= Constants.KilogramsToGramsFactor;
-        }
-
-        return View(packagingTypeFromDb);
+        var result = await _mediator.Send(new GetPackagingTypeById(id));
+        return View(result);
     }
-
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(PackagingType packagingType)
+    public async Task<IActionResult> Edit(PackagingTypeDto packagingTypeDto)
     {
         if (ModelState.IsValid)
         {
-            if (packagingType.IsWeightInGrams)
-            {
-                packagingType.Weight /= Constants.KilogramsToGramsFactor;
-            }
-            _unitOfWork.PackagingType.Update(packagingType);
-            _unitOfWork.Save();
+            await _mediator.Send(new EditPackagingType(packagingTypeDto));
             TempData["success"] = "Packaging Type updated succesfully";
             return RedirectToAction("Index");
         }
-        return View(packagingType);
+        return View(packagingTypeDto);
     }
 
-    public IActionResult Delete(int? id)
+    public async Task<IActionResult> Delete(int? id)
     {
-        if (id == null || id == 0)
-        {
-            return NotFound();
-        }
-        var packagingTypeFromDb = _unitOfWork.PackagingType.GetFirstOrDefault(u => u.Id == id);
+        var result = await _mediator.Send(new GetPackagingTypeById(id));
 
-        if (packagingTypeFromDb == null)
-        {
-            return NotFound();
-        }
-
-        return View(packagingTypeFromDb);
+        return View(result);
     }
 
-
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult DeletePOST(int? id)
+    public async Task<IActionResult> DeletePOST(int? id)
     {
-        var packagingType = _unitOfWork.PackagingType.GetFirstOrDefault(u => u.Id == id);
-
-        if (packagingType == null)
-        {
-            return NotFound();
-        }
-
-        _unitOfWork.PackagingType.Remove(packagingType);
-        _unitOfWork.Save();
+        await _mediator.Send(new DeletePackagingType(id));
         TempData["success"] = "Packaging Type deleted succesfully";
         return RedirectToAction("Index");
     }

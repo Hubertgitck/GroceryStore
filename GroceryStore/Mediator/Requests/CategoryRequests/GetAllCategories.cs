@@ -1,6 +1,6 @@
 ﻿namespace ApplicationWeb.Mediator.Requests.CategoryRequests;
 
-public class GetAllCategories : IRequest<IEnumerable<CategoryDto>>
+public record GetAllCategories : IRequest<IEnumerable<CategoryDto>>
 {
 
 }

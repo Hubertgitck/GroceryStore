@@ -1,4 +1,5 @@
-﻿using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
+﻿using Application.Utility.Exceptions;
+using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
 using Stripe.Checkout;
 
 namespace ApplicationWeb.Mediator.Handlers.OrderHeaderHandlers;
@@ -16,14 +17,17 @@ public class PaymentConfirmationHandler : IRequestHandler<PaymentConfirmation>
 
     public Task Handle(PaymentConfirmation request, CancellationToken cancellationToken)
     {
-        OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == request.Id);
-
-        Session session = _stripeServices.GetStripeSession(orderHeader.SessionId);
+        OrderHeader orderHeaderFromDb = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == request.Id);
+        if (orderHeaderFromDb == null)
+        {
+            throw new NotFoundException("Order Header with given ID was not found in database");
+        }
+        Session session = _stripeServices.GetStripeSession(orderHeaderFromDb.SessionId);
 
         if (session.PaymentStatus.ToLower() == "paid")
         {
-            _unitOfWork.OrderHeader.UpdateStripePaymentID(request.Id, orderHeader.SessionId, session.PaymentIntentId);
-            _unitOfWork.OrderHeader.UpdateStatus(request.Id, orderHeader.OrderStatus, Constants.PaymentStatusApproved);
+            _unitOfWork.OrderHeader.UpdateStripePaymentID(request.Id, orderHeaderFromDb.SessionId, session.PaymentIntentId);
+            _unitOfWork.OrderHeader.UpdateStatus(request.Id, orderHeaderFromDb.OrderStatus, Constants.PaymentStatusApproved);
             _unitOfWork.Save();
         }
 

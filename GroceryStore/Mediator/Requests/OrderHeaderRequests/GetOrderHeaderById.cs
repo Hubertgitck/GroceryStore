@@ -1,12 +1,11 @@
-﻿namespace ApplicationWeb.Mediator.Requests.OrderHeaderRequests
-{
-    public class GetOrderHeaderById : IRequest<OrderHeaderDto>
-    {
-        public int Id;
+﻿namespace ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
 
-        public GetOrderHeaderById(int id)
-        {
-            Id = id;
-        }
+public record GetOrderHeaderById : IRequest<OrderHeaderDto>
+{
+    public int Id;
+
+    public GetOrderHeaderById(int id)
+    {
+        Id = id;
     }
 }

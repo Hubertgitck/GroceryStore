@@ -1,4 +1,5 @@
-﻿using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
+﻿using Application.Utility.Exceptions;
+using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
 
 namespace ApplicationWeb.Mediator.Handlers.OrderHeaderHandlers;
 
@@ -17,6 +18,11 @@ public class CancelOrderHandler : IRequestHandler<CancelOrder>
     {
         var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(
             u => u.Id == request.Id, tracked: false);
+
+        if (orderHeader == null)
+        {
+            throw new NotFoundException("Order Header with given ID was not found in database");
+        }
 
         if (orderHeader.PaymentStatus == Constants.PaymentStatusApproved)
         {

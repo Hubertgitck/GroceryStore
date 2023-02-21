@@ -39,15 +39,8 @@ public class CategoryController : Controller
 
     public async Task<IActionResult> Edit(int? id)
     {
-        try
-        {
-            var result = await _mediator.Send(new GetCategoryById(id));
-            return View(result);
-        }
-        catch (Exception)
-        {
-            return NotFound();
-        } 
+        var result = await _mediator.Send(new GetCategoryById(id));
+        return View(result);
     }
 
 
@@ -66,15 +59,8 @@ public class CategoryController : Controller
        
     public async Task<IActionResult> Delete(int? id)
     {
-        try
-        {
-            var result = await _mediator.Send(new GetCategoryById(id));
-            return View(result);
-        }
-        catch (Exception)
-        {
-            return NotFound();
-        }
+        var result = await _mediator.Send(new GetCategoryById(id));
+        return View(result);
     }
 
     
@@ -82,15 +68,8 @@ public class CategoryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeletePost(int? id)
     {
-        try
-        {
-            await _mediator.Send(new DeleteCategory(id));
-            TempDataHelper.SetSuccess(this, "Category deleted succesfully");
-            return RedirectToAction("Index");
-        }
-        catch (Exception)
-        {
-            return NotFound();
-        }
+        await _mediator.Send(new DeleteCategory(id));
+        TempDataHelper.SetSuccess(this, "Category deleted succesfully");
+        return RedirectToAction("Index");
     }
 }

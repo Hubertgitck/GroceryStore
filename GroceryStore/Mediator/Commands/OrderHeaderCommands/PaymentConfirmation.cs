@@ -1,6 +1,6 @@
 ﻿namespace ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
 
-public class PaymentConfirmation : IRequest
+public record PaymentConfirmation : IRequest
 {
     public int Id;
 

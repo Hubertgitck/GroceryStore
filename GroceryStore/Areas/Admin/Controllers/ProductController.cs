@@ -1,8 +1,5 @@
-﻿using Application.Models.ViewModels;
-using ApplicationWeb.Mediator.Commands.ProductCommands;
+﻿using ApplicationWeb.Mediator.Commands.ProductCommands;
 using ApplicationWeb.Mediator.Requests.ProductRequests;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ApplicationWeb.Areas.Admin.Controllers;
 

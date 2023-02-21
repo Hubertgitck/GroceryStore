@@ -44,9 +44,9 @@ public class GetProductByIdHandler : IRequestHandler<DeleteCommand, Dictionary<s
         dictionary = new()
             {
                 { "success", "true" },
-                { "message", "Delete Successful" }
+                { "message", "Product deleted successfully" }
             };
-        return Task.FromResult(dictionary);
 
+        return Task.FromResult(dictionary);
     }
 }

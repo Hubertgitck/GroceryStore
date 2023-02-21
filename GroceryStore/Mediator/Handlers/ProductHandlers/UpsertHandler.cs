@@ -18,15 +18,16 @@ public class UpsertHandler : IRequestHandler<UpsertCommand, string>
     {
         string message;
         string wwwRootPath = _hostEnvironment.WebRootPath;
+
         if (request.File != null)
         {
             string fileName = Guid.NewGuid().ToString();
             var uploads = Path.Combine(wwwRootPath, @"img\products");
             var extension = Path.GetExtension(request.File.FileName);
 
-            if (request.ProductViewDto.ProductDto.ImageUrl != null)
+            if (request.ProductDto.ImageUrl != null)
             {
-                var oldImagePath = Path.Combine(wwwRootPath, request.ProductViewDto.ProductDto.ImageUrl.TrimStart('\\'));
+                var oldImagePath = Path.Combine(wwwRootPath, request.ProductDto.ImageUrl.TrimStart('\\'));
                 if (File.Exists(oldImagePath))
                 {
                     File.Delete(oldImagePath);
@@ -37,23 +38,23 @@ public class UpsertHandler : IRequestHandler<UpsertCommand, string>
             {
                 request.File.CopyTo(fileStreams);
             }
-            request.ProductViewDto.ProductDto.ImageUrl = @"\img\products\" + fileName + extension;
+            request.ProductDto.ImageUrl = @"\img\products\" + fileName + extension;
         }
 
-        var product = _mapper.Map<Product>(request.ProductViewDto.ProductDto);
+        var productDb = _mapper.Map<Product>(request.ProductDto);
 
-        if (request.ProductViewDto.ProductDto.Id == 0)
+        if (request.ProductDto.Id == 0)
         {
-            _unitOfWork.Product.Add(product);
+            _unitOfWork.Product.Add(productDb);
             message = "created";
         }
         else
         {
-            _unitOfWork.Product.Update(product);
+            _unitOfWork.Product.Update(productDb);
             message = "updated";
         }
-
         _unitOfWork.Save();
+
         return Task.FromResult(message);
     }
 }

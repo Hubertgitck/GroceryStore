@@ -2,12 +2,12 @@ namespace ApplicationWeb.Mediator.Commands.ProductCommands;
 
 public record UpsertCommand : IRequest<string>
 {
-    public ProductViewDto ProductViewDto;
+    public ProductDto ProductDto;
     public IFormFile? File;
 
-    public UpsertCommand(ProductViewDto productViewDto, IFormFile? file)
+    public UpsertCommand(ProductDto productDto, IFormFile? file)
     {
-        ProductViewDto = productViewDto;
+        ProductDto = productDto;
         File = file;
     }
 }

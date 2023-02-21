@@ -34,15 +34,14 @@ public class GetProductViewlHandler : IRequestHandler<GetProductViewById, Produc
                 })
         };
 
-        if (request.Id == null || request.Id == 0)
+        if (request.Id.GetValueOrDefault() == 0)
         {
             return Task.FromResult(productViewDto);
         }
         else
         {
-            var product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == request.Id);
-            var productDto = _mapper.Map<ProductDto>(product);
-            productViewDto.ProductDto = productDto;
+            var productFromDb = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == request.Id);
+            productViewDto.ProductDto = _mapper.Map<ProductDto>(productFromDb);
 
             return Task.FromResult(productViewDto);
         }

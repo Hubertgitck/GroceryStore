@@ -14,11 +14,11 @@ public class GetAllOrderDetailsByIdHandler : IRequestHandler<GetAllOrderDetailsB
     }
     public Task<IEnumerable<OrderDetailDto>> Handle(GetAllOrderDetailsById request, CancellationToken cancellationToken)
     {
-        var listOfOrderDetailsFromDb = _unitOfWork.OrderDetail
+        var orderDetailsCollectionFromDb = _unitOfWork.OrderDetail
             .GetAll(u => u.OrderId == request.Id, includeProperties: "Product", thenIncludeProperty: "PackagingType");
 
-        var result = _mapper.Map<IEnumerable<OrderDetailDto>>(listOfOrderDetailsFromDb);
+        var orderDetailCollectionDto = _mapper.Map<IEnumerable<OrderDetailDto>>(orderDetailsCollectionFromDb);
 
-        return Task.FromResult(result);
+        return Task.FromResult(orderDetailCollectionDto);
     }
 }

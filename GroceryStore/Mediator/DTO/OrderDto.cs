@@ -1,8 +1,7 @@
-namespace ApplicationWeb.Mediator.DTO
+namespace ApplicationWeb.Mediator.DTO;
+
+public class OrderDto
 {
-    public class OrderDto
-    {
-        public OrderHeaderDto OrderHeaderDto { get; set; }
-        public IEnumerable<OrderDetailDto> OrderDetailDtos { get; set; }
-    }
+    public OrderHeaderDto OrderHeaderDto { get; set; }
+    public IEnumerable<OrderDetailDto> OrderDetailDtos { get; set; }
 }

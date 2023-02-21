@@ -16,7 +16,7 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryById, CategoryD
 
     public Task<CategoryDto> Handle(GetCategoryById request, CancellationToken cancellationToken)
     {
-        if (request.Id == null || request.Id == 0)
+        if (request.Id.GetValueOrDefault() == 0)
         {
             throw new ArgumentException("Invalid id");
         }

@@ -18,7 +18,6 @@ public class GetProductByIdHandler : IRequestHandler<DeleteCommand, Dictionary<s
         Dictionary<string, string> dictionary;
 
         var product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == request.Id);
-
         if (product == null)
         {
             dictionary = new()
@@ -29,8 +28,7 @@ public class GetProductByIdHandler : IRequestHandler<DeleteCommand, Dictionary<s
             return Task.FromResult(dictionary);
         }
 
-        var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
-        
+        var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));  
         if (File.Exists(oldImagePath))
         {
             File.Delete(oldImagePath);

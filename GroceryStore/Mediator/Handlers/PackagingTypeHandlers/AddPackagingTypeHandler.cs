@@ -1,5 +1,4 @@
-﻿using Application.Models;
-using ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
+﻿using ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 
@@ -20,6 +19,7 @@ public class AddCategoryHandler : IRequestHandler<AddPackagingType>
         {
             request.PackagingTypeDto.Weight /= Constants.KilogramsToGramsFactor;
         }
+
         var packagingType = _mapper.Map<PackagingType>(request.PackagingTypeDto);
         _unitOfWork.PackagingType.Add(packagingType);
         _unitOfWork.Save();

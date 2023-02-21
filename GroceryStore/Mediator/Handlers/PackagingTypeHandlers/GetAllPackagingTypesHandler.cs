@@ -1,5 +1,4 @@
-﻿
-using ApplicationWeb.Mediator.Requests.PackagingTypeRequests;
+﻿using ApplicationWeb.Mediator.Requests.PackagingTypeRequests;
 
 namespace ApplicationWeb.Mediator.Handlers.PackagingTypeHandlers;
 
@@ -15,17 +14,17 @@ public class GetAllPackagingTypesHandler : IRequestHandler<GetAllPackagingTypes,
     }
     public Task<IEnumerable<PackagingTypeDto>> Handle(GetAllPackagingTypes request, CancellationToken cancellationToken)
     {
-        IEnumerable<PackagingType> packagingTypesFromDb = _unitOfWork.PackagingType.GetAll();
+        var packagingTypesCollectionFromDb = _unitOfWork.PackagingType.GetAll();
 
-        foreach (var elem in packagingTypesFromDb)
+        foreach (var packagingType in packagingTypesCollectionFromDb)
         {
-            if (elem.IsWeightInGrams)
+            if (packagingType.IsWeightInGrams)
             {
-                elem.Weight *= Constants.KilogramsToGramsFactor;
+                packagingType.Weight *= Constants.KilogramsToGramsFactor;
             }
         }
-        var result = _mapper.Map<IEnumerable<PackagingTypeDto>>(packagingTypesFromDb);
+        var packagingTypesCollectionDto = _mapper.Map<IEnumerable<PackagingTypeDto>>(packagingTypesCollectionFromDb);
 
-        return Task.FromResult(result);
+        return Task.FromResult(packagingTypesCollectionDto);
     }
 }

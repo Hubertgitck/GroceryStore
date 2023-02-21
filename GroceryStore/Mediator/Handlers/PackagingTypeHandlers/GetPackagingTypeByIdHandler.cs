@@ -16,7 +16,7 @@ public class GetPackagingTypeByIdHandler : IRequestHandler<GetPackagingTypeById,
 
     public Task<PackagingTypeDto> Handle(GetPackagingTypeById request, CancellationToken cancellationToken)
     {
-        if (request.Id == null || request.Id == 0)
+        if (request.Id.GetValueOrDefault() == 0)
         {
             throw new ArgumentException("Invalid id");
         }
@@ -35,6 +35,5 @@ public class GetPackagingTypeByIdHandler : IRequestHandler<GetPackagingTypeById,
         var packagingTypeDto = _mapper.Map<PackagingTypeDto>(packagingTypeFromDb);
 
         return Task.FromResult(packagingTypeDto);
-
     }
 }

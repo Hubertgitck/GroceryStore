@@ -14,9 +14,9 @@ public class GetAllCategoriesHandler : IRequestHandler<GetAllCategories, IEnumer
     }
     public Task<IEnumerable<CategoryDto>> Handle(GetAllCategories request, CancellationToken cancellationToken)
     {
-        var categoriesFromDb = _unitOfWork.Category.GetAll();
-        var result = _mapper.Map<IEnumerable<CategoryDto>>(categoriesFromDb);
+        var categoriesCollectionFromDb = _unitOfWork.Category.GetAll();
+        var categoriesCollectionDto = _mapper.Map<IEnumerable<CategoryDto>>(categoriesCollectionFromDb);
 
-        return Task.FromResult(result);
+        return Task.FromResult(categoriesCollectionDto);
     }
 }

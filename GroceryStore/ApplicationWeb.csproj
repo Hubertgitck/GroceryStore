@@ -30,7 +30,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Mediator\Requests\OrderRequests\" />
 		<Folder Include="wwwroot\img\products\" />
 	</ItemGroup>
 

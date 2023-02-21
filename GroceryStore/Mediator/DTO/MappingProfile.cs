@@ -18,6 +18,7 @@ public class MappingProfile : Profile
         CreateMap<ApplicationUser, ApplicationUserDto>();
 
         CreateMap<Product, ProductDto>();
+        CreateMap<ProductDto, Product>();
 
         CreateMap<OrderHeaderDto, OrderHeader>();
         CreateMap<OrderHeader, OrderHeaderDto>()

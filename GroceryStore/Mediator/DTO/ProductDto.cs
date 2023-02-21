@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Application.Models;
-using Application.Utility;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace ApplicationWeb.Mediator.DTO;

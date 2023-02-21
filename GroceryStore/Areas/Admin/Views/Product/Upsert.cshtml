@@ -1,55 +1,55 @@
-﻿@model Application.Models.ViewModels.ProductViewModel
+﻿@model ProductViewDto
 
 @{
     ViewData["Title"] = "Edit";
 }
 <div class="container-fluid">
     <form method="post" asp-action="Upsert" enctype="multipart/form-data">
-        <input asp-for="Product.Id" hidden />
-        <input asp-for="Product.ImageUrl" hidden />
+        <input asp-for="ProductDto.Id" hidden />
+        <input asp-for="ProductDto.ImageUrl" hidden />
 
         <div class="row col-md-10 mx-auto">
             <div class="col-8">
                 <div class="border p-3 mt-4 row">
                     <div class="col-12 pb-2">
-                        <h2 class="text-primary">@(Model.Product.Id != 0 ? "Update" : "Create") Product </h2>
+                        <h2 class="text-primary">@(Model.ProductDto.Id != 0 ? "Update" : "Create") Product </h2>
                         <hr />
                     </div>
                     <div class="mb-3">
-                        <label asp-for="Product.Name"></label>
-                        <input asp-for="Product.Name" class="form-control" />
-                        <span asp-validation-for="Product.Name" class="text-danger"></span>
+                        <label asp-for="ProductDto.Name"></label>
+                        <input asp-for="ProductDto.Name" class="form-control" />
+                        <span asp-validation-for="ProductDto.Name" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="Product.Description"></label>
-                        <textarea asp-for="Product.Description" rows="3" class="form-control" ></textarea>
-                        <span asp-validation-for="Product.Description" class="text-danger"></span>
+                        <label asp-for="ProductDto.Description"></label>
+                        <textarea asp-for="ProductDto.Description" rows="3" class="form-control" ></textarea>
+                        <span asp-validation-for="ProductDto.Description" class="text-danger"></span>
                     </div>             
                     <div class="mb-3">
-                        <label asp-for="Product.ImageUrl"></label>
+                        <label asp-for="ProductDto.ImageUrl"></label>
                         <input type="file" id="uploadBox" name="file" class="form-control" />
                     </div>
                     <div class="mb-3 col-6">
-                        <label asp-for="Product.CategoryId"></label>
-                        <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-select">
+                        <label asp-for="ProductDto.CategoryId"></label>
+                        <select asp-for="ProductDto.CategoryId" asp-items="@Model.CategoryList" class="form-select">
                             <option disabled selected>--Select Category--</option>
                         </select>
-                        <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                        <span asp-validation-for="ProductDto.CategoryId" class="text-danger"></span>
                     </div>
                     <div class="mb-3 col-6">
-                        <label asp-for="Product.PackagingTypeId"></label>
-                        <select asp-for="Product.PackagingTypeId" asp-items="@Model.PackagingTypeList" class="form-select">
+                        <label asp-for="ProductDto.PackagingTypeId"></label>
+                        <select asp-for="ProductDto.PackagingTypeId" asp-items="@Model.PackagingTypeList" class="form-select">
                             <option disabled selected>--Select Category--</option>
                         </select>
-                        <span asp-validation-for="Product.PackagingTypeId" class="text-danger"></span>
+                        <span asp-validation-for="ProductDto.PackagingTypeId" class="text-danger"></span>
                     </div>
                     <div class="mb-3 col-6">
-                        <label asp-for="Product.Price">Price per packaging unit</label>
-                        <input asp-for="Product.Price" class="form-control" />
-                        <span asp-validation-for="Product.Price" class="text-danger"></span>
+                        <label asp-for="ProductDto.Price">Price per packaging unit</label>
+                        <input asp-for="ProductDto.Price" class="form-control" />
+                        <span asp-validation-for="ProductDto.Price" class="text-danger"></span>
                     </div>
                     <div class="col-12">
-                        @if (Model.Product.Id != 0)
+                        @if (Model.ProductDto.Id != 0)
                         {
                             <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
                         }
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="col-2 pt-4">
-                <img src="@Model.Product.ImageUrl"
+                <img src="@Model.ProductDto.ImageUrl"
                      width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
             </div>
         </div>

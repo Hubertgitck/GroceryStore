@@ -1,45 +1,25 @@
 ﻿using System.Diagnostics;
+using ApplicationWeb.Mediator.Requests.ShopRequests;
 
 namespace ApplicationWeb.Areas.Customer.Controllers;
 
 [Area("Customer")]
 public class ShopController : Controller
 {
-	private readonly ILogger<ShopController> _logger;
-	private readonly IUnitOfWork _unitOfWork;
+    private readonly IMediator _mediator;
 
-	public ShopController(ILogger<ShopController> logger, IUnitOfWork unitOfWork)
+    public ShopController(IMediator mediator)
 	{
-		_logger = logger;
-		_unitOfWork = unitOfWork;
-	}
+        _mediator = mediator;
+    }
 
-	public IActionResult Index(string category)
+	public async Task<IActionResult> Index(string category)
 	{
-		IEnumerable<Product> productsList;
-
-        if (string.IsNullOrEmpty(category))
-        {
-			productsList = _unitOfWork.Product.GetAll(includeProperties: "Category,PackagingType")
-				.OrderBy(u => u.Category.DisplayOrder);
-		}
-		else
-		{
-            productsList = _unitOfWork.Product.GetAll(u => u.Category.Name == category,
-               includeProperties: "Category,PackagingType")
-				.OrderBy(u => u.Category.DisplayOrder);
-        }
-
-        ShopIndexViewModel shopIndexViewModel = new()
-        {
-			ProductsList = productsList,
-            CategoryList = _unitOfWork.Category.GetAll()
-		};
-
-    return View(shopIndexViewModel);
+		var result = await _mediator.Send(new GetShopIndexView(category));
+		return View(result);
     } 
 	
-	[Authorize]
+	/*[Authorize]
 	public IActionResult Details(int productId)
 	{
 		var claim = GetUserClaim();
@@ -117,5 +97,5 @@ public class ShopController : Controller
         {
             return _unitOfWork.ShoppingCart.GetFirstOrDefault(
                 u => u.ApplicationUserId == claim.Value && u.ProductId == productId);
-        }
-    }
+        }*/
+}

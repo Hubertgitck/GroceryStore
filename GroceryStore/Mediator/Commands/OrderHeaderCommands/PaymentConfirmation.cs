@@ -2,7 +2,7 @@
 
 public record PaymentConfirmation : IRequest
 {
-    public int Id;
+    public readonly int Id;
 
     public PaymentConfirmation(int id)
     {

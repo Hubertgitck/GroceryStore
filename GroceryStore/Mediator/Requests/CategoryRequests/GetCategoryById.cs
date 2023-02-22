@@ -2,7 +2,7 @@
 
 public record GetCategoryById : IRequest<CategoryDto>
 {
-    public int? Id;
+    public readonly int? Id;
 
     public GetCategoryById(int? id)
     {

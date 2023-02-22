@@ -2,7 +2,7 @@
 
 public record GetOrderHeaderById : IRequest<OrderHeaderDto>
 {
-    public int Id;
+    public readonly int Id;
 
     public GetOrderHeaderById(int id)
     {

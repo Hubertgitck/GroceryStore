@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Security.Claims;
 using ApplicationWeb.Mediator.Requests.ShopRequests;
 
 namespace ApplicationWeb.Areas.Customer.Controllers;
@@ -19,14 +20,15 @@ public class ShopController : Controller
 		return View(result);
     } 
 	
-	/*[Authorize]
 	public IActionResult Details(int productId)
 	{
-		var claim = GetUserClaim();
+		var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-		ShoppingCart cartFromDb = GetCartByUserClaimAndProductId(claim, productId);
+        ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.GetFirstOrDefault(
+                u => u.ApplicationUserId == claim.Value && u.ProductId == productId);
 
-		Product product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == productId, includeProperties: "Category,PackagingType");
+        Product product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == productId, includeProperties: "Category,PackagingType");
 
         if (cartFromDb != null)
 		{
@@ -44,7 +46,7 @@ public class ShopController : Controller
             return View(cartObj);
         }	
 	}
-
+    /*
     [HttpPost]
 	[ValidateAntiForgeryToken]
 	[Authorize]
@@ -85,17 +87,10 @@ public class ShopController : Controller
 		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 	}
 
-        private Claim GetUserClaim()
-        {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            return claim;
-        }
 
 
         private ShoppingCart GetCartByUserClaimAndProductId(Claim claim, int productId)
         {
-            return _unitOfWork.ShoppingCart.GetFirstOrDefault(
-                u => u.ApplicationUserId == claim.Value && u.ProductId == productId);
+
         }*/
 }

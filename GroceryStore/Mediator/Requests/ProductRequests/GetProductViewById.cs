@@ -2,7 +2,7 @@
 
 public class GetProductViewById : IRequest<ProductViewDto>
 {
-    public int? Id;
+    public readonly int? Id;
 
     public GetProductViewById(int? id)
     {

@@ -2,7 +2,7 @@
 
 public record GetAllOrderDetailsById : IRequest<IEnumerable<OrderDetailDto>>
 {
-    public int Id;
+    public readonly int Id;
 
     public GetAllOrderDetailsById(int id)
     {

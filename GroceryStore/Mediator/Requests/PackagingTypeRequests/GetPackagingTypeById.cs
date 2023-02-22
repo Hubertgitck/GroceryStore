@@ -2,7 +2,7 @@
 
 public record GetPackagingTypeById : IRequest<PackagingTypeDto>
 {
-    public int? Id;
+    public readonly int? Id;
 
     public GetPackagingTypeById(int? id)
     {

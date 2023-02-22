@@ -2,7 +2,7 @@
 
 public record GetShopIndexView : IRequest<ShopIndexDto>
 {
-    public readonly string Category;
+    public string Category;
 
     public GetShopIndexView(string category)
     {

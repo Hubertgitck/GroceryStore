@@ -2,7 +2,7 @@ namespace ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
 
 public record AddPackagingType : IRequest
 {
-    public PackagingTypeDto PackagingTypeDto;
+    public readonly PackagingTypeDto PackagingTypeDto;
 
     public AddPackagingType(PackagingTypeDto packagingTypeDto)
     {

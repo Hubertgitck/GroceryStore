@@ -24,7 +24,8 @@ public class GetAllOrderHeadersHandler : IRequestHandler<GetAllOrderHeaders, IEn
         }
         else
         {
-            var userId = HelperMethods.GetApplicationUserIdFromClaimsPrincipal(request.ClaimsPrincipal);
+
+        var userId = HelperMethods.GetApplicationUserIdFromClaimsPrincipal(request.ClaimsPrincipal);
 
             orderHeadersFromDb = _unitOfWork.OrderHeader.GetAll(
                 u => u.ApplicationUserId == userId, includeProperties: "ApplicationUser");

@@ -1,4 +1,4 @@
-﻿@model ShoppingCartViewModel
+﻿@model ShoppingCartViewDto
 
 <form method="post">
 	<br />
@@ -19,15 +19,15 @@
 				@foreach(var item in Model.CartList){
 				<div class="row">
 					<div class="d-none d-lg-block col-lg-1 text-center py-2">
-						<img src="@item.Product.ImageUrl" class="rounded" width="100%" />
+						<img src="@item.ProductDto.ImageUrl" class="rounded" width="100%" />
 					</div>
 					<div class="col-12 col-lg-6 pt-md-3">
-							<h5><strong>@item.Product.Name</strong></h5>
-						<p><small>@item.Product.Description</small></p>
+							<h5><strong>@item.ProductDto.Name</strong></h5>
+						<p><small>@item.ProductDto.Description</small></p>
 					</div>
 						<div class="col-12  col-lg-5 text-center row my-auto">
 						<div class="col-5 text-md-right pt-3">
-								<h6><strong>@item.Product.Price.ToString("c")&nbsp;x&nbsp;@item.Count </strong></h6>
+								<h6><strong>@item.ProductDto.Price.ToString("c")&nbsp;x&nbsp;@item.Count </strong></h6>
 						</div>
 						<div class="col-4 col-sm-3 col-lg-6 pt-2 my-auto">
 							<div class="w-75 btn-group" role="group">
@@ -54,7 +54,7 @@
 						<ul class="list-group">
 							<li class="list-group-item d-flex justify-content-between bg-light">
 								<span class="text-info"> Total (USD)</span>
-								<strong class="text-info">@Model.OrderHeader.OrderTotal.ToString("c")</strong>
+								<strong class="text-info">@Model.OrderHeaderDto.OrderTotal.ToString("c")</strong>
 							</li>
 						</ul>
 					</div>

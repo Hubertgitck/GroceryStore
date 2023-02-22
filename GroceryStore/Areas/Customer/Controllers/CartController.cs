@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using Stripe.Checkout;
+﻿using ApplicationWeb.Mediator.Requests.CartRequests;
 
 namespace ApplicationWeb.Areas.Customer.Controllers;
 
@@ -7,37 +6,19 @@ namespace ApplicationWeb.Areas.Customer.Controllers;
 [Authorize]
 public class CartController : Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IEmailSender _emailSender;
+	private readonly IMediator _mediator;
 
-    [BindProperty]
-    public ShoppingCartViewModel ShoppingCartViewModel { get; set; }
-    public int OrderTotal { get; set; }
-
-    public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
+	public CartController(IMediator mediator)
     {
-        _unitOfWork = unitOfWork;
-        _emailSender = emailSender;
+        _mediator = mediator;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var claim = GetUserClaim();
-
-        ShoppingCartViewModel = new ShoppingCartViewModel()
-        {
-            CartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value,
-            includeProperties: "Product"),
-            OrderHeader = new()
-        };
-
-        foreach (var cart in ShoppingCartViewModel.CartList)
-        {
-            ShoppingCartViewModel.OrderHeader.OrderTotal += (cart.Count * cart.Product.Price);
-        }
-        return View(ShoppingCartViewModel);
+        var result = await _mediator.Send(new GetCartIndexView(User));
+		return View(result);
     }
-
+    /*
     public IActionResult Summary()
     {
         var claim = GetUserClaim();
@@ -145,12 +126,7 @@ public class CartController : Controller
         HttpContext.Session.SetInt32(Constants.SessionCart, count);
         return RedirectToAction(nameof(Index));
     }
-    private Claim GetUserClaim()
-    {
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-        return claim;
-    }
+
     private IActionResult ProceedToPayment(Claim claim)
     {
         ShoppingCartViewModel.OrderHeader.OrderDate = DateTime.Now;
@@ -225,5 +201,5 @@ public class CartController : Controller
 
         Response.Headers.Add("Location", session.Url);
         return new StatusCodeResult(303);
-    }
+    }*/
 }

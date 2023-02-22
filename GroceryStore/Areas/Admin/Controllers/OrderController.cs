@@ -10,9 +10,6 @@ public class OrderController : Controller
 {
     private readonly IMediator _mediator;
 
-    [BindProperty]
-	public OrderDto? OrderViewModel { get; set; }
-
     public OrderController(IMediator mediator)
     {
         _mediator = mediator;

@@ -30,6 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Mediator\Commands\CartCommands\" />
 		<Folder Include="wwwroot\img\products\" />
 	</ItemGroup>
 

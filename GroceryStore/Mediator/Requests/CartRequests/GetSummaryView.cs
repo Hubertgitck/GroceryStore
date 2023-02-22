@@ -1,10 +1,10 @@
 ﻿namespace ApplicationWeb.Mediator.Requests.CartRequests;
 
-public record GetSummaryView : IRequest<ShoppingCartViewDto>
+public record GetCartIndexView : IRequest<ShoppingCartViewDto>
 {
 	public readonly ClaimsPrincipal ClaimsPrincipal;
 
-	public GetSummaryView(ClaimsPrincipal claimsPrincipal)
+	public GetCartIndexView(ClaimsPrincipal claimsPrincipal)
 	{
 		ClaimsPrincipal = claimsPrincipal;
 	}

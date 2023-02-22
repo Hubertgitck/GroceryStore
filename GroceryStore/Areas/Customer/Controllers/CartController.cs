@@ -18,36 +18,13 @@ public class CartController : Controller
         var result = await _mediator.Send(new GetCartIndexView(User));
 		return View(result);
     }
-    /*
-    public IActionResult Summary()
+    
+    public async Task<IActionResult> Summary()
     {
-        var claim = GetUserClaim();
-
-        ShoppingCartViewModel = new ShoppingCartViewModel()
-        {
-            CartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value,
-            includeProperties: "Product", thenIncludeProperty: "PackagingType"),
-            OrderHeader = new()
-        };
-
-        ShoppingCartViewModel.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(
-            u => u.Id == claim.Value);
-
-        ShoppingCartViewModel.OrderHeader.Name = ShoppingCartViewModel.OrderHeader.ApplicationUser.Name;
-        ShoppingCartViewModel.OrderHeader.PhoneNumber = ShoppingCartViewModel.OrderHeader.ApplicationUser.PhoneNumber;
-        ShoppingCartViewModel.OrderHeader.StreetAddress = ShoppingCartViewModel.OrderHeader.ApplicationUser.StreetAddress;
-        ShoppingCartViewModel.OrderHeader.City = ShoppingCartViewModel.OrderHeader.ApplicationUser.City;
-        ShoppingCartViewModel.OrderHeader.State = ShoppingCartViewModel.OrderHeader.ApplicationUser.State;
-        ShoppingCartViewModel.OrderHeader.PostalCode = ShoppingCartViewModel.OrderHeader.ApplicationUser.PostalCode;
-
-        foreach (var cart in ShoppingCartViewModel.CartList)
-        {
-            cart.Price = cart.Count * cart.Product.Price;
-            ShoppingCartViewModel.OrderHeader.OrderTotal += cart.Price;
-        }
-        return View(ShoppingCartViewModel);
-    }
-
+		var result = await _mediator.Send(new GetSummaryView(User));
+		return View(result);
+	}
+	/*
     [HttpPost]
     [ValidateAntiForgeryToken]
     [ActionName("Summary")]
@@ -69,6 +46,7 @@ public class CartController : Controller
         }
     }
 
+	
     public IActionResult OrderConfirmation(int id)
     {
         OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id, includeProperties: "ApplicationUser");

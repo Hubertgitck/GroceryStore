@@ -30,7 +30,7 @@ public class ProductController : Controller
     {
         if (ModelState.IsValid) 
         {
-            var result = await _mediator.Send(new UpsertCommand(productViewDto.ProductDto, file));
+            var result = await _mediator.Send(new Upsert(productViewDto.ProductDto, file));
             TempData["success"] = $"Product {result} successfully";
             return RedirectToAction("Index");
         }
@@ -48,7 +48,7 @@ public class ProductController : Controller
     [HttpDelete]
     public async Task<IActionResult> Delete(int? id)
     {
-        var result = await _mediator.Send(new DeleteCommand(id));
+        var result = await _mediator.Send(new Delete(id));
         return Json(result);
     }
 

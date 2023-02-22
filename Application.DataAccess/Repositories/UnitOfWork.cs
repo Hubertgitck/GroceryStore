@@ -26,8 +26,6 @@ public class UnitOfWork : IUnitOfWork
     {
         _dbContext.SaveChanges();
     }
-
-    
+  
 }
 
-protected class test Unit : IUnit

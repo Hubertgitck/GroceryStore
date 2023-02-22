@@ -26,5 +26,9 @@ public class MappingProfile : Profile
 
         CreateMap<PackagingType, PackagingTypeDto>();
         CreateMap<PackagingTypeDto, PackagingType>();
+
+        CreateMap<ShoppingCart, ShoppingCartDto>()
+            .ForMember(dest => dest.ProductDto, opt => opt.MapFrom(src => src.Product));
+        CreateMap<ShoppingCartDto, ShoppingCart>();
     }
 }

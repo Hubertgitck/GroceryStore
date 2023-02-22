@@ -2,12 +2,12 @@
 
 public record GetAllOrderHeaders : IRequest<IEnumerable<OrderHeaderDto>>
 {
-    public readonly ClaimsPrincipal Claim;
+    public readonly ClaimsPrincipal ClaimsPrincipal;
     public readonly string Status;
 
-    public GetAllOrderHeaders(ClaimsPrincipal claim, string status)
+    public GetAllOrderHeaders(ClaimsPrincipal claimsPrincipal, string status)
     {
-        Claim = claim;
+        ClaimsPrincipal = claimsPrincipal;
         Status = status;
     }
 }

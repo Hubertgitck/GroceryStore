@@ -1,4 +1,5 @@
 ﻿using ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
+using ApplicationWeb.Mediator.Utility;
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 
@@ -16,17 +17,17 @@ public class GetAllOrderHeadersHandler : IRequestHandler<GetAllOrderHeaders, IEn
     {
         IEnumerable<OrderHeader> orderHeadersFromDb;
 
-        if (request.Claim.IsInRole(Constants.RoleAdmin) || request.Claim.IsInRole(Constants.RoleEmployee))
+        if (request.ClaimsPrincipal.IsInRole(Constants.RoleAdmin) || 
+            request.ClaimsPrincipal.IsInRole(Constants.RoleEmployee))
         {
             orderHeadersFromDb = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
         }
         else
         {
-            var claimsIdentity = (ClaimsIdentity)request.Claim.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = HelperMethods.GetApplicationUserIdFromClaimsPrincipal(request.ClaimsPrincipal);
 
             orderHeadersFromDb = _unitOfWork.OrderHeader.GetAll(
-                u => u.ApplicationUserId == claim.Value, includeProperties: "ApplicationUser");
+                u => u.ApplicationUserId == userId, includeProperties: "ApplicationUser");
         }
 
         switch (request.Status)

@@ -7,15 +7,14 @@ using Stripe;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Globalization;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using Application.Utility.Middleware;
-using Application.Utility.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));

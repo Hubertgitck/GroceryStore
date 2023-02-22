@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Security.Claims;
+using ApplicationWeb.Mediator.Commands.ShopCommands;
 using ApplicationWeb.Mediator.Requests.ShopRequests;
 
 namespace ApplicationWeb.Areas.Customer.Controllers;
@@ -18,61 +18,22 @@ public class ShopController : Controller
 	{
 		var result = await _mediator.Send(new GetShopIndexView(category));
 		return View(result);
-    } 
-	
-	public IActionResult Details(int productId)
+    }
+
+	[Authorize]
+	public async Task<IActionResult> Details(int productId)
 	{
-		var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-        ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.GetFirstOrDefault(
-                u => u.ApplicationUserId == claim.Value && u.ProductId == productId);
-
-        Product product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == productId, includeProperties: "Category,PackagingType");
-
-        if (cartFromDb != null)
-		{
-			cartFromDb.Product = product;
-            return View(cartFromDb);
-		}
-		else
-		{
-            ShoppingCart cartObj = new()
-            {
-                Count = 1,
-                ProductId = productId,
-                Product = product
-            };
-            return View(cartObj);
-        }	
+		var result = await _mediator.Send(new GetProductDetails(User, productId));
+		return View(result);
 	}
-    /*
+    
     [HttpPost]
 	[ValidateAntiForgeryToken]
 	[Authorize]
-	public IActionResult Details(ShoppingCart shoppingCart)
+	public async Task<IActionResult> Details(ShoppingCartDto shoppingCartDto)
 	{
-        var claim = GetUserClaim();
-        shoppingCart.ApplicationUserId = claim.Value;
-
-		ShoppingCart cartFromDb = GetCartByUserClaimAndProductId(claim, shoppingCart.ProductId);
-
-		if (cartFromDb == null)
-		{
-			_unitOfWork.ShoppingCart.Add(shoppingCart);
-			_unitOfWork.Save();
-			TempData["success"] = "Product added to cart succesfully";
-            HttpContext.Session.SetInt32(Constants.SessionCart,
-				_unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).ToList().Count());
-		}
-		else
-		{
-			cartFromDb.Count = shoppingCart.Count;
-            TempData["success"] = "Shopping Cart updated succesfully";
-            _unitOfWork.ShoppingCart.Update(cartFromDb);
-			_unitOfWork.Save();
-		}
-
+		var result = await _mediator.Send(new DetailsPost(shoppingCartDto, User));
+		TempData["success"] = result;
 		return RedirectToAction(nameof(Index));
 	}
 
@@ -86,11 +47,4 @@ public class ShopController : Controller
 	{
 		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 	}
-
-
-
-        private ShoppingCart GetCartByUserClaimAndProductId(Claim claim, int productId)
-        {
-
-        }*/
 }

@@ -1,12 +1,14 @@
 ﻿namespace ApplicationWeb.Mediator.Requests.ShopRequests;
 
-public record GetShopIndexView : IRequest<ShopIndexDto>
+public record GetProductDetails : IRequest<ShoppingCartDto>
 {
-    public string Category;
+    public readonly int Id;
+    public readonly ClaimsPrincipal ClaimsPrincipal;
 
-    public GetShopIndexView(string category)
+    public GetProductDetails(ClaimsPrincipal claimsPrincipal, int id)
     {
-        Category = category;
+        ClaimsPrincipal = claimsPrincipal;
+        Id = id;
     }
 }
 

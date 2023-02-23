@@ -29,7 +29,7 @@ public class OrderControllerTests
 
         _unitOfWorkMock.Setup(u => u.OrderHeader.GetFirstOrDefault(It.IsAny<Expression<Func<OrderHeader, bool>>>(), It.IsAny<string>(), true))
             .Returns(orderHeader);
-        _unitOfWorkMock.Setup(u => u.OrderHeader.UpdateStripePaymentID(orderHeaderId, It.IsAny<string>(), It.IsAny<string>()));
+        _unitOfWorkMock.Setup(u => u.OrderHeader.UpdatePaymentID(orderHeaderId, It.IsAny<string>(), It.IsAny<string>()));
         _unitOfWorkMock.Setup(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), Constants.PaymentStatusApproved));
         _unitOfWorkMock.Setup(u => u.Save());
 
@@ -43,7 +43,7 @@ public class OrderControllerTests
 
         //Assert
         _stripeServiceMock.Verify(s => s.GetStripeSession(orderHeader.SessionId!), Times.Once());
-        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStripePaymentID(orderHeaderId, It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+        _unitOfWorkMock.Verify(u => u.OrderHeader.UpdatePaymentID(orderHeaderId, It.IsAny<string>(), It.IsAny<string>()), Times.Once());
         _unitOfWorkMock.Verify(u => u.OrderHeader.UpdateStatus(orderHeaderId, It.IsAny<string>(), Constants.PaymentStatusApproved), Times.Once());
         _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
     }

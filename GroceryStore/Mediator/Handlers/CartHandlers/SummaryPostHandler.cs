@@ -49,7 +49,7 @@ public class SummaryPostHandler : IRequestHandler<SummaryPost, string>
 			var service = new SessionService();
 			Session session = service.Create(options);
 
-			_unitOfWork.OrderHeader.UpdateStripePaymentID(_orderHeaderDto.Id,
+			_unitOfWork.OrderHeader.UpdatePaymentID(_orderHeaderDto.Id,
 				session.Id, session.PaymentIntentId);
 			_unitOfWork.Save();
 

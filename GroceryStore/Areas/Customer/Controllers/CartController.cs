@@ -46,67 +46,33 @@ public class CartController : Controller
 		}
     }
 
-	/*
-public IActionResult OrderConfirmation(int id)
-{
-	OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id, includeProperties: "ApplicationUser");
-
-	var service = new SessionService();
-	Session session = service.Get(orderHeader.SessionId);
-	if (session.PaymentStatus.ToLower() == "paid")
+	public async Task<IActionResult> OrderConfirmation(int id)
 	{
-		_unitOfWork.OrderHeader.UpdateStripePaymentID(id, orderHeader.SessionId, session.PaymentIntentId);
-		_unitOfWork.OrderHeader.UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
-		_unitOfWork.Save();
+		await _mediator.Send(new OrderConfirmation(id));
+
+		HttpContext.Session.Clear();
+		return View(id);
 	}
 
-	//_emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "New Order - Grocery Store","<p>New Order Created</p>");
-
-	List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
-		.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
-	HttpContext.Session.Clear();
-	_unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
-	_unitOfWork.Save();
-
-	return View(id);
-}
-
-public IActionResult Plus(int cartId)
-{
-	var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
-	_unitOfWork.ShoppingCart.IncrementCount(cart, 1);
-	_unitOfWork.Save();
-	return RedirectToAction(nameof(Index));
-}
-public IActionResult Minus(int cartId)
-{
-	var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
-	if (cart.Count <= 1)
+	
+	public async Task<IActionResult> IncrementCount(int cartId)
 	{
-		_unitOfWork.ShoppingCart.Remove(cart);
-		var count = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).ToList().Count() - 1;
-		HttpContext.Session.SetInt32(Constants.SessionCart, count);
+		await _mediator.Send(new IncrementCount(cartId));
+
+		return RedirectToAction(nameof(Index));
 	}
-	else
+	
+	public async Task<IActionResult> DecrementCount(int cartId)
 	{
-		_unitOfWork.ShoppingCart.DecrementCount(cart, 1);
+		await _mediator.Send(new DecrementCount(cartId));
+
+		return RedirectToAction(nameof(Index));
 	}
+	
+	public async Task<IActionResult> Remove(int cartId)
+	{
+		await _mediator.Send(new RemoveCartById(cartId));
 
-	_unitOfWork.Save();
-	return RedirectToAction(nameof(Index));
-}
-public IActionResult Remove(int cartId)
-{
-	var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
-	_unitOfWork.ShoppingCart.Remove(cart);
-	_unitOfWork.Save();
-	var count = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).ToList().Count();
-	HttpContext.Session.SetInt32(Constants.SessionCart, count);
-	return RedirectToAction(nameof(Index));
-}
-
-private IActionResult ProceedToPayment(Claim claim)
-{
-
-}*/
+		return RedirectToAction(nameof(Index));
+	}	
 }

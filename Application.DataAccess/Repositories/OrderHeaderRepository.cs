@@ -25,7 +25,7 @@ public class OrderHeaderRepository : Repository<OrderHeader>, IOrderHeaderReposi
             }
         }
     }
-    public void UpdateStripePaymentID(int id, string sessionId, string paymentIntendId)
+    public void UpdatePaymentID(int id, string sessionId, string paymentIntendId)
     {
         var orderFromDb = _dbContext.OrderHeaders.FirstOrDefault(u => u.Id == id);
 

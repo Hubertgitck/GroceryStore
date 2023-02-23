@@ -26,7 +26,7 @@ public class PaymentConfirmationHandler : IRequestHandler<PaymentConfirmation>
 
         if (session.PaymentStatus.ToLower() == "paid")
         {
-            _unitOfWork.OrderHeader.UpdateStripePaymentID(request.Id, orderHeaderFromDb.SessionId, session.PaymentIntentId);
+            _unitOfWork.OrderHeader.UpdatePaymentID(request.Id, orderHeaderFromDb.SessionId, session.PaymentIntentId);
             _unitOfWork.OrderHeader.UpdateStatus(request.Id, orderHeaderFromDb.OrderStatus, Constants.PaymentStatusApproved);
             _unitOfWork.Save();
         }

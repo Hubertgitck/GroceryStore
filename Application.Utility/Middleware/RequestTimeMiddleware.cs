@@ -18,22 +18,16 @@ namespace Application.Utility.Middleware
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            try
-            {
-                _stopwatch.Start();
-                await next.Invoke(context);
-                _stopwatch.Stop();
 
-                var elapsedMilliseconds = _stopwatch.ElapsedMilliseconds;
-                if (elapsedMilliseconds / 1000 > 5) 
-                {
-                    var message = $"Request [{context.Request.Method}] at {context.Request.Path} took {elapsedMilliseconds} ms";
-                    _logger.LogInformation(message);
-                }
-            }
-            catch (RequestTimeoutException)
-            {
+            _stopwatch.Start();
+            await next.Invoke(context);
+            _stopwatch.Stop();
 
+            var elapsedMilliseconds = _stopwatch.ElapsedMilliseconds;
+            if (elapsedMilliseconds / 1000 > 5) 
+            {
+                var message = $"Request [{context.Request.Method}] at {context.Request.Path} took {elapsedMilliseconds} ms";
+                _logger.LogInformation(message);
             }
         }
     }

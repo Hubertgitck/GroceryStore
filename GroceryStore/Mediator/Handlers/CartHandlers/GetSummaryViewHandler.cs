@@ -30,6 +30,9 @@ public class GetSummaryViewHandler : IRequestHandler<GetSummaryView, ShoppingCar
 		shoppingCartViewDto.OrderHeaderDto.ApplicationUserDto = _mapper.Map<ApplicationUserDto>(applicationUser);
 		shoppingCartViewDto.OrderHeaderDto = _mapper.Map<OrderHeaderDto>(shoppingCartViewDto.OrderHeaderDto.ApplicationUserDto);
 
+		var orderId = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.ApplicationUserId == userId).Id;
+		shoppingCartViewDto.OrderHeaderDto.Id = orderId;
+		
 		foreach (var cart in shoppingCartViewDto.CartList)
 		{
 			cart.Price = cart.Count * cart.ProductDto.Price;

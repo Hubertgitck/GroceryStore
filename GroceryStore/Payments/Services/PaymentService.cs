@@ -9,15 +9,15 @@ public abstract class PaymentService<TModel> : IPaymentService
         return typeof(TModel).Equals(provider);
     }
 
-    public void MakePayment<T>(T model) where T : IPaymentModel
+    public string MakePayment<T>(T model) where T : IPaymentModel
     {
-        MakePayment((TModel)(object)model);
+        return MakePayment((TModel)(object)model);
     }    
     public void MakeRefund<T>(T model) where T : IPaymentModel
     {
         MakeRefund((TModel)(object)model);
     }
 
-    protected abstract void MakePayment(TModel model);
+    protected abstract string MakePayment(TModel model);
     protected abstract void MakeRefund(TModel model);
 }

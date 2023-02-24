@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Globalization;
 using System.Reflection;
 using Application.Utility.Middleware;
+using ApplicationWeb.PaymentServices.Interfaces;
+using ApplicationWeb.Payments;
+using ApplicationWeb.Payments.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +62,9 @@ CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
+
+builder.Services.AddScoped<IPaymentService, StripePaymentService>();
+builder.Services.AddScoped<IPaymentStrategy, PaymentStrategy>();
 
 var app = builder.Build();
 

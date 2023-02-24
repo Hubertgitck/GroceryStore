@@ -1,6 +1,7 @@
 ﻿using ApplicationWeb.Mediator.Commands.CartCommands;
 using ApplicationWeb.Mediator.Utility;
-using Stripe.Checkout;
+using ApplicationWeb.Payments.Models;
+using ApplicationWeb.PaymentServices.Interfaces;
 
 namespace ApplicationWeb.Mediator.Handlers.CartHandlers;
 
@@ -8,13 +9,15 @@ public class SummaryPostHandler : IRequestHandler<SummaryPost, string>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
-	private OrderHeaderDto _orderHeaderDto;
+    private readonly IPaymentStrategy _paymentStrategy;
+    private OrderHeaderDto _orderHeaderDto;
 
-	public SummaryPostHandler(IUnitOfWork unitOfWork, IMapper mapper)
+	public SummaryPostHandler(IUnitOfWork unitOfWork, IMapper mapper, IPaymentStrategy paymentStrategy)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
-	}
+        _paymentStrategy = paymentStrategy;
+    }
 	public Task<string> Handle(SummaryPost request, CancellationToken cancellationToken)
 	{
 		_orderHeaderDto = request.ShoppingCartViewDto.OrderHeaderDto;
@@ -40,20 +43,15 @@ public class SummaryPostHandler : IRequestHandler<SummaryPost, string>
 				_unitOfWork.OrderDetail.Add(orderDetail);
 				_unitOfWork.Save();
 			}
+			StripeModel stripeModel = new()
+			{
+				OrderId = _orderHeaderDto.Id,
+				CartList = cartListFromDb
+			};
 
-			//Stripe settings
-			var domain = request.ShoppingCartViewDto.PaymentDomain;
+			var redirectUrl = _paymentStrategy.MakePayment(stripeModel);
 
-			var options = PrepareStripeOptions(request.ShoppingCartViewDto.PaymentDomain, cartListFromDb);
-
-			var service = new SessionService();
-			Session session = service.Create(options);
-
-			_unitOfWork.OrderHeader.UpdatePaymentID(_orderHeaderDto.Id,
-				session.Id, session.PaymentIntentId);
-			_unitOfWork.Save();
-
-			return Task.FromResult(session.Url);
+			return Task.FromResult(redirectUrl);
 		}
 		else
 		{
@@ -81,42 +79,5 @@ public class SummaryPostHandler : IRequestHandler<SummaryPost, string>
 		_unitOfWork.Save();
 
 		_orderHeaderDto.Id = orderHeaderToDb.Id;
-	}
-
-	private SessionCreateOptions PrepareStripeOptions(string domain, IEnumerable<ShoppingCart> cartListFromDb)
-	{
-		var options = new SessionCreateOptions
-		{
-			PaymentMethodTypes = new List<string>
-				{
-				"card",
-				},
-			LineItems = new List<SessionLineItemOptions>(),
-			Mode = "payment",
-			SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={_orderHeaderDto.Id}",
-			CancelUrl = domain + $"customer/cart/index",
-		};
-
-		foreach (var item in cartListFromDb)
-		{
-			{
-				var sessionLineItem = new SessionLineItemOptions
-				{
-					PriceData = new SessionLineItemPriceDataOptions
-					{
-						UnitAmount = (long)(item.Price * 100),
-						Currency = "usd",
-						ProductData = new SessionLineItemPriceDataProductDataOptions
-						{
-							Name = item.Product.Name
-						},
-					},
-					Quantity = 1,
-				};
-				options.LineItems.Add(sessionLineItem);
-			}
-		}
-
-		return options;
 	}
 }

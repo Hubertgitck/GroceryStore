@@ -7,6 +7,7 @@ namespace Application.Utility.Middleware
     public class ExceptionHandlingMiddleware : IMiddleware
     {
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        private int _statusCode;
 
         public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)
         {
@@ -22,40 +23,40 @@ namespace Application.Utility.Middleware
             
             catch (ForbiddenException forbiddenException)
             {
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                _statusCode = StatusCodes.Status403Forbidden;
                 await HandleExceptionAsync(context,forbiddenException);
             }
 
             catch (BadRequestException badRequestException)
             {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                _statusCode = StatusCodes.Status400BadRequest;
                 await HandleExceptionAsync(context, badRequestException);
             }
 
             catch(NotFoundException notFoundException)
             {
-                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                _statusCode = StatusCodes.Status404NotFound;
                 await HandleExceptionAsync(context, notFoundException);
             }
 
             catch(ArgumentException argumentException)
             {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                _statusCode = StatusCodes.Status400BadRequest;
                 await HandleExceptionAsync(context, argumentException);
             }
 
             catch(Exception exception)
             {
-                _logger.LogError(exception, exception.Message);
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await context.Response.WriteAsync("Something went wrong");
+                _statusCode = StatusCodes.Status500InternalServerError;
+                await HandleExceptionAsync(context, exception);
             }
         }
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             _logger.LogError(exception, exception.Message);
-            await context.Response.WriteAsync(exception.Message);
+
+            context.Response.Redirect($"/Customer/Home/Error?StatusCode={_statusCode}&Message={exception.Message}");
         }
     }
 }

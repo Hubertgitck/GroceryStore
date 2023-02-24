@@ -35,7 +35,6 @@
 
 	<ItemGroup>
 		<Using Include="Application.Models" />
-		<Using Include="Application.Models.ViewModels" />
 		<Using Include="Application.Utility" />
 		<Using Include="Application.DataAccess.Repositories.Interfaces" />
 		<Using Include="Microsoft.AspNetCore.Authorization" />

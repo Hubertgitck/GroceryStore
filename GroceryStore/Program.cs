@@ -53,7 +53,7 @@ builder.Services.AddAuthentication().AddFacebook(options =>
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-CultureInfo culture = new CultureInfo("en-US");
+CultureInfo culture = new("en-US");
 CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;
 

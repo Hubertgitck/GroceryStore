@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using ApplicationWeb.Mediator.Commands.ShopCommands;
+﻿using ApplicationWeb.Mediator.Commands.ShopCommands;
 using ApplicationWeb.Mediator.Requests.ShopRequests;
 
 namespace ApplicationWeb.Areas.Customer.Controllers;
@@ -16,7 +15,7 @@ public class ShopController : Controller
 
 	public async Task<IActionResult> Index(string category)
 	{
-		var result = await _mediator.Send(new GetShopIndexView(category));
+        var result = await _mediator.Send(new GetShopIndexView(category));
 		return View(result);
     }
 
@@ -35,16 +34,5 @@ public class ShopController : Controller
 		var result = await _mediator.Send(new DetailsPost(shoppingCartDto, User));
 		TempData["success"] = result;
 		return RedirectToAction(nameof(Index));
-	}
-
-	public IActionResult Privacy()
-	{
-		return View();
-	}
-
-	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public IActionResult Error()
-	{
-		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 	}
 }

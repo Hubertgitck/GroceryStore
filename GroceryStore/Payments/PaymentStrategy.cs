@@ -21,6 +21,11 @@ public class PaymentStrategy : IPaymentStrategy
         GetPaymentService(model).MakeRefund(model);
     }
 
+    public string GetPaymentStatus<T>(T model) where T : IPaymentModel
+    {
+        return GetPaymentService(model).GetPaymentStatus(model);
+    }
+
     private IPaymentService GetPaymentService<T>(T model) where T : IPaymentModel
     {
         var result = paymentServices.FirstOrDefault(p => p.AppliesTo(model.GetType()));

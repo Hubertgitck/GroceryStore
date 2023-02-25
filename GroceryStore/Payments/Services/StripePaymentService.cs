@@ -1,4 +1,6 @@
-﻿using ApplicationWeb.Payments.Models;
+﻿using Application.Models;
+using ApplicationWeb.Payments.Models;
+using ApplicationWeb.Payments.ServicesSettings;
 using ApplicationWeb.PaymentServices.Services;
 using Microsoft.Extensions.Options;
 using Stripe;
@@ -41,6 +43,14 @@ public class StripePaymentService : PaymentService<StripeModel>
 
         var service = new RefundService();
         service.Create(options);
+    }
+
+    protected override string GetPaymentStatus(StripeModel model)
+    {
+        var service = new SessionService();
+        Session session = service.Get(model.SessionId);
+
+        return session.PaymentStatus.ToLower();
     }
 
     private SessionCreateOptions PrepareStripeOptions(IEnumerable<ShoppingCart> cartListFromDb, int orderId)

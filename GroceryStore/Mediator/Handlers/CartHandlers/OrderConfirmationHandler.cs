@@ -1,4 +1,6 @@
 ﻿using ApplicationWeb.Mediator.Requests.CartRequests;
+using ApplicationWeb.Payments.Models;
+using ApplicationWeb.PaymentServices.Interfaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Stripe.Checkout;
 
@@ -8,27 +10,30 @@ public class OrderConfirmationHandler : IRequestHandler<OrderConfirmation>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
-	private readonly StripeServiceProvider _stripeServiceProvider;
 	private readonly IEmailSender _emailSender;
+    private readonly IPaymentStrategy _paymentStrategy;
 
-	public OrderConfirmationHandler(IUnitOfWork unitOfWork, IMapper mapper, 
-		StripeServiceProvider stripeServiceProvider, IEmailSender emailSender)
+    public OrderConfirmationHandler(IUnitOfWork unitOfWork, IMapper mapper,
+		IEmailSender emailSender, IPaymentStrategy paymentStrategy)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
-		_stripeServiceProvider = stripeServiceProvider;
 		_emailSender = emailSender;
-	}
+        _paymentStrategy = paymentStrategy;
+    }
 	public Task Handle(OrderConfirmation request, CancellationToken cancellationToken)
 	{
 		OrderHeader orderHeader = _unitOfWork.OrderHeader
 			.GetFirstOrDefault(u => u.Id == request.Id, includeProperties: "ApplicationUser");
 
-		var session = _stripeServiceProvider.GetStripeSession(orderHeader.SessionId);
-
-		if (session.PaymentStatus.ToLower() == "paid")
+		var paymentStatus = _paymentStrategy.GetPaymentStatus(new StripeModel
 		{
-			_unitOfWork.OrderHeader.UpdatePaymentID(request.Id, orderHeader.SessionId, session.PaymentIntentId);
+			SessionId = orderHeader.SessionId
+		});
+
+		if (paymentStatus == "paid")
+		{
+			_unitOfWork.OrderHeader.UpdatePaymentID(request.Id, orderHeader.SessionId, orderHeader.PaymentIntendId);
 			_unitOfWork.OrderHeader.UpdateStatus(request.Id, Constants.StatusApproved, Constants.PaymentStatusApproved);
 		}
 

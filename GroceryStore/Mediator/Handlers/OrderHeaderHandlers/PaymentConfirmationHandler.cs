@@ -1,5 +1,7 @@
 ﻿using Application.Utility.Exceptions;
 using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
+using ApplicationWeb.Payments.Models;
+using ApplicationWeb.PaymentServices.Interfaces;
 using Stripe.Checkout;
 
 namespace ApplicationWeb.Mediator.Handlers.OrderHeaderHandlers;
@@ -7,12 +9,12 @@ namespace ApplicationWeb.Mediator.Handlers.OrderHeaderHandlers;
 public class PaymentConfirmationHandler : IRequestHandler<PaymentConfirmation>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly StripeServiceProvider _stripeServices;
+    private readonly IPaymentStrategy _paymentStrategy;
 
-    public PaymentConfirmationHandler(IUnitOfWork unitOfWork, StripeServiceProvider stripeServices)
+    public PaymentConfirmationHandler(IUnitOfWork unitOfWork, IPaymentStrategy paymentStrategy)
     {
         _unitOfWork = unitOfWork;
-        _stripeServices = stripeServices;
+        _paymentStrategy = paymentStrategy;
     }
 
     public Task Handle(PaymentConfirmation request, CancellationToken cancellationToken)
@@ -22,11 +24,14 @@ public class PaymentConfirmationHandler : IRequestHandler<PaymentConfirmation>
         {
             throw new NotFoundException("Order Header with given ID was not found in database");
         }
-        Session session = _stripeServices.GetStripeSession(orderHeaderFromDb.SessionId);
-
-        if (session.PaymentStatus.ToLower() == "paid")
+        var paymentStatus = _paymentStrategy.GetPaymentStatus(new StripeModel
         {
-            _unitOfWork.OrderHeader.UpdatePaymentID(request.Id, orderHeaderFromDb.SessionId, session.PaymentIntentId);
+            SessionId = orderHeaderFromDb.SessionId
+        });
+
+        if (paymentStatus == "paid")
+        {
+            _unitOfWork.OrderHeader.UpdatePaymentID(request.Id, orderHeaderFromDb.SessionId, orderHeaderFromDb.PaymentIntendId);
             _unitOfWork.OrderHeader.UpdateStatus(request.Id, orderHeaderFromDb.OrderStatus, Constants.PaymentStatusApproved);
             _unitOfWork.Save();
         }

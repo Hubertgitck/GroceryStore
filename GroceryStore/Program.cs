@@ -11,6 +11,7 @@ using Application.Utility.Middleware;
 using ApplicationWeb.PaymentServices.Interfaces;
 using ApplicationWeb.Payments;
 using ApplicationWeb.Payments.Services;
+using ApplicationWeb.Payments.ServicesSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
-builder.Services.AddScoped<StripeServiceProvider>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>()

@@ -8,13 +8,11 @@ namespace ApplicationWeb.Mediator.Handlers.OrderHeaderHandlers;
 public class CancelOrderHandler : IRequestHandler<CancelOrder>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly StripeServiceProvider _stripeServices;
     private readonly IPaymentStrategy _paymentStrategy;
 
-    public CancelOrderHandler(IUnitOfWork unitOfWork, StripeServiceProvider stripeServices, IPaymentStrategy paymentStrategy)
+    public CancelOrderHandler(IUnitOfWork unitOfWork,  IPaymentStrategy paymentStrategy)
     {
         _unitOfWork = unitOfWork;
-        _stripeServices = stripeServices;
         _paymentStrategy = paymentStrategy;
     }
 

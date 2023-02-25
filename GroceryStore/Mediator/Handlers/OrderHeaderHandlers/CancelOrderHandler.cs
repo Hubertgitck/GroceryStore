@@ -1,5 +1,7 @@
 ﻿using Application.Utility.Exceptions;
 using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
+using ApplicationWeb.Payments.Models;
+using ApplicationWeb.PaymentServices.Interfaces;
 
 namespace ApplicationWeb.Mediator.Handlers.OrderHeaderHandlers;
 
@@ -7,11 +9,13 @@ public class CancelOrderHandler : IRequestHandler<CancelOrder>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly StripeServiceProvider _stripeServices;
+    private readonly IPaymentStrategy _paymentStrategy;
 
-    public CancelOrderHandler(IUnitOfWork unitOfWork, StripeServiceProvider stripeServices)
+    public CancelOrderHandler(IUnitOfWork unitOfWork, StripeServiceProvider stripeServices, IPaymentStrategy paymentStrategy)
     {
         _unitOfWork = unitOfWork;
         _stripeServices = stripeServices;
+        _paymentStrategy = paymentStrategy;
     }
 
     public Task Handle(CancelOrder request, CancellationToken cancellationToken)
@@ -26,7 +30,7 @@ public class CancelOrderHandler : IRequestHandler<CancelOrder>
 
         if (orderHeader.PaymentStatus == Constants.PaymentStatusApproved)
         {
-            _stripeServices.GetRefundService(orderHeader.PaymentIntendId!);
+            _paymentStrategy.MakeRefund(new StripeModel { PaymentIntentId = orderHeader.PaymentIntendId });
             _unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusRefunded);
         }
         else

@@ -1,6 +1,7 @@
 ﻿using ApplicationWeb.Payments.Models;
 using ApplicationWeb.PaymentServices.Services;
 using Microsoft.Extensions.Options;
+using Stripe;
 using Stripe.Checkout;
 
 namespace ApplicationWeb.Payments.Services;
@@ -32,7 +33,14 @@ public class StripePaymentService : PaymentService<StripeModel>
 
     protected override void MakeRefund(StripeModel model)
     {
-        throw new NotImplementedException();
+        var options = new RefundCreateOptions
+        {
+            Reason = RefundReasons.RequestedByCustomer,
+            PaymentIntent = model.PaymentIntentId
+        };
+
+        var service = new RefundService();
+        service.Create(options);
     }
 
     private SessionCreateOptions PrepareStripeOptions(IEnumerable<ShoppingCart> cartListFromDb, int orderId)

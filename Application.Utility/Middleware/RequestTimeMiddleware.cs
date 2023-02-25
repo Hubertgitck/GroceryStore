@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Application.Utility.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Application.Utility.Exceptions;
 using Microsoft.AspNetCore.Http;
-using Application.Utility.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Utility.Middleware
 {

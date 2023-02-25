@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using MimeKit;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
+using MimeKit;
 
 namespace Application.Utility;
 

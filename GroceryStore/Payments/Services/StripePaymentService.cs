@@ -1,5 +1,4 @@
-﻿using Application.Models;
-using ApplicationWeb.Payments.Models;
+﻿using ApplicationWeb.Payments.Models;
 using ApplicationWeb.Payments.ServicesSettings;
 using ApplicationWeb.PaymentServices.Services;
 using Microsoft.Extensions.Options;

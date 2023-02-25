@@ -18,13 +18,21 @@ public class CartController : Controller
     public async Task<IActionResult> Index()
     {
         var result = await _mediator.Send(new GetCartIndexView(User));
+
 		return View(result);
     }
     
     public async Task<IActionResult> Summary()
     {
 		var result = await _mediator.Send(new GetSummaryView(User));
-		return View(result);
+		if (!result.CartList.Any())
+		{
+			return RedirectToIndexWhenCartIsEmpty();
+        }
+		else
+		{
+            return View(result);
+        }
 	}
 
     [HttpPost]
@@ -36,9 +44,8 @@ public class CartController : Controller
 		
 		if(string.IsNullOrEmpty(result))
 		{
-			TempData["error"] = "Your cart is empty. Please, add any product first.";
-			return RedirectToAction("Index", "Shop");
-		}
+            return RedirectToIndexWhenCartIsEmpty();
+        }
 		else
 		{
 			Response.Headers.Add("Location", result);
@@ -75,4 +82,10 @@ public class CartController : Controller
 
 		return RedirectToAction(nameof(Index));
 	}	
+
+	private IActionResult RedirectToIndexWhenCartIsEmpty()
+	{
+        TempData["error"] = "Your cart is empty. Please, add any product first.";
+        return RedirectToAction("Index", "Shop");
+    }
 }

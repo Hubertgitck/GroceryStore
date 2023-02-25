@@ -15,9 +15,10 @@ public class DeleteCategoryHandler : IRequestHandler<DeleteCategory>
     public Task Handle(DeleteCategory request, CancellationToken cancellationToken)
     {
         var categoryToDeleteInDb = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == request.Id);
+
         if (categoryToDeleteInDb == null)
         {
-            throw new NotFoundException("Category with given ID was not found in database");
+            throw new NotFoundException($"Category with ID: {request.Id} was not found in database");
         }
         _unitOfWork.Category.Remove(categoryToDeleteInDb);
         _unitOfWork.Save();

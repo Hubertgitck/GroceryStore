@@ -9,15 +9,12 @@ namespace ApplicationWeb.Mediator.Handlers.CartHandlers;
 public class OrderConfirmationHandler : IRequestHandler<OrderConfirmation>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly IMapper _mapper;
 	private readonly IEmailSender _emailSender;
     private readonly IPaymentStrategy _paymentStrategy;
 
-    public OrderConfirmationHandler(IUnitOfWork unitOfWork, IMapper mapper,
-		IEmailSender emailSender, IPaymentStrategy paymentStrategy)
+    public OrderConfirmationHandler(IUnitOfWork unitOfWork, IEmailSender emailSender, IPaymentStrategy paymentStrategy)
 	{
 		_unitOfWork = unitOfWork;
-		_mapper = mapper;
 		_emailSender = emailSender;
         _paymentStrategy = paymentStrategy;
     }

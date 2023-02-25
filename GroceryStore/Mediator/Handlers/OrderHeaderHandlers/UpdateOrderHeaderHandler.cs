@@ -19,7 +19,7 @@ public class UpdateOrderHeaderHandler : IRequestHandler<UpdateOrderHeader, int>
 
         if (orderHeaderFromDb == null)
         {
-            throw new NotFoundException("Order Header with given ID was not found in database");
+            throw new NotFoundException($"Order Header with ID: {request.OrderHeaderDto.Idd} was not found in database");
         }
 
         orderHeaderFromDb.Name = request.OrderHeaderDto.Name;
@@ -28,6 +28,7 @@ public class UpdateOrderHeaderHandler : IRequestHandler<UpdateOrderHeader, int>
         orderHeaderFromDb.City = request.OrderHeaderDto.City;
         orderHeaderFromDb.State = request.OrderHeaderDto.State;
         orderHeaderFromDb.PostalCode = request.OrderHeaderDto.PostalCode;
+
         if (request.OrderHeaderDto.Carrier != null)
         {
             orderHeaderFromDb.Carrier = request.OrderHeaderDto.Carrier;

@@ -26,7 +26,7 @@ public class GetOrderHeaderByIdHandler : IRequestHandler<GetOrderHeaderById, Ord
 
         if (orderHeaderFromDb == null)
         {
-            throw new NotFoundException("Order Header with given ID was not found in database");
+            throw new NotFoundException($"Order Header with ID: {request.Id} was not found in database");
         }
 
         var orderHeaderDto = _mapper.Map<OrderHeaderDto>(orderHeaderFromDb);

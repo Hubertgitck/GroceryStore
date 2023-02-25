@@ -1,5 +1,4 @@
 ﻿using ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
-using ApplicationWeb.Mediator.DTO;
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 

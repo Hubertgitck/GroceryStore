@@ -23,7 +23,7 @@ public class CancelOrderHandler : IRequestHandler<CancelOrder>
 
         if (orderHeader == null)
         {
-            throw new NotFoundException("Order Header with given ID was not found in database");
+            throw new NotFoundException($"Order Header with ID: {request.Id} was not found in database");
         }
 
         if (orderHeader.PaymentStatus == Constants.PaymentStatusApproved)

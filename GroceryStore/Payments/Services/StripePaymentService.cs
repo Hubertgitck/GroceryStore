@@ -21,7 +21,7 @@ public class StripePaymentService : PaymentService<StripeModel>
 
     protected override string MakePayment(StripeModel model)
     {
-        var options = PrepareStripeOptions(model.CartList, model.OrderId);
+        var options = PrepareStripeOptions(model.CartList!, model.OrderId);
 
         var service = new SessionService();
         Session session = service.Create(options);

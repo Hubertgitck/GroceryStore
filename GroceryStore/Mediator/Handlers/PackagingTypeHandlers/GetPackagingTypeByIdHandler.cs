@@ -24,7 +24,7 @@ public class GetPackagingTypeByIdHandler : IRequestHandler<GetPackagingTypeById,
 
         if (packagingTypeFromDb == null)
         {
-            throw new NotFoundException("PackagingType with given ID was not found in database");
+            throw new NotFoundException($"PackagingType with ID: {request.Id} was not found in database");
         }
 
         if (packagingTypeFromDb.IsWeightInGrams)

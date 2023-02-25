@@ -31,7 +31,7 @@ public class DetailsPostHandler : IRequestHandler<DetailsPost, string>
             _unitOfWork.Save();
             message = "Product added to cart succesfully";
             _httpContextAccessor.HttpContext!.Session.SetInt32(Constants.SessionCart,
-                _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).ToList().Count());
+                _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).ToList().Count);
         }
         else
         {

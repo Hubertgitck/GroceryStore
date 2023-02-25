@@ -18,7 +18,7 @@ public class DeletePackagingTypeHandler : IRequestHandler<DeletePackagingType>
         
         if(packagingTypeToDeleteInDb == null)
         {
-            throw new NotFoundException("Packaging Type with given ID was not found in database");
+            throw new NotFoundException($"Order Header with ID: {request.Id} was not found in database");
         }
 
         _unitOfWork.PackagingType.Remove(packagingTypeToDeleteInDb);

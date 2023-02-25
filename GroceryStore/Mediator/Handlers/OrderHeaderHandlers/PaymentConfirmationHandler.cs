@@ -22,7 +22,7 @@ public class PaymentConfirmationHandler : IRequestHandler<PaymentConfirmation>
         OrderHeader orderHeaderFromDb = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == request.Id);
         if (orderHeaderFromDb == null)
         {
-            throw new NotFoundException("Order Header with given ID was not found in database");
+            throw new NotFoundException($"Order Header with ID: {request.Id} was not found in database");
         }
         var paymentStatus = _paymentStrategy.GetPaymentStatus(new StripeModel
         {

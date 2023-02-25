@@ -1,5 +1,4 @@
-﻿using Application.Models;
-using ApplicationWeb.Mediator.Requests.ShopRequests;
+﻿using ApplicationWeb.Mediator.Requests.ShopRequests;
 
 namespace ApplicationWeb.Mediator.Handlers.ShopHandlers;
 

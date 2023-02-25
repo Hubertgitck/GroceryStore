@@ -15,17 +15,17 @@ public class GetProductByIdHandler : IRequestHandler<Delete, Dictionary<string, 
 
     public Task<Dictionary<string,string>> Handle(Delete request, CancellationToken cancellationToken)
     {
-        Dictionary<string, string> dictionary;
+        Dictionary<string, string> handlerResponse;
 
         var product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == request.Id);
         if (product == null)
         {
-            dictionary = new()
+            handlerResponse = new()
             {
                 { "success", "false" },
                 { "message", "Error while deleting" }
             };
-            return Task.FromResult(dictionary);
+            return Task.FromResult(handlerResponse);
         }
 
         var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));  
@@ -37,12 +37,12 @@ public class GetProductByIdHandler : IRequestHandler<Delete, Dictionary<string, 
         _unitOfWork.Product.Remove(product);
         _unitOfWork.Save();
 
-        dictionary = new()
+        handlerResponse = new()
             {
                 { "success", "true" },
                 { "message", "Product deleted successfully" }
             };
 
-        return Task.FromResult(dictionary);
+        return Task.FromResult(handlerResponse);
     }
 }

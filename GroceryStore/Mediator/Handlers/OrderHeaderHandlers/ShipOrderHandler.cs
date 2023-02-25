@@ -19,7 +19,7 @@ public class ShipOrderHandler : IRequestHandler<ShipOrder>
 
         if (orderHeaderFromDb == null)
         {
-            throw new NotFoundException("Order Header with given ID was not found in database");
+            throw new NotFoundException($"Order Header with ID: {request.OrderHeaderDto.Id} was not found in database");
         }
 
         orderHeaderFromDb.TrackingNumber = request.OrderHeaderDto.TrackingNumber;

@@ -20,11 +20,12 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryById, CategoryD
         {
             throw new ArgumentException("Invalid id");
         }
+
         var categoryFromDb = _unitOfWork.Category.GetFirstOrDefault(c => c.Id == request.Id);
 
         if (categoryFromDb == null)
         {
-            throw new NotFoundException("Category with given ID was not found in database");
+            throw new NotFoundException($"Category with ID: {request.Id} was not found in database");
         }
 
         var categoryDto = _mapper.Map<CategoryDto>(categoryFromDb);

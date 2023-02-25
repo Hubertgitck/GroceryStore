@@ -10,7 +10,6 @@ public class SummaryPostHandler : IRequestHandler<SummaryPost, string>
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
     private readonly IPaymentStrategy _paymentStrategy;
-    private OrderHeaderDto _orderHeaderDto;
 
 	public SummaryPostHandler(IUnitOfWork unitOfWork, IMapper mapper, IPaymentStrategy paymentStrategy)
 	{
@@ -20,7 +19,7 @@ public class SummaryPostHandler : IRequestHandler<SummaryPost, string>
     }
 	public Task<string> Handle(SummaryPost request, CancellationToken cancellationToken)
 	{
-		_orderHeaderDto = request.ShoppingCartViewDto.OrderHeaderDto;
+		var orderHeaderDto = request.ShoppingCartViewDto.OrderHeaderDto;
 
 		var userId = HelperMethods.GetApplicationUserIdFromClaimsPrincipal(request.ClaimsPrincipal);
 
@@ -29,23 +28,12 @@ public class SummaryPostHandler : IRequestHandler<SummaryPost, string>
 
 		if (cartListFromDb.Any())
 		{
-			PrepareAndAddOrderHeaderToDb(cartListFromDb, userId);
+			var idOfOrderHeaderJustAddedToDb = CreateAndAddOrderHeaderToDb(orderHeaderDto, cartListFromDb, userId);
+			CreateAndAddOrderDetailsToDb(cartListFromDb, idOfOrderHeaderJustAddedToDb);
 
-			foreach (var cart in cartListFromDb)
+			IPaymentModel stripeModel = new StripeModel()
 			{
-				OrderDetail orderDetail = new()
-				{
-					ProductId = cart.ProductId,
-					OrderId = _orderHeaderDto.Id,
-					Price = cart.Price,
-					Count = cart.Count
-				};
-				_unitOfWork.OrderDetail.Add(orderDetail);
-				_unitOfWork.Save();
-			}
-			StripeModel stripeModel = new()
-			{
-				OrderId = _orderHeaderDto.Id,
+				OrderId = idOfOrderHeaderJustAddedToDb,
 				CartList = cartListFromDb
 			};
 
@@ -59,25 +47,41 @@ public class SummaryPostHandler : IRequestHandler<SummaryPost, string>
 		}
 	}
 
-	private void PrepareAndAddOrderHeaderToDb(IEnumerable<ShoppingCart> cartListFromDb, string userId)
+    private int CreateAndAddOrderHeaderToDb(OrderHeaderDto orderHeaderDto, IEnumerable<ShoppingCart> cartListFromDb, string userId)
 	{
-		_orderHeaderDto.OrderDate = DateTime.Now;
-		_orderHeaderDto.ApplicationUserId = userId;
+		orderHeaderDto.OrderDate = DateTime.Now;
+		orderHeaderDto.ApplicationUserId = userId;
 
 		foreach (var cart in cartListFromDb)
 		{
 			cart.Price = cart.Count * cart.Product.Price;
-			_orderHeaderDto.OrderTotal += cart.Price;
+			orderHeaderDto.OrderTotal += cart.Price;
 		}
 
-		_orderHeaderDto.PaymentStatus = Constants.PaymentStatusPending;
-		_orderHeaderDto.OrderStatus = Constants.StatusPending;
+		orderHeaderDto.PaymentStatus = Constants.PaymentStatusPending;
+		orderHeaderDto.OrderStatus = Constants.StatusPending;
 
-		var orderHeaderToDb = _mapper.Map<OrderHeader>(_orderHeaderDto);
+		var orderHeaderToDb = _mapper.Map<OrderHeader>(orderHeaderDto);
 
 		_unitOfWork.OrderHeader.Add(orderHeaderToDb);
 		_unitOfWork.Save();
 
-		_orderHeaderDto.Id = orderHeaderToDb.Id;
+		return orderHeaderToDb.Id;
 	}
+
+    private void CreateAndAddOrderDetailsToDb(IEnumerable<ShoppingCart> cartListFromDb, int orderHeaderId)
+    {
+        foreach (var cart in cartListFromDb)
+        {
+            OrderDetail orderDetail = new()
+            {
+                ProductId = cart.ProductId,
+                OrderId = orderHeaderId,
+                Price = cart.Price,
+                Count = cart.Count
+            };
+            _unitOfWork.OrderDetail.Add(orderDetail);
+            _unitOfWork.Save();
+        }
+    }
 }

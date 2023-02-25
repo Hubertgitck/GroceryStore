@@ -27,7 +27,7 @@ public class PaymentStrategy : IPaymentStrategy
         if (result == null)
         {
             throw new InvalidOperationException(
-                $"Payment service for {model.GetType().ToString()} not registered.");
+                $"Payment service for {model.GetType()} not registered.");
         }
         return result;
     }

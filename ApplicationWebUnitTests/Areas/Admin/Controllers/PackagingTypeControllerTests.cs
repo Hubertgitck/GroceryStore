@@ -1,4 +1,4 @@
-﻿namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
+﻿/*namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
 public class PackagingTypeControllerTests
 {
@@ -17,4 +17,4 @@ public class PackagingTypeControllerTests
             IsWeightInGrams = true
         };
     }
-}
+}*/

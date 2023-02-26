@@ -34,5 +34,9 @@
 		<Using Include="Microsoft.AspNetCore.Http" />
 		<Using Include="Microsoft.AspNetCore.Mvc.ViewFeatures" />
 	</ItemGroup>
+	
+    <ItemGroup>
+      <Folder Include="TestUtilities\" />
+    </ItemGroup>
 
 </Project>

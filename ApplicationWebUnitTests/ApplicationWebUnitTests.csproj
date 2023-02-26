@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ApplicationWebTests\ApplicationWebTests.csproj" />
+		<ProjectReference Include="..\ApplicationWebTests\ApplicationWebIntegrationTests.csproj" />
 		<ProjectReference Include="..\GroceryStore\ApplicationWeb.csproj" />
 	</ItemGroup>
 

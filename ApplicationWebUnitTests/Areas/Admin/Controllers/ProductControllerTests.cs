@@ -1,4 +1,4 @@
-﻿namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
+﻿/*namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
 public class ProductControllerTests
 {
@@ -7,4 +7,4 @@ public class ProductControllerTests
     public ProductControllerTests()
     {
     }
-}
+}*/

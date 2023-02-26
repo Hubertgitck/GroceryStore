@@ -68,7 +68,7 @@ public class CategoryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeletePost(int? id)
     {
-        await _mediator.Send(new DeleteCategory(id));
+        await _mediator.Send(new DeleteCategoryById(id));
         TempDataHelper.SetSuccess(this, "Category deleted succesfully");
         return RedirectToAction("Index");
     }

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
-
-namespace ApplicationWebTests.TestUtilities;
+﻿namespace ApplicationWebTests.TestUtilities;
 
 public static class TempDataProvider
 {

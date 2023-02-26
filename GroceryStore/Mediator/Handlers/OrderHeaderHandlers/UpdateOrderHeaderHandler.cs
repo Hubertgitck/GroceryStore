@@ -19,7 +19,7 @@ public class UpdateOrderHeaderHandler : IRequestHandler<UpdateOrderHeader, int>
 
         if (orderHeaderFromDb == null)
         {
-            throw new NotFoundException($"Order Header with ID: {request.OrderHeaderDto.Idd} was not found in database");
+            throw new NotFoundException($"Order Header with ID: {request.OrderHeaderDto.Id} was not found in database");
         }
 
         orderHeaderFromDb.Name = request.OrderHeaderDto.Name;

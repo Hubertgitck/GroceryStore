@@ -1,10 +1,10 @@
 namespace ApplicationWeb.Mediator.Commands.CategoryCommands;
 
-public record DeleteCategory : IRequest
+public record DeleteCategoryById : IRequest
 {
     public readonly int? Id;
 
-	public DeleteCategory(int? id)
+	public DeleteCategoryById(int? id)
 	{
 		Id = id;
 	}

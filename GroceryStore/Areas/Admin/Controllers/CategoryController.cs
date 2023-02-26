@@ -43,7 +43,6 @@ public class CategoryController : Controller
         return View(result);
     }
 
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(CategoryDto category)

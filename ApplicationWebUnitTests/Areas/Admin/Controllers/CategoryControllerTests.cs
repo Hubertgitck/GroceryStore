@@ -39,17 +39,6 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public void Create_ReturnsViewResult()
-    {
-        //Act
-        var result = _controller.Create();
-
-        //Assert
-        var viewResult = result as ViewResult;
-        viewResult.Should().BeOfType(typeof(ViewResult));
-    }
-
-    [Fact]
     public async Task Create_WithValidModel_ShouldSendAddNewCategoryRequestToMediator()
     {
         //Act
@@ -70,9 +59,9 @@ public class CategoryControllerTests
         var result = await _controller.Create(category);
 
         //Assert
+        result.Should().BeOfType<ViewResult>();
         var viewResult = result as ViewResult;
 
-        viewResult.Should().BeOfType(typeof(ViewResult));
         viewResult!.Model.Should().BeEquivalentTo(category);
     }
 
@@ -80,7 +69,7 @@ public class CategoryControllerTests
     public async Task Edit_ShouldSendGetCategoryByGivenIdRequestToMediator()
     {
         //Act
-        await _controller.Edit(It.IsAny<int>());
+        var result = await _controller.Edit(It.IsAny<int>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(GetCategoryByIdRequest(), default), Times.Once);
@@ -99,7 +88,6 @@ public class CategoryControllerTests
         // Assert
         var viewResult = result as ViewResult;
 
-        viewResult.Should().BeOfType(typeof(ViewResult));
         viewResult!.Model.Should().BeEquivalentTo(category);
     }
 

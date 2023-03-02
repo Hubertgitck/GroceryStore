@@ -1,4 +1,6 @@
-﻿namespace ApplicationWeb.Areas.Customer.Controllers;
+﻿using Microsoft.AspNetCore.WebUtilities;
+
+namespace ApplicationWeb.Areas.Customer.Controllers;
 
 [Area("Customer")]
 public class HomeController : Controller
@@ -20,7 +22,7 @@ public class HomeController : Controller
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error([FromQuery] ErrorViewDto errorViewDto)
-    {
+    {     
         return View(errorViewDto);
     }
 }

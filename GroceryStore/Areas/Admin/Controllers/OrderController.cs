@@ -42,11 +42,10 @@ public class OrderController : Controller
 	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 	public async Task<IActionResult> UpdateOrderDetail(OrderHeaderDto orderHeaderDto)
 	{
-		var result = await _mediator.Send(new UpdateOrderHeader(orderHeaderDto));
-		TempDataHelper.SetSuccess(this, "Order Details Updated Successfully");
-
-		return RedirectToAction("Details", "Order", new { orderId = result });
-	}
+        var result = await _mediator.Send(new UpdateOrderHeader(orderHeaderDto));
+        TempDataHelper.SetSuccess(this, "Order Details Updated Successfully");
+        return RedirectToAction("Details", "Order", new { orderId = result });
+    }
     
 	[HttpPost]
 	[ValidateAntiForgeryToken]
@@ -89,7 +88,6 @@ public class OrderController : Controller
 	public async Task<IActionResult> GetAll(string status)
 	{
 		var result = await _mediator.Send(new GetAllOrderHeaders(User, status));
-
 		return Json(new { data = result });
 	}
 	#endregion

@@ -1,5 +1,8 @@
-﻿using Application.Utility.Exceptions;
+﻿using System.Text;
+using System.Web;
+using Application.Utility.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Utility.Middleware
@@ -55,8 +58,9 @@ namespace Application.Utility.Middleware
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             _logger.LogError(exception, exception.Message);
+            var messageEncoded = HttpUtility.UrlEncode(exception.Message);
 
-            context.Response.Redirect($"/Customer/Home/Error?StatusCode={_statusCode}&Message={exception.Message}");
+            context.Response.Redirect($"/Customer/Home/Error?StatusCode={_statusCode}&Message={messageEncoded}");
         }
     }
 }

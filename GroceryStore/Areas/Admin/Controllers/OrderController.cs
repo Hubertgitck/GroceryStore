@@ -50,7 +50,7 @@ public class OrderController : Controller
 	[HttpPost]
 	[ValidateAntiForgeryToken]
 	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
-	public async Task<IActionResult> StartProcessing(OrderHeader orderHeaderDto)
+	public async Task<IActionResult> StartProcessing(OrderHeaderDto orderHeaderDto)
 	{
 		await _mediator.Send(new StartProcessing(orderHeaderDto.Id));
 
@@ -76,11 +76,10 @@ public class OrderController : Controller
 	[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 	public async Task<IActionResult> CancelOrder(OrderHeaderDto orderHeaderDto)
 	{
-		var orderId = orderHeaderDto.Id;
-		await _mediator.Send(new CancelOrder(orderId));
+		await _mediator.Send(new CancelOrder(orderHeaderDto.Id));
 
 		TempDataHelper.SetSuccess(this, "Order Cancelled Successfully");
-		return RedirectToAction("Details", "Order", new { orderId });
+		return RedirectToAction("Details", "Order", new { orderHeaderDto.Id });
 	}
 
     #region API CALLS

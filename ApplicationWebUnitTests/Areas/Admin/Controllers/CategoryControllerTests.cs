@@ -39,7 +39,7 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public async Task Create_WithValidModel_ShouldSendAddNewCategoryRequestToMediator()
+    public async Task Create_WithValidModel_ShouldSendAddNewCategoryRequest()
     {
         //Act
         var result = await _controller.Create(It.IsAny<CategoryDto>());
@@ -66,7 +66,7 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public async Task Edit_ShouldSendGetCategoryByGivenIdRequestToMediator()
+    public async Task Edit_ShouldSendGetCategoryByGivenIdRequest()
     {
         //Act
         var result = await _controller.Edit(It.IsAny<int>());
@@ -92,7 +92,7 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public async Task Edit_WithValidModel_ShouldSendEditCategoryRequestToMediator()
+    public async Task Edit_WithValidModel_ShouldSendEditCategoryRequest()
     {
         //Act
         var result = await _controller.Edit(It.IsAny<CategoryDto>());
@@ -102,7 +102,7 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public async Task Delete_ShouldSendRequestToMediatorToGetCategoryByGivenId()
+    public async Task Delete_ShouldSendRequestToGetCategoryByGivenId()
     {
         //Act
         await _controller.Delete(It.IsAny<int>());
@@ -112,7 +112,7 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public async Task DeletePost_ShouldSendDeleteCategoryByIdRequestToMediator()
+    public async Task DeletePost_ShouldSendDeleteCategoryByIdRequest()
     {
         //Act
         await _controller.DeletePost(It.IsAny<int>());

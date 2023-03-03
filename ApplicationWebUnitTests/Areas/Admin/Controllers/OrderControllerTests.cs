@@ -11,9 +11,9 @@ namespace ApplicationWebTests.Areas.Admin.Controllers;
 
 public class OrderControllerTests
 {
-
     private readonly Mock<IMediator> _mediatorMock;
     private readonly OrderController _controller;
+    private readonly OrderHeaderDto _testOrderHeaderDto;
 
     public OrderControllerTests()
     {
@@ -22,10 +22,11 @@ public class OrderControllerTests
         {
             TempData = TempDataProvider.GetTempDataMock()
         };
+        _testOrderHeaderDto = GetTestOrderHeader();
     }
 
     [Fact]
-    public async Task Details_ShouldSendMediatorRequestsToCreateNewOrderDto()
+    public async Task Details_ShouldSendRequestsToCreateNewOrderDto()
     {
         //Act
         var result = await _controller.Details(It.IsAny<int>());
@@ -54,18 +55,61 @@ public class OrderControllerTests
     }
 
     [Fact]
-    public async Task UpdateOrderDetail_ShoouldSendUpdateOrderHeaderRequest()
+    public async Task UpdateOrderDetail_ShouldSendUpdateOrderHeaderRequest()
     {
+        //Act
+        await _controller.UpdateOrderDetail(It.IsAny<OrderHeaderDto>());
 
+        //Assert
+        _mediatorMock.Verify(x => x.Send(It.IsAny<UpdateOrderHeader>(), default), Times.Once);
     }
 
+    [Fact]
+    public async Task StartProcessing_ShouldSendUpdateStartProcessingRequest()
+    {
+        //Act
+        await _controller.StartProcessing(_testOrderHeaderDto);
 
-     private OrderHeader GetTestOrderHeader(int id)
+        //Assert
+        _mediatorMock.Verify(x => x.Send(It.IsAny<StartProcessing>(), default), Times.Once);
+    }
+
+    [Fact]
+    public async Task ShipOrder_ShouldSendShipOrderRequest()
+    {
+        //Act
+        await _controller.ShipOrder(_testOrderHeaderDto);
+
+        //Assert
+        _mediatorMock.Verify(x => x.Send(It.IsAny<ShipOrder>(), default), Times.Once);
+    }
+
+    [Fact]
+    public async Task CancelOrder_ShouldSendCancelOrderRequest()
+    {
+        //Act
+        var result = await _controller.CancelOrder(_testOrderHeaderDto);
+
+        //Assert
+        _mediatorMock.Verify(x => x.Send(It.IsAny<CancelOrder>(), default), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetAll_ShouldSendGetAllOrderHeadersRequest()
+    {
+        //Act
+        var result = await _controller.GetAll(It.IsAny<string>());
+
+        //Assert
+        _mediatorMock.Verify(x => x.Send(It.IsAny<GetAllOrderHeaders>(), default), Times.Once);
+    }
+
+    private OrderHeaderDto GetTestOrderHeader()
      {
 
-         var orderHeader = new OrderHeader
+         var orderHeaderDto = new OrderHeaderDto
          {
-             Id = id,
+             Id = 1,
              Name = "Jane Doe",
              PhoneNumber = "0987654321",
              StreetAddress = "456 Main St",
@@ -77,6 +121,6 @@ public class OrderControllerTests
              SessionId = "Test-session",
              PaymentIntendId = "Some-payment-IntendId"
          };
-         return orderHeader;
+         return orderHeaderDto;
      }
 }

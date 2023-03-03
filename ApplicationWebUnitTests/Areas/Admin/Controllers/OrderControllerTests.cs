@@ -40,10 +40,11 @@ public class OrderControllerTests
     }
 
 
-    [Theory]
-    [InlineData(1)]
-    public async Task PaymentConfirmation_ShouldSendPaymentConfirmationRequest(int orderHeaderId)
+    [Fact]
+    public async Task PaymentConfirmation_ShouldSendPaymentConfirmationRequest()
     {
+        //Arrange
+        var orderHeaderId = _testOrderHeaderDto.Id;
         //Act
         var result = await _controller.PaymentConfirmation(orderHeaderId);
 

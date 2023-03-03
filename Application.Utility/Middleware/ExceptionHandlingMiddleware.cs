@@ -1,8 +1,6 @@
-﻿using System.Text;
-using System.Web;
+﻿using System.Web;
 using Application.Utility.Exceptions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Utility.Middleware
@@ -27,35 +25,35 @@ namespace Application.Utility.Middleware
             catch (ForbiddenException forbiddenException)
             {
                 _statusCode = StatusCodes.Status403Forbidden;
-                await HandleExceptionAsync(context,forbiddenException);
+                HandleException(context,forbiddenException);
             }
 
             catch (BadRequestException badRequestException)
             {
                 _statusCode = StatusCodes.Status400BadRequest;
-                await HandleExceptionAsync(context, badRequestException);
+                HandleException(context, badRequestException);
             }
 
             catch(NotFoundException notFoundException)
             {
                 _statusCode = StatusCodes.Status404NotFound;
-                await HandleExceptionAsync(context, notFoundException);
+                HandleException(context, notFoundException);
             }
 
             catch(ArgumentException argumentException)
             {
                 _statusCode = StatusCodes.Status400BadRequest;
-                await HandleExceptionAsync(context, argumentException);
+                HandleException(context, argumentException);
             }
 
             catch(Exception exception)
             {
                 _statusCode = StatusCodes.Status500InternalServerError;
-                await HandleExceptionAsync(context, exception);
+                HandleException(context, exception);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private void HandleException(HttpContext context, Exception exception)
         {
             _logger.LogError(exception, exception.Message);
             var messageEncoded = HttpUtility.UrlEncode(exception.Message);

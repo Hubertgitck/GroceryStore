@@ -48,7 +48,7 @@ public class ProductController : Controller
     [HttpDelete]
     public async Task<IActionResult> Delete(int? id)
     {
-        var result = await _mediator.Send(new Delete(id));
+        var result = await _mediator.Send(new DeleteProductById(id));
         return Json(result);
     }
 

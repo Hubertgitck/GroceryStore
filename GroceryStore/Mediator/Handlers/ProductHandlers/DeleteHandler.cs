@@ -2,7 +2,7 @@
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 
-public class GetProductByIdHandler : IRequestHandler<Delete, Dictionary<string, string>>
+public class GetProductByIdHandler : IRequestHandler<DeleteProductById, Dictionary<string, string>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IWebHostEnvironment _hostEnvironment;
@@ -13,7 +13,7 @@ public class GetProductByIdHandler : IRequestHandler<Delete, Dictionary<string, 
         _hostEnvironment = hostEnvironment;
     }
 
-    public Task<Dictionary<string,string>> Handle(Delete request, CancellationToken cancellationToken)
+    public Task<Dictionary<string,string>> Handle(DeleteProductById request, CancellationToken cancellationToken)
     {
         Dictionary<string, string> handlerResponse;
 

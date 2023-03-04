@@ -1,8 +1,5 @@
 ﻿using ApplicationWeb.Mediator.Commands.CategoryCommands;
-using ApplicationWeb.Mediator.DTO;
 using ApplicationWeb.Mediator.Requests.CategoryRequests;
-using ApplicationWebTests.TestUtilities;
-using MediatR;
 
 namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
@@ -72,7 +69,7 @@ public class CategoryControllerTests
         var result = await _controller.Edit(It.IsAny<int>());
 
         //Assert
-        _mediatorMock.Verify(x => x.Send(GetCategoryByIdRequest(), default), Times.Once);
+        _mediatorMock.Verify(x => x.Send(It.IsAny<GetCategoryById>(), default), Times.Once);
     }
 
     [Fact]
@@ -80,7 +77,7 @@ public class CategoryControllerTests
     {
         //Arrange
         var category = GetTestCategory();
-        _mediatorMock.Setup(m => m.Send(GetCategoryByIdRequest(), default)).ReturnsAsync(category);
+        _mediatorMock.Setup(m => m.Send(It.IsAny<GetCategoryById>(), default)).ReturnsAsync(category);
 
         //Act
         var result = await _controller.Edit(It.IsAny<int>());
@@ -108,7 +105,7 @@ public class CategoryControllerTests
         await _controller.Delete(It.IsAny<int>());
 
         //Assert
-        _mediatorMock.Verify(x => x.Send(GetCategoryByIdRequest(), default), Times.Once);
+        _mediatorMock.Verify(x => x.Send(It.IsAny<GetCategoryById>(), default), Times.Once);
     }
 
     [Fact]
@@ -127,16 +124,12 @@ public class CategoryControllerTests
     }
     private List<CategoryDto> GetTestCategoriesList()
     {
-        var expectedCategories = new List<CategoryDto>
+        var testList = new List<CategoryDto>
         {
             new CategoryDto { Id = 1, Name = "Category 1" },
             new CategoryDto { Id = 2, Name = "Category 2" }
         };
 
-        return expectedCategories;
-    }
-    private GetCategoryById GetCategoryByIdRequest()
-    {
-        return It.IsAny<GetCategoryById>();
+        return testList;
     }
 }

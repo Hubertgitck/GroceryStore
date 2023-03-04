@@ -34,6 +34,9 @@
 		<Using Include="System.Linq.Expressions" />
 		<Using Include="Microsoft.AspNetCore.Http" />
 		<Using Include="Microsoft.AspNetCore.Mvc.ViewFeatures" />
+		<Using Include="ApplicationWeb.Mediator.DTO" />
+		<Using Include="ApplicationWebTests.TestUtilities" />
+		<Using Include="MediatR" />
 	</ItemGroup>
 
 </Project>

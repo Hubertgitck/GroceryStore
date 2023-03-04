@@ -3,7 +3,7 @@ using ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
 
 namespace ApplicationWeb.Mediator.Handlers.PackagingTypeHandlers;
 
-public class DeletePackagingTypeHandler : IRequestHandler<DeletePackagingType>
+public class DeletePackagingTypeHandler : IRequestHandler<DeletePackagingTypeById>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -12,7 +12,7 @@ public class DeletePackagingTypeHandler : IRequestHandler<DeletePackagingType>
         _unitOfWork = unitOfWork;
     }
 
-    public Task Handle(DeletePackagingType request, CancellationToken cancellationToken)
+    public Task Handle(DeletePackagingTypeById request, CancellationToken cancellationToken)
     {
         var packagingTypeToDeleteInDb = _unitOfWork.PackagingType.GetFirstOrDefault(u => u.Id == request.Id);
         

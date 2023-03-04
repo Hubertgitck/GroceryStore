@@ -1,11 +1,7 @@
 ﻿using ApplicationWeb.Areas.Admin.Controllers;
-using ApplicationWeb.Mediator.Commands.CategoryCommands;
 using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
-using ApplicationWeb.Mediator.DTO;
 using ApplicationWeb.Mediator.Requests.OrderDetailRequests;
 using ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
-using ApplicationWebTests.TestUtilities;
-using MediatR;
 
 namespace ApplicationWebTests.Areas.Admin.Controllers;
 

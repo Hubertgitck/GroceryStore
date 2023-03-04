@@ -1,6 +1,4 @@
 ﻿using ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
-using ApplicationWeb.Mediator.DTO;
-using ApplicationWeb.Mediator.Requests.CategoryRequests;
 using ApplicationWeb.Mediator.Requests.PackagingTypeRequests;
 
 namespace ApplicationWeb.Areas.Admin.Controllers;
@@ -22,7 +20,7 @@ public class PackagingTypeController : Controller
         return View(result);
     }
 
-   public IActionResult Create()
+    public IActionResult Create()
     {
         return View();
     }
@@ -66,13 +64,12 @@ public class PackagingTypeController : Controller
 
         return View(result);
     }
-
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeletePOST(int? id)
+    public async Task<IActionResult> DeletePost(int? id)
     {
-        await _mediator.Send(new DeletePackagingType(id));
+        await _mediator.Send(new DeletePackagingTypeById(id));
         TempData["success"] = "Packaging Type deleted succesfully";
         return RedirectToAction("Index");
     }

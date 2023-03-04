@@ -1,10 +1,10 @@
 namespace ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
 
-public record DeletePackagingType : IRequest
+public record DeletePackagingTypeById : IRequest
 {
     public readonly int? Id;
 
-	public DeletePackagingType(int? id)
+	public DeletePackagingTypeById(int? id)
 	{
 		Id = id;
 	}

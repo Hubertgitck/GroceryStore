@@ -1,6 +1,4 @@
 ﻿using ApplicationWeb.Mediator.Commands.ProductCommands;
-using ApplicationWeb.Mediator.Requests.CategoryRequests;
-using ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
 using ApplicationWeb.Mediator.Requests.ProductRequests;
 
 namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
@@ -33,13 +31,13 @@ public class ProductControllerTests
     public async Task Upsert_WithValidModel_ShouldSendUpsertRequest()
     {
         //Arrange
-        _mediatorMock.Setup(m => m.Send(It.IsAny<Upsert>(), default)).ReturnsAsync(It.IsAny<string>());
+        _mediatorMock.Setup(m => m.Send(It.IsAny<UpsertProduct>(), default)).ReturnsAsync(It.IsAny<string>());
 
         //Act
         var result = await _controller.Upsert(GetTestProductViewDto(), null);
 
         //Assert
-        _mediatorMock.Verify(x => x.Send(It.IsAny<Upsert>(), default), Times.Once);
+        _mediatorMock.Verify(x => x.Send(It.IsAny<UpsertProduct>(), default), Times.Once);
     }
 
     [Fact]

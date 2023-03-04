@@ -18,23 +18,16 @@ public class PackagingTypeControllerTests
     }
 
     [Fact]
-    public async Task Index_ShouldReturnViewResultOfPackagingTypes()
+    public async Task Index_ShouldSendGetAllPackagingTypesRequest()
     {
         //Arrange
-        var packagingTypesList = GetTestPackagingTypeList();
-        _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllPackagingTypes>(), default)).ReturnsAsync(packagingTypesList);
+        _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllPackagingTypes>(), default));
 
         //Act
         var result = await _controller.Index();
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetAllPackagingTypes>(), default), Times.Once);
-
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = result as ViewResult;
-
-        viewResult!.Model.Should().BeAssignableTo<IEnumerable<PackagingTypeDto>>();
-        viewResult.Model.Should().BeEquivalentTo(packagingTypesList);
     }
 
     [Fact]

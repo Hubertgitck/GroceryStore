@@ -2,7 +2,7 @@
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 
-public class UpsertHandler : IRequestHandler<Upsert, string>
+public class UpsertHandler : IRequestHandler<UpsertProduct, string>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -14,7 +14,7 @@ public class UpsertHandler : IRequestHandler<Upsert, string>
         _mapper = mapper;
         _hostEnvironment = hostEnvironment;
     }
-    public Task<string> Handle(Upsert request, CancellationToken cancellationToken)
+    public Task<string> Handle(UpsertProduct request, CancellationToken cancellationToken)
     {
         string message;
         string wwwRootPath = _hostEnvironment.WebRootPath;

@@ -30,7 +30,7 @@ public class ProductController : Controller
     {
         if (ModelState.IsValid) 
         {
-            var result = await _mediator.Send(new Upsert(productViewDto.ProductDto, file));
+            var result = await _mediator.Send(new UpsertProduct(productViewDto.ProductDto, file));
             TempData["success"] = $"Product {result} successfully";
             return RedirectToAction("Index");
         }

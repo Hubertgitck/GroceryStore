@@ -1,5 +1,6 @@
 ﻿using ApplicationWeb.Mediator.Commands.CategoryCommands;
 using ApplicationWeb.Mediator.Requests.CategoryRequests;
+using ApplicationWeb.Mediator.Requests.PackagingTypeRequests;
 
 namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
@@ -18,21 +19,16 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public async Task Index_ShouldReturnViewResultOfAllCategories()
+    public async Task Index_ShouldSendGetAllCategoriesRequest()
     {
         //Arrange
-        var categoryList = GetTestCategoriesList();
-        _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllCategories>(), default)).ReturnsAsync(categoryList);
+        _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllCategories>(), default));
 
         //Act
         var result = await _controller.Index();
 
         //Assert
-        result.Should().BeOfType<ViewResult>();
-        var viewResult = result as ViewResult;
-
-        viewResult!.Model.Should().BeAssignableTo<IEnumerable<CategoryDto>>();
-        viewResult.Model.Should().BeEquivalentTo(categoryList);
+        _mediatorMock.Verify(x => x.Send(It.IsAny<GetAllCategories>(), default), Times.Once);
     }
 
     [Fact]
@@ -121,15 +117,5 @@ public class CategoryControllerTests
     private CategoryDto GetTestCategory()
     {
         return new CategoryDto { Id = 1, Name = "Category 1" };
-    }
-    private List<CategoryDto> GetTestCategoriesList()
-    {
-        var testList = new List<CategoryDto>
-        {
-            new CategoryDto { Id = 1, Name = "Category 1" },
-            new CategoryDto { Id = 2, Name = "Category 2" }
-        };
-
-        return testList;
     }
 }

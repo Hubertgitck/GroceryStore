@@ -25,6 +25,7 @@ public class CartController : Controller
     public async Task<IActionResult> Summary()
     {
 		var result = await _mediator.Send(new GetSummaryView(User));
+
 		if (!result.CartList.Any())
 		{
 			return RedirectToIndexWhenCartIsEmpty();
@@ -38,7 +39,7 @@ public class CartController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [ActionName("Summary")]
-    public async Task<IActionResult> SummaryPOST(ShoppingCartViewDto shoppingCartViewDto)
+    public async Task<IActionResult> SummaryPost(ShoppingCartViewDto shoppingCartViewDto)
     {
 		var result = await _mediator.Send(new SummaryPost(User, shoppingCartViewDto));
 		

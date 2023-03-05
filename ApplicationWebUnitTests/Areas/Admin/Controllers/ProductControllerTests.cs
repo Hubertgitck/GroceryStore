@@ -21,7 +21,7 @@ public class ProductControllerTests
     public async Task Upsert_ShouldSendGetCategoryByGivenIdRequest()
     {
         //Act
-        var result = await _controller.Upsert(It.IsAny<int>());
+        await _controller.Upsert(It.IsAny<int>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetProductViewById>(), default), Times.Once);
@@ -34,7 +34,7 @@ public class ProductControllerTests
         _mediatorMock.Setup(m => m.Send(It.IsAny<UpsertProduct>(), default)).ReturnsAsync(It.IsAny<string>());
 
         //Act
-        var result = await _controller.Upsert(GetTestProductViewDto(), null);
+        await _controller.Upsert(GetTestProductViewDto(), null);
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<UpsertProduct>(), default), Times.Once);
@@ -61,7 +61,7 @@ public class ProductControllerTests
     public async Task GetAll_ShouldSendGetAllProductsRequest()
     {
         //Act
-        var result = await _controller.GetAll();
+        await _controller.GetAll();
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetAllProducts>(), default), Times.Once);

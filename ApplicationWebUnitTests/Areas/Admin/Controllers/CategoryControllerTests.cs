@@ -1,6 +1,5 @@
 ﻿using ApplicationWeb.Mediator.Commands.CategoryCommands;
 using ApplicationWeb.Mediator.Requests.CategoryRequests;
-using ApplicationWeb.Mediator.Requests.PackagingTypeRequests;
 
 namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
@@ -25,7 +24,7 @@ public class CategoryControllerTests
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllCategories>(), default));
 
         //Act
-        var result = await _controller.Index();
+        await _controller.Index();
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetAllCategories>(), default), Times.Once);
@@ -35,7 +34,7 @@ public class CategoryControllerTests
     public async Task Create_WithValidModel_ShouldSendAddNewCategoryRequest()
     {
         //Act
-        var result = await _controller.Create(It.IsAny<CategoryDto>());
+        await _controller.Create(It.IsAny<CategoryDto>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<AddCategory>(), default), Times.Once);
@@ -62,7 +61,7 @@ public class CategoryControllerTests
     public async Task Edit_ShouldSendGetCategoryByGivenIdRequest()
     {
         //Act
-        var result = await _controller.Edit(It.IsAny<int>());
+        await _controller.Edit(It.IsAny<int>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetCategoryById>(), default), Times.Once);
@@ -88,7 +87,7 @@ public class CategoryControllerTests
     public async Task Edit_WithValidModel_ShouldSendEditCategoryRequest()
     {
         //Act
-        var result = await _controller.Edit(It.IsAny<CategoryDto>());
+        await _controller.Edit(It.IsAny<CategoryDto>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<EditCategory>(), default), Times.Once);

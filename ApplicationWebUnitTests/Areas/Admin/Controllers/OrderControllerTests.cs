@@ -85,7 +85,7 @@ public class OrderControllerTests
     public async Task CancelOrder_ShouldSendCancelOrderRequest()
     {
         //Act
-        var result = await _controller.CancelOrder(_testOrderHeaderDto);
+        await _controller.CancelOrder(_testOrderHeaderDto);
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<CancelOrder>(), default), Times.Once);
@@ -95,7 +95,7 @@ public class OrderControllerTests
     public async Task GetAll_ShouldSendGetAllOrderHeadersRequest()
     {
         //Act
-        var result = await _controller.GetAll(It.IsAny<string>());
+        await _controller.GetAll(It.IsAny<string>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetAllOrderHeaders>(), default), Times.Once);

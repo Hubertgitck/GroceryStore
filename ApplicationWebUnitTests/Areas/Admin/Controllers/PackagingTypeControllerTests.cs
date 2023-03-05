@@ -24,7 +24,7 @@ public class PackagingTypeControllerTests
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllPackagingTypes>(), default));
 
         //Act
-        var result = await _controller.Index();
+        await _controller.Index();
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetAllPackagingTypes>(), default), Times.Once);
@@ -34,7 +34,7 @@ public class PackagingTypeControllerTests
     public async Task Create_WithValidModel_ShouldSendCreatePackagingTypeRequest()
     {
         //Act
-        var result = await _controller.Create(It.IsAny<PackagingTypeDto>());
+        await _controller.Create(It.IsAny<PackagingTypeDto>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<AddPackagingType>(), default), Times.Once);
@@ -61,7 +61,7 @@ public class PackagingTypeControllerTests
     public async Task Edit_ShouldSendGetPackagingTypeByGivenIdRequest()
     {
         //Act
-        var result = await _controller.Edit(It.IsAny<int>());
+        await _controller.Edit(It.IsAny<int>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetPackagingTypeById>(), default), Times.Once);
@@ -71,7 +71,7 @@ public class PackagingTypeControllerTests
     public async Task Edit_WithValidModel_ShouldSendEditPackagingTypeRequest()
     {
         //Act
-        var result = await _controller.Edit(It.IsAny<PackagingTypeDto>());
+        await _controller.Edit(It.IsAny<PackagingTypeDto>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<EditPackagingType>(), default), Times.Once);
@@ -98,7 +98,7 @@ public class PackagingTypeControllerTests
     public async Task Delete_ShouldSendGetPackagingTypeByGivenIdRequest()
     {
         //Act
-        var result = await _controller.Delete(It.IsAny<int>());
+        await _controller.Delete(It.IsAny<int>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetPackagingTypeById>(), default), Times.Once);
@@ -108,7 +108,7 @@ public class PackagingTypeControllerTests
     public async Task DeletePost_ShouldSendDeletePackagingTypeByGivenIdRequest()
     {
         //Act
-        var result = await _controller.Delete(It.IsAny<int>());
+        await _controller.Delete(It.IsAny<int>());
 
         //Assert
         _mediatorMock.Verify(x => x.Send(It.IsAny<GetPackagingTypeById>(), default), Times.Once);
@@ -123,15 +123,5 @@ public class PackagingTypeControllerTests
             Weight = 10,
             IsWeightInGrams = true
         };
-    }
-
-    private List<PackagingTypeDto> GetTestPackagingTypeList()
-    {
-        var testList = new List<PackagingTypeDto> 
-        { 
-            new PackagingTypeDto{ Id = 1, Name = "testName", Weight = 50, IsWeightInGrams = true },
-            new PackagingTypeDto{ Id = 2, Name = "testName2", Weight = 100, IsWeightInGrams = false }
-        };
-        return testList;
     }
 }

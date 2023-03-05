@@ -1,9 +1,8 @@
-﻿using ApplicationWeb.Areas.Admin.Controllers;
-using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
+﻿using ApplicationWeb.Mediator.Commands.OrderHeaderCommands;
 using ApplicationWeb.Mediator.Requests.OrderDetailRequests;
 using ApplicationWeb.Mediator.Requests.OrderHeaderRequests;
 
-namespace ApplicationWebTests.Areas.Admin.Controllers;
+namespace ApplicationWeb.Areas.Admin.Controllers.Tests;
 
 public class OrderControllerTests
 {

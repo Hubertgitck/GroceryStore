@@ -61,7 +61,6 @@ public class CartController : Controller
 		HttpContext.Session.Clear();
 		return View(id);
 	}
-
 	
 	public async Task<IActionResult> IncrementCount(int cartId)
 	{

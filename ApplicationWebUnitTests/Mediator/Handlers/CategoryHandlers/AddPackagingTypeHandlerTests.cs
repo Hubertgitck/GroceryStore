@@ -70,7 +70,7 @@ public class PackagingTypeHandlerTests
     }
 
     [Fact]
-    public void DeletePackagingTypeHandler_WhenPackagingTypeIsNotFoundInDatabase_ShouldThrowNotFoundExpcetion()
+    public void DeletePackagingTypeByIdHandler_WhenPackagingTypeIsNotFoundInDatabase_ShouldThrowNotFoundExpcetion()
     {
         //Arrange  
         PackagingType packagingType = null!;
@@ -87,7 +87,7 @@ public class PackagingTypeHandlerTests
     }    
     
     [Fact]
-    public void DeletePackagingTypeHandler_WhenPackagingTypeIsFoundInDatabase_ShouldRemoveItFromDatabase()
+    public void DeletePackagingTypeByIdHandler_WhenPackagingTypeIsFoundInDatabase_ShouldRemoveItFromDatabase()
     {
         //Arrange  
         PackagingType packagingType = new Mock<PackagingType>().Object;

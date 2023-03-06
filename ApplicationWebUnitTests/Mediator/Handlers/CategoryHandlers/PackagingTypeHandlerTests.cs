@@ -103,6 +103,58 @@ public class PackagingTypeHandlerTests
         _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
     }
 
+    [Fact]
+    public void EditPackagingTypeHandler_WhenPackagingTypeIsInGrams_ShouldDivideWeightByFactor()
+    {
+        //Arrange  
+        var testPackagingTypeDto = GetTestPackagingTypeDto();
+        var beforeHandlerCallWeight = testPackagingTypeDto.Weight;
+        var request = new EditPackagingType(testPackagingTypeDto);
+        var handler = new EditPackagingTypeHandler(_unitOfWorkMock.Object, _mapperMock);
+        _unitOfWorkMock.Setup(u => u.PackagingType.Update(It.IsAny<PackagingType>()));
+
+        //Act
+        _ = handler.Handle(request, default);
+
+        //Assert
+        request.PackagingTypeDto.Weight.Should().Be(beforeHandlerCallWeight /= Constants.KilogramsToGramsFactor);
+    }
+
+    [Fact]
+    public void EditPackagingTypeHandler_WhenPackagingTypeIsNotInGrams_ShouldNotDivideWeight()
+    {
+        //Arrange  
+        var testPackagingTypeDto = GetTestPackagingTypeDto();
+        testPackagingTypeDto.IsWeightInGrams = false;
+        var beforeHandlerCallWeight = testPackagingTypeDto.Weight;
+        var request = new EditPackagingType(testPackagingTypeDto);
+        var handler = new EditPackagingTypeHandler(_unitOfWorkMock.Object, _mapperMock);
+        _unitOfWorkMock.Setup(u => u.PackagingType.Update(It.IsAny<PackagingType>()));
+
+
+        //Act
+        _ = handler.Handle(request, default);
+
+        //Assert
+        request.PackagingTypeDto.Weight.Should().Be(beforeHandlerCallWeight);
+    }
+
+    [Fact]
+    public void EditPackagingTypeHandler_ShouldCallAddPackagingTypeToDatabase()
+    {
+        //Arrange  
+        PackagingTypeDto packagingType = new Mock<PackagingTypeDto>().Object;
+        var request = new EditPackagingType(packagingType);
+        var handler = new EditPackagingTypeHandler(_unitOfWorkMock.Object, _mapperMock);
+        _unitOfWorkMock.Setup(u => u.PackagingType.Update(It.IsAny<PackagingType>()));
+
+        //Act
+        _ = handler.Handle(request, default);
+
+        //Assert
+        _unitOfWorkMock.Verify(u => u.PackagingType.Update(It.IsAny<PackagingType>()), Times.Once());
+        _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
+    }
 
     private PackagingTypeDto GetTestPackagingTypeDto()
     {

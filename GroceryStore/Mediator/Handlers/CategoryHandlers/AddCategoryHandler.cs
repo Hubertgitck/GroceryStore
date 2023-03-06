@@ -2,12 +2,12 @@
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 
-public class AddPackagingTypeHandler : IRequestHandler<AddCategory>
+public class AddCategoryHandler : IRequestHandler<AddCategory>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public AddPackagingTypeHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public AddCategoryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -18,7 +18,7 @@ public class AddPackagingTypeHandler : IRequestHandler<AddCategory>
         var categoryToAddToDb = _mapper.Map<Category>(request.CategoryDto);
         _unitOfWork.Category.Add(categoryToAddToDb);
         _unitOfWork.Save();
-        
+
         return Task.CompletedTask;  
     }
 }

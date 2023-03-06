@@ -2,12 +2,12 @@
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers;
 
-public class AddCategoryHandler : IRequestHandler<AddPackagingType>
+public class AddPackagingTypeHandler : IRequestHandler<AddPackagingType>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public AddCategoryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public AddPackagingTypeHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;

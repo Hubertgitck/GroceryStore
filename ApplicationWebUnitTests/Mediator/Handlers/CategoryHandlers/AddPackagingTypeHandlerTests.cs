@@ -1,6 +1,7 @@
-﻿
-using Application.Utility;
+﻿using Application.Utility;
+using Application.Utility.Exceptions;
 using ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
+using ApplicationWeb.Mediator.Handlers.PackagingTypeHandlers;
 using AutoMapper;
 
 namespace ApplicationWeb.Mediator.Handlers.CategoryHandlers.Tests;
@@ -52,7 +53,7 @@ public class PackagingTypeHandlerTests
     }
 
     [Fact]
-    public void AddPackagingTypeHandler_ShouldCallAddToRepositoryAndSaveChanges()
+    public void AddPackagingTypeHandler_ShouldCallAddPackagingTypeToDatabase()
     {
         //Arrange  
         var testPackagingTypeDto = GetTestPackagingTypeDto();
@@ -65,6 +66,40 @@ public class PackagingTypeHandlerTests
 
         //Assert
         _unitOfWorkMock.Verify(u => u.PackagingType.Add(It.IsAny<PackagingType>()), Times.Once());
+        _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
+    }
+
+    [Fact]
+    public void DeletePackagingTypeHandler_WhenPackagingTypeIsNotFoundInDatabase_ShouldThrowNotFoundExpcetion()
+    {
+        //Arrange  
+        PackagingType packagingType = null!;
+        var request = new DeletePackagingTypeById(It.IsAny<int>());
+        _unitOfWorkMock.Setup(u => u.PackagingType.GetFirstOrDefault(u => u.Id == It.IsAny<int>(), null, true)).Returns(packagingType);
+        var handler = new DeletePackagingTypeByIdHandler(_unitOfWorkMock.Object);
+
+        //Act
+        Action act = () => handler.Handle(request, default);
+
+        //Assert
+        act.Should().Throw<NotFoundException>()
+            .WithMessage($"Order Header with ID: {request.Id} was not found in database");
+    }    
+    
+    [Fact]
+    public void DeletePackagingTypeHandler_WhenPackagingTypeIsFoundInDatabase_ShouldRemoveItFromDatabase()
+    {
+        //Arrange  
+        PackagingType packagingType = new Mock<PackagingType>().Object;
+        var request = new DeletePackagingTypeById(It.IsAny<int>());
+        _unitOfWorkMock.Setup(u => u.PackagingType.GetFirstOrDefault(u => u.Id == request.Id, null, true)).Returns(packagingType); 
+        var handler = new DeletePackagingTypeByIdHandler(_unitOfWorkMock.Object);
+
+        //Act
+        _ = handler.Handle(request, default);
+
+        //Assert
+        _unitOfWorkMock.Verify(u => u.PackagingType.Remove(packagingType), Times.Once());
         _unitOfWorkMock.Verify(u => u.Save(), Times.Once());
     }
 

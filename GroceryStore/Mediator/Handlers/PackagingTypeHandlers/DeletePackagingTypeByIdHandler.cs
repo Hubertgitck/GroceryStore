@@ -3,11 +3,11 @@ using ApplicationWeb.Mediator.Commands.PackagingTypeCommands;
 
 namespace ApplicationWeb.Mediator.Handlers.PackagingTypeHandlers;
 
-public class DeletePackagingTypeHandler : IRequestHandler<DeletePackagingTypeById>
+public class DeletePackagingTypeByIdHandler : IRequestHandler<DeletePackagingTypeById>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeletePackagingTypeHandler(IUnitOfWork unitOfWork)
+    public DeletePackagingTypeByIdHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
